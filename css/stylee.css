@@ -1,0 +1,148 @@
+body {
+  background-color: #181818;
+}
+
+.father {
+  position: fixed; /* 使用固定定位 */
+  bottom: 0; /* 距离页面底部的距离为0 */
+  left: 0; /* 距离页面左侧的距离为0 */
+  display: flex;
+  justify-content: left 30% ;
+  align-items: center;
+  height: 40vh;
+  width: 20%;
+  overflow: hidden;
+  z-index: 0; 
+}
+.father .scene {
+  width: 150px;
+  height: 100px;
+  perspective: 20rem;
+  transform: rotateZ(180deg);
+}
+.father .scene .box {
+  position: relative;
+  transform-style: preserve-3d;
+  transform: rotateY(0deg) rotateX(0deg) translateZ(-25px);
+}
+.father .scene .box:hover .box-side {
+  animation: glow 400ms infinite ease-in-out forwards;
+}
+.father .scene .box .box-side {
+  background-color: rgba(12, 116, 235, 0.1);
+  background-size: cover;
+  background-repeat: no-repeat;
+  border: 1px solid rgba(12, 116, 235, 0.1);
+  animation: glow 2s infinite ease-in-out forwards;
+}
+.father .scene .box .face-front {
+  width: 150px;
+  height: 100px;
+  position: absolute;
+}
+.father .scene .box .face-right,
+.father .scene .box .face-left, .father .scene .box .head-left, .father .scene .box .head-right {
+  width: 50px;
+  height: 100px;
+  left: 50px;
+  position: absolute;
+  display: inherit !important;
+}
+.father .scene .box .face-top, .father .scene .box .head-top, .father .scene .box .head-bottom,
+.father .scene .box .face-bottom {
+  width: 150px;
+  height: 50px;
+  top: 25px;
+  position: absolute;
+  display: inherit !important;
+}
+.father .scene .box .face-front {
+  transform: rotateY(0deg) translateZ(25px);
+}
+.father .scene .box .face-back {
+  transform: rotateY(180deg) translateZ(25px);
+}
+.father .scene .box .face-right {
+  transform: rotateY(90deg) translateZ(75px);
+}
+.father .scene .box .face-left {
+  transform: rotateY(-90deg) translateZ(75px);
+}
+.father .scene .box .face-top {
+  transform: rotateX(90deg) translateZ(50px);
+}
+.father .scene .box .face-bottom {
+  transform: rotateX(-90deg) translateZ(50px);
+}
+
+@keyframes glow {
+  0% {
+    border: 1px solid rgba(12, 116, 235, 0);
+  }
+  50% {
+    border: 1px solid #0c74eb;
+  }
+  100% {
+    border: 1px solid rgba(12, 116, 235, 0);
+  }
+}
+/********************************/
+@keyframes start {
+  0% {
+    grid-template-columns: 1fr;
+    height: 250px;
+    width: 250px;
+  }
+  10% {
+    grid-template-columns: 1fr 1fr;
+  }
+  20% {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+  30% {
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+  }
+  40% {
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  }
+  50% {
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+  }
+  60% {
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  }
+  70% {
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  }
+  80% {
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  }
+  90% {
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  }
+  100% {
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  }
+}
+.main {
+  cursor: pointer;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  height: 100px;
+  width: 150px;
+  transform: rotateZ(180deg);
+  border: 1px solid #0c74eb;
+  animation: start 1s ease-in-out 500ms forwards;
+}
+.main div {
+  background-color: transparent;
+}
+
+.c1 {
+  background-color: #0c74eb !important;
+}
+
+.c0 {
+  background-color: #161616 !important;
+}
