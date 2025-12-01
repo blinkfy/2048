@@ -1,0 +1,2413 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>2048-3D</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport"
+    content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0, maximum-scale=1, user-scalable=no, minimal-ui">
+</head>
+<link href="css/main3d.css" rel="stylesheet" type="text/css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js" type="text/javascript"></script>
+<!--星空背景-->
+<style type="text/css">
+  /* =============================================================================CSS 样式用于全屏覆盖的 loading 界面 */
+  .loading-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 170%;
+    background-color: rgba(255, 255, 255, 0.3);
+    /* 半透明黑色背景 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    /* 确保在最上层 */
+  }
+
+  /* Additional styles can be added here if needed */
+  .content {
+    display: none;
+    /* Initially hide the content */
+  }
+
+  /*-------------------------------------------------加载↑---------导航栏↓----------------------------------*/
+  .schmenu {
+    height: 33px;
+    line-height: 33px;
+    background: #636871;
+    width: 100%;
+    margin: 0 auto;
+    overflow: hidden;
+  }
+
+  .schmenu ul {
+    width: 1180px;
+    margin: 0 auto;
+    overflow: hidden;
+  }
+
+  .schmenu ul li {
+    float: left;
+    list-style: none;
+  }
+
+  .schmenu ul li a {
+    height: 33px;
+    line-height: 33px;
+    display: block;
+    color: #fff;
+    font-size: 13px;
+    padding: 0 10px;
+    text-decoration: none;
+  }
+
+  .schmenu ul li a:hover {
+    color: #fff;
+    background: #000;
+    text-decoration: none;
+    -moz-transition: all 0.2s ease;
+    -webkit-transition: all 0.2s ease;
+    -o-transition: all 0.2s ease;
+    -moz-transition: all 0.2s ease;
+    transition: all 0.2s ease;
+  }
+
+  /*--------------------------------------------------------------导航栏↑----虚化背景↓-------------------------*/
+
+  /*-----------------------------------------------------------渐变背景↓-----------------------------------*/
+  body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+  }
+
+  /*----------------------------------------------------------------带定时器的动态广告↓----------------------*/
+
+  html {
+    margin: 0;
+    padding: 0;
+    height: 170%;
+  }
+
+  #ad-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 300px;
+    height: 40px;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    z-index: 9999;
+    text-align: center;
+    display: none;
+  }
+
+  .ad-img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+  }
+
+  .cancel-btn {
+    position: absolute;
+    top: 15px;
+    right: 5px;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 50%;
+    text-align: center;
+    line-height: 20px;
+    font-weight: bold;
+    display: none;
+    font-size: 25px;
+  }
+
+  .timer {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    bottom: 10px;
+    width: calc(100% - 20px);
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 5px;
+    border-radius: 5px;
+    font-size: 12px;
+    text-align: center;
+  }
+
+  .close-now {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    cursor: pointer;
+    padding: 5px 10px;
+    background-color: #333;
+    color: #fff;
+    border-radius: 5px;
+    display: none;
+  }
+
+  .close-btn {
+    display: none;
+    /* Initially hidden */
+    cursor: pointer;
+    margin-top: 60px;
+    color: blue;
+    text-decoration: underline;
+  }
+
+  .title {
+    font-family: Montserrat, sans-serif;
+    /* 设置字体为 Arial 或者后备字体 sans-serif */
+    font-size: 2.5em;
+    /* 设置字体大小 */
+    color: #fffbd3;
+    /* 设置字体颜色 */
+    text-align: center;
+    /* 文本居中显示 */
+  }
+
+  .game-explanation {
+    color: #fffde1;
+    width: 115%;
+  }
+
+  /*============================================================================3D2048↓===============================*/
+  html,
+  body,
+  div,
+  span,
+  applet,
+  object,
+  iframe,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  p,
+  blockquote,
+  pre,
+  a,
+  abbr,
+  acronym,
+  address,
+  big,
+  cite,
+  code,
+  del,
+  dfn,
+  em,
+  img,
+  ins,
+  kbd,
+  q,
+  s,
+  samp,
+  small,
+  strike,
+  strong,
+  sub,
+  sup,
+  tt,
+  var,
+  b,
+  u,
+  i,
+  center,
+  dl,
+  dt,
+  dd,
+  ol,
+  ul,
+  li,
+  fieldset,
+  form,
+  label,
+  legend,
+  table,
+  caption,
+  tbody,
+  tfoot,
+  thead,
+  tr,
+  th,
+  td,
+  article,
+  aside,
+  canvas,
+  details,
+  embed,
+  figure,
+  figcaption,
+  footer,
+  header,
+  hgroup,
+  menu,
+  nav,
+  output,
+  ruby,
+  section,
+  summary,
+  time,
+  mark,
+  audio,
+  video {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    font: inherit;
+    vertical-align: baseline
+  }
+
+  article,
+  aside,
+  details,
+  figcaption,
+  figure,
+  footer,
+  header,
+  hgroup,
+  menu,
+  nav,
+  section {
+    display: block
+  }
+
+  body {
+    line-height: 1
+  }
+
+  ol,
+  ul {
+    list-style: none
+  }
+
+  blockquote,
+  q {
+    quotes: none
+  }
+
+  blockquote:before,
+  blockquote:after,
+  q:before,
+  q:after {
+    content: '';
+    content: none
+  }
+
+  table {
+    border-collapse: collapse;
+    border-spacing: 0
+  }
+
+  @import url(https://fonts.googleapis.com/css?family=Archivo+Narrow);
+
+  .cube-folding {
+    width: 50px;
+    height: 50px;
+    display: inline-block;
+    -webkit-transform: rotate(45deg);
+    -moz-transform: rotate(45deg);
+    transform: rotate(45deg);
+    font-size: 0;
+  }
+
+  .cube-folding span {
+    position: relative;
+    width: 25px;
+    height: 25px;
+    -webkit-transform: scale(1.1);
+    -moz-transform: scale(1.1);
+    transform: scale(1.1);
+    display: inline-block;
+  }
+
+  .cube-folding span::before {
+    content: "";
+    background-color: rgb(216, 211, 211);
+    position: absolute;
+    left: 0;
+    top: 0;
+    display: block;
+    width: 25px;
+    height: 25px;
+    -moz-transform-origin: 100% 100%;
+    -ms-transform-origin: 100% 100%;
+    -webkit-transform-origin: 100% 100%;
+    transform-origin: 100% 100%;
+    -webkit-animation: folding 2.5s infinite linear both;
+    -moz-animation: folding 2.5s infinite linear both;
+    animation: folding 2.5s infinite linear both;
+  }
+
+  .cube-folding .leaf2 {
+    -webkit-transform: rotateZ(90deg) scale(1.1);
+    -moz-transform: rotateZ(90deg) scale(1.1);
+    transform: rotateZ(90deg) scale(1.1);
+  }
+
+  .cube-folding .leaf2::before {
+    -webkit-animation-delay: 0.3s;
+    animation-delay: 0.3s;
+    background-color: #c9c4c4;
+  }
+
+  .cube-folding .leaf3 {
+    -webkit-transform: rotateZ(270deg) scale(1.1);
+    -moz-transform: rotateZ(270deg) scale(1.1);
+    transform: rotateZ(270deg) scale(1.1);
+  }
+
+  .cube-folding .leaf3::before {
+    -webkit-animation-delay: 0.9s;
+    animation-delay: 0.9s;
+    background-color: #565656;
+  }
+
+  .cube-folding .leaf4 {
+    -webkit-transform: rotateZ(180deg) scale(1.1);
+    -moz-transform: rotateZ(180deg) scale(1.1);
+    transform: rotateZ(180deg) scale(1.1);
+  }
+
+  .cube-folding .leaf4::before {
+    -webkit-animation-delay: 0.6s;
+    animation-delay: 0.6s;
+    background-color: #8a8989;
+  }
+
+  @-webkit-keyframes folding {
+
+    0%,
+    10% {
+      -webkit-transform: perspective(140px) rotateX(-180deg);
+      -moz-transform: perspective(140px) rotateX(-180deg);
+      transform: perspective(140px) rotateX(-180deg);
+      -webkit-opacity: 0;
+      -moz-opacity: 0;
+      opacity: 0;
+    }
+
+    25%,
+    75% {
+      -webkit-transform: perspective(140px) rotateX(0deg);
+      -moz-transform: perspective(140px) rotateX(0deg);
+      transform: perspective(140px) rotateX(0deg);
+      -webkit-opacity: 1;
+      -moz-opacity: 1;
+      opacity: 1;
+    }
+
+    90%,
+    100% {
+      -webkit-transform: perspective(140px) rotateY(180deg);
+      -moz-transform: perspective(140px) rotateY(180deg);
+      transform: perspective(140px) rotateY(180deg);
+      -webkit-opacity: 0;
+      -moz-opacity: 0;
+      opacity: 0;
+    }
+  }
+
+  @-moz-keyframes folding {
+
+    0%,
+    10% {
+      -webkit-transform: perspective(140px) rotateX(-180deg);
+      -moz-transform: perspective(140px) rotateX(-180deg);
+      transform: perspective(140px) rotateX(-180deg);
+      -webkit-opacity: 0;
+      -moz-opacity: 0;
+      opacity: 0;
+    }
+
+    25%,
+    75% {
+      -webkit-transform: perspective(140px) rotateX(0deg);
+      -moz-transform: perspective(140px) rotateX(0deg);
+      transform: perspective(140px) rotateX(0deg);
+      -webkit-opacity: 1;
+      -moz-opacity: 1;
+      opacity: 1;
+    }
+
+    90%,
+    100% {
+      -webkit-transform: perspective(140px) rotateY(180deg);
+      -moz-transform: perspective(140px) rotateY(180deg);
+      transform: perspective(140px) rotateY(180deg);
+      -webkit-opacity: 0;
+      -moz-opacity: 0;
+      opacity: 0;
+    }
+  }
+
+  @-ms-keyframes folding {
+
+    0%,
+    10% {
+      -webkit-transform: perspective(140px) rotateX(-180deg);
+      -moz-transform: perspective(140px) rotateX(-180deg);
+      transform: perspective(140px) rotateX(-180deg);
+      -webkit-opacity: 0;
+      -moz-opacity: 0;
+      opacity: 0;
+    }
+
+    25%,
+    75% {
+      -webkit-transform: perspective(140px) rotateX(0deg);
+      -moz-transform: perspective(140px) rotateX(0deg);
+      transform: perspective(140px) rotateX(0deg);
+      -webkit-opacity: 1;
+      -moz-opacity: 1;
+      opacity: 1;
+    }
+
+    90%,
+    100% {
+      -webkit-transform: perspective(140px) rotateY(180deg);
+      -moz-transform: perspective(140px) rotateY(180deg);
+      transform: perspective(140px) rotateY(180deg);
+      -webkit-opacity: 0;
+      -moz-opacity: 0;
+      opacity: 0;
+    }
+  }
+
+  @keyframes folding {
+
+    0%,
+    10% {
+      -webkit-transform: perspective(140px) rotateX(-180deg);
+      -moz-transform: perspective(140px) rotateX(-180deg);
+      transform: perspective(140px) rotateX(-180deg);
+      -webkit-opacity: 0;
+      -moz-opacity: 0;
+      opacity: 0;
+    }
+
+    25%,
+    75% {
+      -webkit-transform: perspective(140px) rotateX(0deg);
+      -moz-transform: perspective(140px) rotateX(0deg);
+      transform: perspective(140px) rotateX(0deg);
+      -webkit-opacity: 1;
+      -moz-opacity: 1;
+      opacity: 1;
+    }
+
+    90%,
+    100% {
+      -webkit-transform: perspective(140px) rotateY(180deg);
+      -moz-transform: perspective(140px) rotateY(180deg);
+      transform: perspective(140px) rotateY(180deg);
+      -webkit-opacity: 0;
+      -moz-opacity: 0;
+      opacity: 0;
+    }
+  }
+
+  .cube-wrapper {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    margin-top: -50px;
+    margin-left: -50px;
+    width: 100px;
+    height: 100px;
+    text-align: center;
+  }
+
+  .cube-wrapper:after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -20px;
+    margin: auto;
+    width: 90px;
+    height: 6px;
+    z-index: 1;
+    background-color: rgba(233, 219, 219, 0.774);
+    -webkit-filter: blur(2px);
+    filter: blur(2px);
+    -webkit-border-radius: 100%;
+    -moz-border-radius: 100%;
+    border-radius: 100%;
+    -webkit-animation: shadow 0.5s ease infinite alternate;
+    -moz-animation: shadow 0.5s ease infinite alternate;
+    animation: shadow 0.5s ease infinite alternate;
+  }
+
+  .cube-wrapper .loading {
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    display: block;
+    color: rgb(193, 190, 190);
+    position: relative;
+    top: 25px;
+    z-index: 2;
+    -webkit-animation: text 0.5s ease infinite alternate;
+    -moz-animation: text 0.5s ease infinite alternate;
+    animation: text 0.5s ease infinite alternate;
+  }
+
+  @-webkit-keyframes text {
+    100% {
+      top: 35px;
+    }
+  }
+
+  @-moz-keyframes text {
+    100% {
+      top: 35px;
+    }
+  }
+
+  @-ms-keyframes text {
+    100% {
+      top: 35px;
+    }
+  }
+
+  @keyframes text {
+    100% {
+      top: 35px;
+    }
+  }
+
+  @-webkit-keyframes shadow {
+    100% {
+      bottom: -18px;
+      width: 100px;
+    }
+  }
+
+  @-moz-keyframes shadow {
+    100% {
+      bottom: -18px;
+      width: 100px;
+    }
+  }
+
+  @-ms-keyframes shadow {
+    100% {
+      bottom: -18px;
+      width: 100px;
+    }
+  }
+
+  @keyframes shadow {
+    100% {
+      bottom: -18px;
+      width: 100px;
+    }
+  }
+
+  html,
+  body {
+    min-height: 100%;
+  }
+
+  body {
+    /* fallback for old browsers */
+    font-family: arial;
+  }
+
+  h1 {
+    font-size: 26px;
+    display: block;
+    text-align: center;
+    color: #ffffff;
+    padding: 50px 20px;
+    font-weight: 300;
+    font-family: "Archivo Narrow", sans-serif;
+  }
+
+  .made-with-love {
+    position: fixed;
+    left: 0;
+    width: 100%;
+    bottom: 10px;
+    text-align: center;
+    font-size: 10px;
+    z-index: 9999;
+    font-family: arial;
+    color: #6d6969;
+  }
+
+  .made-with-love i {
+    font-style: normal;
+    color: #f50057;
+    font-size: 14px;
+    position: relative;
+    top: 2px;
+  }
+
+  .made-with-love a {
+    color: #656161;
+    text-decoration: none;
+  }
+
+  .made-with-love a:hover {
+    text-decoration: underline;
+  }
+
+  /*=========================================================================================星空*/
+  button,
+  input {
+    overflow: visible
+  }
+
+  audio,
+  canvas,
+  progress,
+  video {
+    display: inline-block
+  }
+
+  progress,
+  sub,
+  sup {
+    vertical-align: baseline
+  }
+
+  html {
+    font-family: sans-serif;
+    line-height: 1.15;
+    -ms-text-size-adjust: 100%;
+    -webkit-text-size-adjust: 100%
+  }
+
+  body {
+    margin: 0
+  }
+
+  menu,
+  article,
+  aside,
+  details,
+  footer,
+  header,
+  nav,
+  section {
+    display: block
+  }
+
+  h1 {
+    font-size: 2em;
+    margin: .67em 0
+  }
+
+  figcaption,
+  figure,
+  main {
+    display: block
+  }
+
+  figure {
+    margin: 1em 40px
+  }
+
+  hr {
+    box-sizing: content-box;
+    height: 0
+  }
+
+  code,
+  kbd,
+  pre,
+  samp {
+    font-family: monospace, monospace;
+    font-size: 1em
+  }
+
+  a {
+    background-color: transparent;
+    -webkit-text-decoration-skip: objects
+  }
+
+  a:active,
+  a:hover {
+    outline-width: 0
+  }
+
+  abbr[title] {
+    border-bottom: none;
+    text-decoration: underline;
+    text-decoration: underline dotted
+  }
+
+  b,
+  strong {
+    font-weight: bolder
+  }
+
+  dfn {
+    font-style: italic
+  }
+
+  mark {
+    background-color: #ff0;
+    color: #000
+  }
+
+  small {
+    font-size: 80%
+  }
+
+  sub,
+  sup {
+    font-size: 75%;
+    line-height: 0;
+    position: relative
+  }
+
+  sub {
+    bottom: -.25em
+  }
+
+  sup {
+    top: -.5em
+  }
+
+  audio:not([controls]) {
+    display: none;
+    height: 0
+  }
+
+  img {
+    border-style: none
+  }
+
+  svg:not(:root) {
+    overflow: hidden
+  }
+
+  button,
+  input,
+  optgroup,
+  select,
+  textarea {
+    font-family: sans-serif;
+    font-size: 100%;
+    line-height: 1.15;
+    margin: 0
+  }
+
+  button,
+  input {}
+
+  button,
+  select {
+    text-transform: none
+  }
+
+  [type=submit],
+  [type=reset],
+  button,
+  html [type=button] {
+    -webkit-appearance: button
+  }
+
+  [type=button]::-moz-focus-inner,
+  [type=reset]::-moz-focus-inner,
+  [type=submit]::-moz-focus-inner,
+  button::-moz-focus-inner {
+    border-style: none;
+    padding: 0
+  }
+
+  [type=button]:-moz-focusring,
+  [type=reset]:-moz-focusring,
+  [type=submit]:-moz-focusring,
+  button:-moz-focusring {
+    outline: ButtonText dotted 1px
+  }
+
+  fieldset {
+    border: 1px solid silver;
+    margin: 0 2px;
+    padding: .35em .625em .75em
+  }
+
+  legend {
+    box-sizing: border-box;
+    color: inherit;
+    display: table;
+    max-width: 100%;
+    padding: 0;
+    white-space: normal
+  }
+
+  progress {}
+
+  textarea {
+    overflow: auto
+  }
+
+  [type=checkbox],
+  [type=radio] {
+    box-sizing: border-box;
+    padding: 0
+  }
+
+  [type=number]::-webkit-inner-spin-button,
+  [type=number]::-webkit-outer-spin-button {
+    height: auto
+  }
+
+  [type=search] {
+    -webkit-appearance: textfield;
+    outline-offset: -2px
+  }
+
+  [type=search]::-webkit-search-cancel-button,
+  [type=search]::-webkit-search-decoration {
+    -webkit-appearance: none
+  }
+
+  ::-webkit-file-upload-button {
+    -webkit-appearance: button;
+    font: inherit
+  }
+
+  summary {
+    display: list-item
+  }
+
+  [hidden],
+  template {
+    display: none
+  }
+
+  html {
+    height: 170%;
+    background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
+  }
+
+  #stars {
+    width: 1px;
+    height: 1px;
+    background: transparent;
+    box-shadow: 737px 278px #FFF, 1524px 1943px #FFF, 166px 1808px #FFF, 162px 1410px #FFF, 1240px 12px #FFF, 81px 1745px #FFF, 1039px 744px #FFF, 743px 186px #FFF, 1285px 1431px #FFF, 1373px 1156px #FFF, 338px 1508px #FFF, 1771px 946px #FFF, 1940px 500px #FFF, 1247px 1597px #FFF, 1536px 129px #FFF, 513px 671px #FFF, 1612px 1365px #FFF, 699px 446px #FFF, 1563px 1178px #FFF, 224px 1549px #FFF, 1551px 1897px #FFF, 671px 1802px #FFF, 898px 931px #FFF, 684px 867px #FFF, 1075px 1879px #FFF, 408px 550px #FFF, 119px 890px #FFF, 1619px 504px #FFF, 1448px 795px #FFF, 1539px 943px #FFF, 928px 1537px #FFF, 67px 1247px #FFF, 533px 1890px #FFF, 693px 792px #FFF, 110px 1864px #FFF, 835px 1094px #FFF, 1559px 582px #FFF, 100px 792px #FFF, 70px 403px #FFF, 767px 1726px #FFF, 955px 1639px #FFF, 282px 582px #FFF, 1156px 7px #FFF, 1913px 1161px #FFF, 1556px 1944px #FFF, 728px 383px #FFF, 306px 1639px #FFF, 878px 648px #FFF, 104px 1285px #FFF, 1957px 1996px #FFF, 79px 1330px #FFF, 771px 144px #FFF, 1391px 1116px #FFF, 169px 1667px #FFF, 1448px 457px #FFF, 885px 1096px #FFF, 885px 1135px #FFF, 992px 502px #FFF, 729px 424px #FFF, 866px 1125px #FFF, 145px 794px #FFF, 1532px 1784px #FFF, 1973px 1553px #FFF, 1560px 988px #FFF, 1383px 750px #FFF, 357px 558px #FFF, 1042px 1125px #FFF, 1496px 11px #FFF, 1514px 668px #FFF, 1868px 1478px #FFF, 1860px 355px #FFF, 91px 230px #FFF, 13px 1673px #FFF, 1021px 848px #FFF, 478px 1072px #FFF, 1063px 1192px #FFF, 1151px 1378px #FFF, 994px 394px #FFF, 1455px 33px #FFF, 1903px 332px #FFF, 1205px 742px #FFF, 1810px 1077px #FFF, 1468px 425px #FFF, 1717px 249px #FFF, 55px 949px #FFF, 1884px 1489px #FFF, 1930px 1234px #FFF, 704px 618px #FFF, 622px 1775px #FFF, 908px 1162px #FFF, 71px 1337px #FFF, 873px 359px #FFF, 1983px 924px #FFF, 1368px 258px #FFF, 343px 1776px #FFF, 1426px 20px #FFF, 1259px 1731px #FFF, 1034px 1883px #FFF, 1787px 334px #FFF, 487px 1446px #FFF, 951px 594px #FFF, 1038px 786px #FFF, 889px 1932px #FFF, 874px 1762px #FFF, 1516px 1986px #FFF, 824px 110px #FFF, 1312px 281px #FFF, 1576px 620px #FFF, 1907px 1714px #FFF, 386px 200px #FFF, 552px 273px #FFF, 1737px 1236px #FFF, 881px 1327px #FFF, 709px 162px #FFF, 720px 1889px #FFF, 1857px 1673px #FFF, 1163px 1147px #FFF, 6px 1860px #FFF, 1909px 519px #FFF, 1966px 1129px #FFF, 1680px 794px #FFF, 598px 1529px #FFF, 1052px 1509px #FFF, 1296px 136px #FFF, 969px 561px #FFF, 99px 1883px #FFF, 1319px 316px #FFF, 893px 1761px #FFF, 837px 712px #FFF, 1273px 1027px #FFF, 1810px 571px #FFF, 1042px 305px #FFF, 332px 1238px #FFF, 1434px 1899px #FFF, 1614px 1785px #FFF, 739px 1154px #FFF, 1413px 820px #FFF, 1232px 1911px #FFF, 256px 104px #FFF, 1886px 243px #FFF, 1999px 1096px #FFF, 867px 1770px #FFF, 1604px 241px #FFF, 1002px 697px #FFF, 1261px 1666px #FFF, 1245px 1374px #FFF, 724px 1162px #FFF, 1107px 1327px #FFF, 92px 311px #FFF, 485px 1866px #FFF, 653px 1484px #FFF, 116px 1767px #FFF, 733px 1865px #FFF, 559px 485px #FFF, 944px 1037px #FFF, 879px 988px #FFF, 1588px 1821px #FFF, 255px 1699px #FFF, 1570px 1205px #FFF, 1956px 1384px #FFF, 189px 1526px #FFF, 1403px 1300px #FFF, 1731px 790px #FFF, 392px 670px #FFF, 1102px 793px #FFF, 539px 1194px #FFF, 1332px 1235px #FFF, 1582px 883px #FFF, 1704px 361px #FFF, 161px 1529px #FFF, 943px 582px #FFF, 574px 456px #FFF, 446px 633px #FFF, 87px 1169px #FFF, 1472px 382px #FFF, 1292px 118px #FFF, 494px 783px #FFF, 1274px 697px #FFF, 1784px 294px #FFF, 57px 1162px #FFF, 1910px 777px #FFF, 701px 827px #FFF, 831px 415px #FFF, 1009px 80px #FFF, 210px 1971px #FFF, 1667px 678px #FFF, 1725px 1459px #FFF, 1733px 293px #FFF, 472px 411px #FFF, 1069px 74px #FFF, 1148px 6px #FFF, 270px 1029px #FFF, 910px 232px #FFF, 1773px 497px #FFF, 1934px 1316px #FFF, 462px 683px #FFF, 1586px 1258px #FFF, 1766px 927px #FFF, 784px 212px #FFF, 1758px 795px #FFF, 338px 885px #FFF, 924px 2px #FFF, 1133px 233px #FFF, 1016px 1631px #FFF, 1063px 1580px #FFF, 1681px 638px #FFF, 1832px 1811px #FFF, 827px 264px #FFF, 855px 687px #FFF, 1642px 135px #FFF, 1163px 1764px #FFF, 1651px 1618px #FFF, 1717px 38px #FFF, 989px 1878px #FFF, 220px 1851px #FFF, 1135px 39px #FFF, 273px 1004px #FFF, 155px 53px #FFF, 331px 1947px #FFF, 1237px 1328px #FFF, 139px 1869px #FFF, 1392px 1744px #FFF, 752px 1996px #FFF, 238px 1424px #FFF, 673px 858px #FFF, 207px 628px #FFF, 52px 1288px #FFF, 966px 1975px #FFF, 406px 1529px #FFF, 488px 336px #FFF, 1712px 800px #FFF, 1249px 471px #FFF, 1973px 1495px #FFF, 382px 1741px #FFF, 321px 774px #FFF, 91px 277px #FFF, 953px 626px #FFF, 453px 218px #FFF, 651px 65px #FFF, 1388px 985px #FFF, 144px 241px #FFF, 63px 1302px #FFF, 1296px 312px #FFF, 1936px 912px #FFF, 679px 1101px #FFF, 702px 93px #FFF, 1587px 556px #FFF, 1364px 1981px #FFF, 923px 1982px #FFF, 1893px 108px #FFF, 1470px 1329px #FFF, 942px 415px #FFF, 601px 1466px #FFF, 1515px 1950px #FFF, 970px 1572px #FFF, 1821px 1323px #FFF, 1740px 1912px #FFF, 1879px 291px #FFF, 1599px 1299px #FFF, 105px 518px #FFF, 842px 1045px #FFF, 29px 344px #FFF, 261px 1821px #FFF, 1228px 805px #FFF, 1485px 1586px #FFF, 1917px 1556px #FFF, 806px 461px #FFF, 240px 337px #FFF, 730px 1388px #FFF, 1818px 1493px #FFF, 882px 147px #FFF, 1282px 590px #FFF, 747px 912px #FFF, 780px 716px #FFF, 1877px 51px #FFF, 35px 1797px #FFF, 1969px 1971px #FFF, 1907px 971px #FFF, 1432px 1831px #FFF, 625px 957px #FFF, 207px 1529px #FFF, 1282px 192px #FFF, 357px 991px #FFF, 261px 114px #FFF, 1683px 1293px #FFF, 1824px 1402px #FFF, 1011px 1096px #FFF, 115px 87px #FFF, 1336px 1930px #FFF, 577px 1349px #FFF, 787px 79px #FFF, 1566px 1065px #FFF, 22px 1509px #FFF, 14px 186px #FFF, 652px 1134px #FFF, 670px 1238px #FFF, 1406px 1576px #FFF, 918px 866px #FFF, 1759px 157px #FFF, 785px 1962px #FFF, 1203px 721px #FFF, 1007px 1819px #FFF, 1830px 1255px #FFF, 1548px 734px #FFF, 1069px 500px #FFF, 70px 195px #FFF, 396px 644px #FFF, 946px 1491px #FFF, 1021px 1179px #FFF, 1282px 1379px #FFF, 545px 1581px #FFF, 1674px 1456px #FFF, 1434px 1923px #FFF, 1900px 1138px #FFF, 477px 1366px #FFF, 269px 228px #FFF, 1226px 464px #FFF, 108px 86px #FFF, 498px 1098px #FFF, 675px 385px #FFF, 773px 179px #FFF, 795px 1210px #FFF, 229px 763px #FFF, 371px 1681px #FFF, 1337px 1010px #FFF, 1778px 1385px #FFF, 1970px 1299px #FFF, 1110px 1705px #FFF, 1273px 636px #FFF, 574px 186px #FFF, 1165px 151px #FFF, 510px 843px #FFF, 2px 1984px #FFF, 541px 419px #FFF, 389px 547px #FFF, 438px 1645px #FFF, 778px 605px #FFF, 994px 1320px #FFF, 1813px 1194px #FFF, 502px 1445px #FFF, 1311px 1448px #FFF, 327px 647px #FFF, 1813px 521px #FFF, 1819px 1356px #FFF, 460px 1710px #FFF, 1316px 1347px #FFF, 621px 1050px #FFF, 812px 1090px #FFF, 1476px 625px #FFF, 331px 449px #FFF, 334px 1133px #FFF, 570px 1923px #FFF, 444px 1894px #FFF, 1667px 648px #FFF, 1822px 952px #FFF, 9px 385px #FFF, 220px 1612px #FFF, 1123px 256px #FFF, 1766px 1646px #FFF, 1161px 1613px #FFF, 1597px 1727px #FFF, 1567px 1269px #FFF, 1249px 874px #FFF, 761px 236px #FFF, 342px 1674px #FFF, 1978px 1940px #FFF, 1403px 1245px #FFF, 73px 464px #FFF, 790px 409px #FFF, 260px 348px #FFF, 1226px 899px #FFF, 1230px 149px #FFF, 1362px 21px #FFF, 1960px 1818px #FFF, 1630px 656px #FFF, 1947px 1497px #FFF, 1415px 1985px #FFF, 584px 1131px #FFF, 1858px 339px #FFF, 1607px 1295px #FFF, 696px 110px #FFF, 991px 1618px #FFF, 1484px 1632px #FFF, 1860px 670px #FFF, 508px 835px #FFF, 686px 1044px #FFF, 67px 1287px #FFF, 1718px 1350px #FFF, 127px 1103px #FFF, 1382px 1903px #FFF, 1935px 1705px #FFF, 1439px 754px #FFF, 923px 86px #FFF, 1490px 758px #FFF, 81px 1325px #FFF, 712px 1776px #FFF, 1043px 1293px #FFF, 917px 67px #FFF, 1725px 730px #FFF, 1882px 959px #FFF, 1772px 1181px #FFF, 1752px 1563px #FFF, 123px 19px #FFF, 230px 535px #FFF, 357px 157px #FFF, 1135px 1537px #FFF, 1369px 331px #FFF, 214px 1371px #FFF, 605px 1488px #FFF, 1717px 671px #FFF, 440px 536px #FFF, 598px 842px #FFF, 713px 1742px #FFF, 967px 1490px #FFF, 438px 1609px #FFF, 1081px 1485px #FFF, 1463px 1316px #FFF, 113px 1238px #FFF, 1226px 802px #FFF, 929px 1422px #FFF, 791px 1278px #FFF, 1965px 1837px #FFF, 1289px 1550px #FFF, 712px 1310px #FFF, 1527px 156px #FFF, 901px 1487px #FFF, 814px 196px #FFF, 338px 1188px #FFF, 862px 671px #FFF, 830px 1176px #FFF, 1380px 1647px #FFF, 565px 673px #FFF, 304px 1809px #FFF, 1288px 921px #FFF, 1180px 1999px #FFF, 568px 1335px #FFF, 710px 531px #FFF, 1215px 1390px #FFF, 366px 1311px #FFF, 1003px 1842px #FFF, 1593px 1299px #FFF, 244px 658px #FFF, 1774px 441px #FFF, 507px 496px #FFF, 1139px 1063px #FFF, 1059px 234px #FFF, 199px 1877px #FFF, 566px 1119px #FFF, 1001px 198px #FFF, 283px 1651px #FFF, 438px 1295px #FFF, 1859px 565px #FFF, 527px 1206px #FFF, 1220px 1730px #FFF, 841px 1233px #FFF, 459px 376px #FFF, 771px 1406px #FFF, 1175px 611px #FFF, 439px 1250px #FFF, 35px 315px #FFF, 1492px 461px #FFF, 1403px 62px #FFF, 1481px 1791px #FFF, 1564px 634px #FFF, 585px 179px #FFF, 1192px 207px #FFF, 1983px 1452px #FFF, 1644px 340px #FFF, 1229px 95px #FFF, 1453px 711px #FFF, 402px 1687px #FFF, 629px 1323px #FFF, 63px 510px #FFF, 1314px 779px #FFF, 1805px 1948px #FFF, 728px 11px #FFF, 1214px 1360px #FFF, 170px 1007px #FFF, 594px 1613px #FFF, 1312px 306px #FFF, 695px 1683px #FFF, 304px 1962px #FFF, 830px 1203px #FFF, 1627px 139px #FFF, 1570px 281px #FFF, 1444px 663px #FFF, 1213px 519px #FFF, 513px 937px #FFF, 485px 592px #FFF, 1569px 1525px #FFF, 308px 577px #FFF, 545px 62px #FFF, 1740px 1035px #FFF, 374px 1209px #FFF, 880px 1269px #FFF, 844px 1012px #FFF, 1815px 169px #FFF, 112px 1154px #FFF, 1781px 897px #FFF, 719px 1572px #FFF, 1547px 1765px #FFF, 94px 3px #FFF, 1363px 1661px #FFF, 624px 285px #FFF, 799px 1458px #FFF, 1595px 1381px #FFF, 1120px 977px #FFF, 1763px 231px #FFF, 842px 999px #FFF, 1026px 47px #FFF, 579px 1073px #FFF, 898px 1731px #FFF, 797px 1777px #FFF, 590px 915px #FFF, 1953px 893px #FFF, 1982px 1883px #FFF, 939px 731px #FFF, 228px 1340px #FFF, 1915px 1268px #FFF, 345px 1115px #FFF, 1491px 1593px #FFF, 1710px 1403px #FFF, 1432px 1068px #FFF, 1277px 1818px #FFF, 415px 1022px #FFF, 442px 491px #FFF, 1266px 43px #FFF, 513px 417px #FFF, 1482px 1386px #FFF, 1924px 1572px #FFF, 1826px 322px #FFF, 1701px 1969px #FFF, 179px 1326px #FFF, 509px 797px #FFF, 262px 920px #FFF, 1609px 349px #FFF, 746px 1642px #FFF, 1182px 243px #FFF, 1301px 575px #FFF, 806px 1393px #FFF, 1282px 170px #FFF, 236px 133px #FFF, 494px 1516px #FFF, 1392px 1499px #FFF, 1981px 1128px #FFF, 692px 1519px #FFF, 1738px 930px #FFF, 606px 1877px #FFF, 550px 1661px #FFF, 271px 1315px #FFF, 467px 995px #FFF, 198px 1504px #FFF, 1472px 1665px #FFF, 173px 1987px #FFF, 750px 930px #FFF, 1638px 275px #FFF, 1089px 1774px #FFF, 529px 1188px #FFF, 383px 221px #FFF, 425px 1407px #FFF, 374px 483px #FFF, 909px 38px #FFF, 1133px 1628px #FFF, 1166px 776px #FFF, 864px 688px #FFF, 1544px 1564px #FFF, 885px 128px #FFF, 34px 970px #FFF, 260px 1815px #FFF, 1953px 1843px #FFF, 611px 670px #FFF, 704px 1980px #FFF, 76px 873px #FFF, 956px 356px #FFF, 1765px 1337px #FFF, 1794px 1120px #FFF, 331px 337px #FFF, 1172px 78px #FFF, 129px 1722px #FFF, 445px 1616px #FFF, 1641px 1129px #FFF, 166px 234px #FFF, 464px 498px #FFF, 63px 1774px #FFF, 1132px 1924px #FFF, 176px 726px #FFF, 1632px 1623px #FFF, 106px 1931px #FFF, 93px 715px #FFF, 1058px 499px #FFF, 912px 992px #FFF, 1959px 1273px #FFF, 474px 1336px #FFF, 1787px 922px #FFF, 1159px 686px #FFF, 1652px 1678px #FFF, 1633px 1703px #FFF, 62px 1248px #FFF, 400px 1866px #FFF, 399px 1478px #FFF, 1759px 115px #FFF, 1269px 1665px #FFF, 1339px 346px #FFF, 1529px 1556px #FFF, 378px 914px #FFF, 69px 1329px #FFF, 869px 922px #FFF, 635px 530px #FFF, 825px 385px #FFF, 17px 1684px #FFF, 493px 1053px #FFF, 31px 1858px #FFF, 172px 1757px #FFF, 1976px 147px #FFF, 434px 845px #FFF, 192px 1449px #FFF, 1891px 1293px #FFF, 993px 78px #FFF, 900px 1208px #FFF, 1486px 679px #FFF, 116px 1505px #FFF, 169px 1512px #FFF, 1294px 1782px #FFF, 1831px 1855px #FFF, 1246px 1195px #FFF, 1416px 728px #FFF, 492px 839px #FFF, 1058px 661px #FFF, 703px 554px #FFF, 191px 1919px #FFF, 657px 1455px #FFF, 965px 1603px #FFF, 389px 1754px #FFF, 510px 1146px #FFF, 842px 1644px #FFF, 764px 840px #FFF, 1245px 1289px #FFF, 1311px 1581px #FFF, 1251px 1186px #FFF, 1898px 382px #FFF, 389px 1797px #FFF, 143px 363px #FFF, 722px 583px #FFF, 336px 636px #FFF, 1807px 1240px #FFF, 286px 1231px #FFF, 1766px 1779px #FFF, 786px 1382px #FFF, 1347px 1435px #FFF, 1137px 717px #FFF, 745px 1764px #FFF, 292px 1001px #FFF, 1908px 1529px #FFF, 1342px 311px #FFF, 163px 260px #FFF, 1640px 1646px #FFF, 1317px 760px #FFF, 1453px 159px #FFF, 1545px 653px #FFF, 501px 692px #FFF, 1151px 413px #FFF, 785px 330px #FFF, 1375px 1897px #FFF, 482px 1667px #FFF, 1041px 1462px #FFF, 498px 678px #FFF, 1276px 1640px #FFF, 362px 1633px #FFF, 44px 329px #FFF, 977px 1299px #FFF, 988px 213px #FFF, 100px 1454px #FFF, 1957px 415px #FFF, 1788px 899px #FFF, 502px 1119px #FFF, 474px 1217px #FFF, 1070px 100px #FFF, 1708px 636px #FFF, 637px 1510px #FFF, 1251px 68px #FFF, 1534px 481px #FFF, 1935px 1912px #FFF, 1705px 1843px #FFF, 1824px 1647px #FFF, 426px 535px #FFF, 270px 1646px #FFF, 719px 1232px #FFF, 619px 1528px #FFF, 736px 1016px #FFF, 943px 1089px #FFF, 824px 861px #FFF, 110px 1316px #FFF, 690px 47px #FFF, 379px 1856px #FFF, 770px 1860px #FFF, 1507px 1897px #FFF, 603px 1293px #FFF, 1919px 216px #FFF, 271px 480px #FFF, 1738px 883px #FFF;
+    animation: animStar 50s linear infinite;
+  }
+
+  #stars:after {
+    content: " ";
+    position: absolute;
+    top: 2000px;
+    width: 1px;
+    height: 1px;
+    background: transparent;
+    box-shadow: 737px 278px #FFF, 1524px 1943px #FFF, 166px 1808px #FFF, 162px 1410px #FFF, 1240px 12px #FFF, 81px 1745px #FFF, 1039px 744px #FFF, 743px 186px #FFF, 1285px 1431px #FFF, 1373px 1156px #FFF, 338px 1508px #FFF, 1771px 946px #FFF, 1940px 500px #FFF, 1247px 1597px #FFF, 1536px 129px #FFF, 513px 671px #FFF, 1612px 1365px #FFF, 699px 446px #FFF, 1563px 1178px #FFF, 224px 1549px #FFF, 1551px 1897px #FFF, 671px 1802px #FFF, 898px 931px #FFF, 684px 867px #FFF, 1075px 1879px #FFF, 408px 550px #FFF, 119px 890px #FFF, 1619px 504px #FFF, 1448px 795px #FFF, 1539px 943px #FFF, 928px 1537px #FFF, 67px 1247px #FFF, 533px 1890px #FFF, 693px 792px #FFF, 110px 1864px #FFF, 835px 1094px #FFF, 1559px 582px #FFF, 100px 792px #FFF, 70px 403px #FFF, 767px 1726px #FFF, 955px 1639px #FFF, 282px 582px #FFF, 1156px 7px #FFF, 1913px 1161px #FFF, 1556px 1944px #FFF, 728px 383px #FFF, 306px 1639px #FFF, 878px 648px #FFF, 104px 1285px #FFF, 1957px 1996px #FFF, 79px 1330px #FFF, 771px 144px #FFF, 1391px 1116px #FFF, 169px 1667px #FFF, 1448px 457px #FFF, 885px 1096px #FFF, 885px 1135px #FFF, 992px 502px #FFF, 729px 424px #FFF, 866px 1125px #FFF, 145px 794px #FFF, 1532px 1784px #FFF, 1973px 1553px #FFF, 1560px 988px #FFF, 1383px 750px #FFF, 357px 558px #FFF, 1042px 1125px #FFF, 1496px 11px #FFF, 1514px 668px #FFF, 1868px 1478px #FFF, 1860px 355px #FFF, 91px 230px #FFF, 13px 1673px #FFF, 1021px 848px #FFF, 478px 1072px #FFF, 1063px 1192px #FFF, 1151px 1378px #FFF, 994px 394px #FFF, 1455px 33px #FFF, 1903px 332px #FFF, 1205px 742px #FFF, 1810px 1077px #FFF, 1468px 425px #FFF, 1717px 249px #FFF, 55px 949px #FFF, 1884px 1489px #FFF, 1930px 1234px #FFF, 704px 618px #FFF, 622px 1775px #FFF, 908px 1162px #FFF, 71px 1337px #FFF, 873px 359px #FFF, 1983px 924px #FFF, 1368px 258px #FFF, 343px 1776px #FFF, 1426px 20px #FFF, 1259px 1731px #FFF, 1034px 1883px #FFF, 1787px 334px #FFF, 487px 1446px #FFF, 951px 594px #FFF, 1038px 786px #FFF, 889px 1932px #FFF, 874px 1762px #FFF, 1516px 1986px #FFF, 824px 110px #FFF, 1312px 281px #FFF, 1576px 620px #FFF, 1907px 1714px #FFF, 386px 200px #FFF, 552px 273px #FFF, 1737px 1236px #FFF, 881px 1327px #FFF, 709px 162px #FFF, 720px 1889px #FFF, 1857px 1673px #FFF, 1163px 1147px #FFF, 6px 1860px #FFF, 1909px 519px #FFF, 1966px 1129px #FFF, 1680px 794px #FFF, 598px 1529px #FFF, 1052px 1509px #FFF, 1296px 136px #FFF, 969px 561px #FFF, 99px 1883px #FFF, 1319px 316px #FFF, 893px 1761px #FFF, 837px 712px #FFF, 1273px 1027px #FFF, 1810px 571px #FFF, 1042px 305px #FFF, 332px 1238px #FFF, 1434px 1899px #FFF, 1614px 1785px #FFF, 739px 1154px #FFF, 1413px 820px #FFF, 1232px 1911px #FFF, 256px 104px #FFF, 1886px 243px #FFF, 1999px 1096px #FFF, 867px 1770px #FFF, 1604px 241px #FFF, 1002px 697px #FFF, 1261px 1666px #FFF, 1245px 1374px #FFF, 724px 1162px #FFF, 1107px 1327px #FFF, 92px 311px #FFF, 485px 1866px #FFF, 653px 1484px #FFF, 116px 1767px #FFF, 733px 1865px #FFF, 559px 485px #FFF, 944px 1037px #FFF, 879px 988px #FFF, 1588px 1821px #FFF, 255px 1699px #FFF, 1570px 1205px #FFF, 1956px 1384px #FFF, 189px 1526px #FFF, 1403px 1300px #FFF, 1731px 790px #FFF, 392px 670px #FFF, 1102px 793px #FFF, 539px 1194px #FFF, 1332px 1235px #FFF, 1582px 883px #FFF, 1704px 361px #FFF, 161px 1529px #FFF, 943px 582px #FFF, 574px 456px #FFF, 446px 633px #FFF, 87px 1169px #FFF, 1472px 382px #FFF, 1292px 118px #FFF, 494px 783px #FFF, 1274px 697px #FFF, 1784px 294px #FFF, 57px 1162px #FFF, 1910px 777px #FFF, 701px 827px #FFF, 831px 415px #FFF, 1009px 80px #FFF, 210px 1971px #FFF, 1667px 678px #FFF, 1725px 1459px #FFF, 1733px 293px #FFF, 472px 411px #FFF, 1069px 74px #FFF, 1148px 6px #FFF, 270px 1029px #FFF, 910px 232px #FFF, 1773px 497px #FFF, 1934px 1316px #FFF, 462px 683px #FFF, 1586px 1258px #FFF, 1766px 927px #FFF, 784px 212px #FFF, 1758px 795px #FFF, 338px 885px #FFF, 924px 2px #FFF, 1133px 233px #FFF, 1016px 1631px #FFF, 1063px 1580px #FFF, 1681px 638px #FFF, 1832px 1811px #FFF, 827px 264px #FFF, 855px 687px #FFF, 1642px 135px #FFF, 1163px 1764px #FFF, 1651px 1618px #FFF, 1717px 38px #FFF, 989px 1878px #FFF, 220px 1851px #FFF, 1135px 39px #FFF, 273px 1004px #FFF, 155px 53px #FFF, 331px 1947px #FFF, 1237px 1328px #FFF, 139px 1869px #FFF, 1392px 1744px #FFF, 752px 1996px #FFF, 238px 1424px #FFF, 673px 858px #FFF, 207px 628px #FFF, 52px 1288px #FFF, 966px 1975px #FFF, 406px 1529px #FFF, 488px 336px #FFF, 1712px 800px #FFF, 1249px 471px #FFF, 1973px 1495px #FFF, 382px 1741px #FFF, 321px 774px #FFF, 91px 277px #FFF, 953px 626px #FFF, 453px 218px #FFF, 651px 65px #FFF, 1388px 985px #FFF, 144px 241px #FFF, 63px 1302px #FFF, 1296px 312px #FFF, 1936px 912px #FFF, 679px 1101px #FFF, 702px 93px #FFF, 1587px 556px #FFF, 1364px 1981px #FFF, 923px 1982px #FFF, 1893px 108px #FFF, 1470px 1329px #FFF, 942px 415px #FFF, 601px 1466px #FFF, 1515px 1950px #FFF, 970px 1572px #FFF, 1821px 1323px #FFF, 1740px 1912px #FFF, 1879px 291px #FFF, 1599px 1299px #FFF, 105px 518px #FFF, 842px 1045px #FFF, 29px 344px #FFF, 261px 1821px #FFF, 1228px 805px #FFF, 1485px 1586px #FFF, 1917px 1556px #FFF, 806px 461px #FFF, 240px 337px #FFF, 730px 1388px #FFF, 1818px 1493px #FFF, 882px 147px #FFF, 1282px 590px #FFF, 747px 912px #FFF, 780px 716px #FFF, 1877px 51px #FFF, 35px 1797px #FFF, 1969px 1971px #FFF, 1907px 971px #FFF, 1432px 1831px #FFF, 625px 957px #FFF, 207px 1529px #FFF, 1282px 192px #FFF, 357px 991px #FFF, 261px 114px #FFF, 1683px 1293px #FFF, 1824px 1402px #FFF, 1011px 1096px #FFF, 115px 87px #FFF, 1336px 1930px #FFF, 577px 1349px #FFF, 787px 79px #FFF, 1566px 1065px #FFF, 22px 1509px #FFF, 14px 186px #FFF, 652px 1134px #FFF, 670px 1238px #FFF, 1406px 1576px #FFF, 918px 866px #FFF, 1759px 157px #FFF, 785px 1962px #FFF, 1203px 721px #FFF, 1007px 1819px #FFF, 1830px 1255px #FFF, 1548px 734px #FFF, 1069px 500px #FFF, 70px 195px #FFF, 396px 644px #FFF, 946px 1491px #FFF, 1021px 1179px #FFF, 1282px 1379px #FFF, 545px 1581px #FFF, 1674px 1456px #FFF, 1434px 1923px #FFF, 1900px 1138px #FFF, 477px 1366px #FFF, 269px 228px #FFF, 1226px 464px #FFF, 108px 86px #FFF, 498px 1098px #FFF, 675px 385px #FFF, 773px 179px #FFF, 795px 1210px #FFF, 229px 763px #FFF, 371px 1681px #FFF, 1337px 1010px #FFF, 1778px 1385px #FFF, 1970px 1299px #FFF, 1110px 1705px #FFF, 1273px 636px #FFF, 574px 186px #FFF, 1165px 151px #FFF, 510px 843px #FFF, 2px 1984px #FFF, 541px 419px #FFF, 389px 547px #FFF, 438px 1645px #FFF, 778px 605px #FFF, 994px 1320px #FFF, 1813px 1194px #FFF, 502px 1445px #FFF, 1311px 1448px #FFF, 327px 647px #FFF, 1813px 521px #FFF, 1819px 1356px #FFF, 460px 1710px #FFF, 1316px 1347px #FFF, 621px 1050px #FFF, 812px 1090px #FFF, 1476px 625px #FFF, 331px 449px #FFF, 334px 1133px #FFF, 570px 1923px #FFF, 444px 1894px #FFF, 1667px 648px #FFF, 1822px 952px #FFF, 9px 385px #FFF, 220px 1612px #FFF, 1123px 256px #FFF, 1766px 1646px #FFF, 1161px 1613px #FFF, 1597px 1727px #FFF, 1567px 1269px #FFF, 1249px 874px #FFF, 761px 236px #FFF, 342px 1674px #FFF, 1978px 1940px #FFF, 1403px 1245px #FFF, 73px 464px #FFF, 790px 409px #FFF, 260px 348px #FFF, 1226px 899px #FFF, 1230px 149px #FFF, 1362px 21px #FFF, 1960px 1818px #FFF, 1630px 656px #FFF, 1947px 1497px #FFF, 1415px 1985px #FFF, 584px 1131px #FFF, 1858px 339px #FFF, 1607px 1295px #FFF, 696px 110px #FFF, 991px 1618px #FFF, 1484px 1632px #FFF, 1860px 670px #FFF, 508px 835px #FFF, 686px 1044px #FFF, 67px 1287px #FFF, 1718px 1350px #FFF, 127px 1103px #FFF, 1382px 1903px #FFF, 1935px 1705px #FFF, 1439px 754px #FFF, 923px 86px #FFF, 1490px 758px #FFF, 81px 1325px #FFF, 712px 1776px #FFF, 1043px 1293px #FFF, 917px 67px #FFF, 1725px 730px #FFF, 1882px 959px #FFF, 1772px 1181px #FFF, 1752px 1563px #FFF, 123px 19px #FFF, 230px 535px #FFF, 357px 157px #FFF, 1135px 1537px #FFF, 1369px 331px #FFF, 214px 1371px #FFF, 605px 1488px #FFF, 1717px 671px #FFF, 440px 536px #FFF, 598px 842px #FFF, 713px 1742px #FFF, 967px 1490px #FFF, 438px 1609px #FFF, 1081px 1485px #FFF, 1463px 1316px #FFF, 113px 1238px #FFF, 1226px 802px #FFF, 929px 1422px #FFF, 791px 1278px #FFF, 1965px 1837px #FFF, 1289px 1550px #FFF, 712px 1310px #FFF, 1527px 156px #FFF, 901px 1487px #FFF, 814px 196px #FFF, 338px 1188px #FFF, 862px 671px #FFF, 830px 1176px #FFF, 1380px 1647px #FFF, 565px 673px #FFF, 304px 1809px #FFF, 1288px 921px #FFF, 1180px 1999px #FFF, 568px 1335px #FFF, 710px 531px #FFF, 1215px 1390px #FFF, 366px 1311px #FFF, 1003px 1842px #FFF, 1593px 1299px #FFF, 244px 658px #FFF, 1774px 441px #FFF, 507px 496px #FFF, 1139px 1063px #FFF, 1059px 234px #FFF, 199px 1877px #FFF, 566px 1119px #FFF, 1001px 198px #FFF, 283px 1651px #FFF, 438px 1295px #FFF, 1859px 565px #FFF, 527px 1206px #FFF, 1220px 1730px #FFF, 841px 1233px #FFF, 459px 376px #FFF, 771px 1406px #FFF, 1175px 611px #FFF, 439px 1250px #FFF, 35px 315px #FFF, 1492px 461px #FFF, 1403px 62px #FFF, 1481px 1791px #FFF, 1564px 634px #FFF, 585px 179px #FFF, 1192px 207px #FFF, 1983px 1452px #FFF, 1644px 340px #FFF, 1229px 95px #FFF, 1453px 711px #FFF, 402px 1687px #FFF, 629px 1323px #FFF, 63px 510px #FFF, 1314px 779px #FFF, 1805px 1948px #FFF, 728px 11px #FFF, 1214px 1360px #FFF, 170px 1007px #FFF, 594px 1613px #FFF, 1312px 306px #FFF, 695px 1683px #FFF, 304px 1962px #FFF, 830px 1203px #FFF, 1627px 139px #FFF, 1570px 281px #FFF, 1444px 663px #FFF, 1213px 519px #FFF, 513px 937px #FFF, 485px 592px #FFF, 1569px 1525px #FFF, 308px 577px #FFF, 545px 62px #FFF, 1740px 1035px #FFF, 374px 1209px #FFF, 880px 1269px #FFF, 844px 1012px #FFF, 1815px 169px #FFF, 112px 1154px #FFF, 1781px 897px #FFF, 719px 1572px #FFF, 1547px 1765px #FFF, 94px 3px #FFF, 1363px 1661px #FFF, 624px 285px #FFF, 799px 1458px #FFF, 1595px 1381px #FFF, 1120px 977px #FFF, 1763px 231px #FFF, 842px 999px #FFF, 1026px 47px #FFF, 579px 1073px #FFF, 898px 1731px #FFF, 797px 1777px #FFF, 590px 915px #FFF, 1953px 893px #FFF, 1982px 1883px #FFF, 939px 731px #FFF, 228px 1340px #FFF, 1915px 1268px #FFF, 345px 1115px #FFF, 1491px 1593px #FFF, 1710px 1403px #FFF, 1432px 1068px #FFF, 1277px 1818px #FFF, 415px 1022px #FFF, 442px 491px #FFF, 1266px 43px #FFF, 513px 417px #FFF, 1482px 1386px #FFF, 1924px 1572px #FFF, 1826px 322px #FFF, 1701px 1969px #FFF, 179px 1326px #FFF, 509px 797px #FFF, 262px 920px #FFF, 1609px 349px #FFF, 746px 1642px #FFF, 1182px 243px #FFF, 1301px 575px #FFF, 806px 1393px #FFF, 1282px 170px #FFF, 236px 133px #FFF, 494px 1516px #FFF, 1392px 1499px #FFF, 1981px 1128px #FFF, 692px 1519px #FFF, 1738px 930px #FFF, 606px 1877px #FFF, 550px 1661px #FFF, 271px 1315px #FFF, 467px 995px #FFF, 198px 1504px #FFF, 1472px 1665px #FFF, 173px 1987px #FFF, 750px 930px #FFF, 1638px 275px #FFF, 1089px 1774px #FFF, 529px 1188px #FFF, 383px 221px #FFF, 425px 1407px #FFF, 374px 483px #FFF, 909px 38px #FFF, 1133px 1628px #FFF, 1166px 776px #FFF, 864px 688px #FFF, 1544px 1564px #FFF, 885px 128px #FFF, 34px 970px #FFF, 260px 1815px #FFF, 1953px 1843px #FFF, 611px 670px #FFF, 704px 1980px #FFF, 76px 873px #FFF, 956px 356px #FFF, 1765px 1337px #FFF, 1794px 1120px #FFF, 331px 337px #FFF, 1172px 78px #FFF, 129px 1722px #FFF, 445px 1616px #FFF, 1641px 1129px #FFF, 166px 234px #FFF, 464px 498px #FFF, 63px 1774px #FFF, 1132px 1924px #FFF, 176px 726px #FFF, 1632px 1623px #FFF, 106px 1931px #FFF, 93px 715px #FFF, 1058px 499px #FFF, 912px 992px #FFF, 1959px 1273px #FFF, 474px 1336px #FFF, 1787px 922px #FFF, 1159px 686px #FFF, 1652px 1678px #FFF, 1633px 1703px #FFF, 62px 1248px #FFF, 400px 1866px #FFF, 399px 1478px #FFF, 1759px 115px #FFF, 1269px 1665px #FFF, 1339px 346px #FFF, 1529px 1556px #FFF, 378px 914px #FFF, 69px 1329px #FFF, 869px 922px #FFF, 635px 530px #FFF, 825px 385px #FFF, 17px 1684px #FFF, 493px 1053px #FFF, 31px 1858px #FFF, 172px 1757px #FFF, 1976px 147px #FFF, 434px 845px #FFF, 192px 1449px #FFF, 1891px 1293px #FFF, 993px 78px #FFF, 900px 1208px #FFF, 1486px 679px #FFF, 116px 1505px #FFF, 169px 1512px #FFF, 1294px 1782px #FFF, 1831px 1855px #FFF, 1246px 1195px #FFF, 1416px 728px #FFF, 492px 839px #FFF, 1058px 661px #FFF, 703px 554px #FFF, 191px 1919px #FFF, 657px 1455px #FFF, 965px 1603px #FFF, 389px 1754px #FFF, 510px 1146px #FFF, 842px 1644px #FFF, 764px 840px #FFF, 1245px 1289px #FFF, 1311px 1581px #FFF, 1251px 1186px #FFF, 1898px 382px #FFF, 389px 1797px #FFF, 143px 363px #FFF, 722px 583px #FFF, 336px 636px #FFF, 1807px 1240px #FFF, 286px 1231px #FFF, 1766px 1779px #FFF, 786px 1382px #FFF, 1347px 1435px #FFF, 1137px 717px #FFF, 745px 1764px #FFF, 292px 1001px #FFF, 1908px 1529px #FFF, 1342px 311px #FFF, 163px 260px #FFF, 1640px 1646px #FFF, 1317px 760px #FFF, 1453px 159px #FFF, 1545px 653px #FFF, 501px 692px #FFF, 1151px 413px #FFF, 785px 330px #FFF, 1375px 1897px #FFF, 482px 1667px #FFF, 1041px 1462px #FFF, 498px 678px #FFF, 1276px 1640px #FFF, 362px 1633px #FFF, 44px 329px #FFF, 977px 1299px #FFF, 988px 213px #FFF, 100px 1454px #FFF, 1957px 415px #FFF, 1788px 899px #FFF, 502px 1119px #FFF, 474px 1217px #FFF, 1070px 100px #FFF, 1708px 636px #FFF, 637px 1510px #FFF, 1251px 68px #FFF, 1534px 481px #FFF, 1935px 1912px #FFF, 1705px 1843px #FFF, 1824px 1647px #FFF, 426px 535px #FFF, 270px 1646px #FFF, 719px 1232px #FFF, 619px 1528px #FFF, 736px 1016px #FFF, 943px 1089px #FFF, 824px 861px #FFF, 110px 1316px #FFF, 690px 47px #FFF, 379px 1856px #FFF, 770px 1860px #FFF, 1507px 1897px #FFF, 603px 1293px #FFF, 1919px 216px #FFF, 271px 480px #FFF, 1738px 883px #FFF;
+  }
+
+  #stars2 {
+    width: 2px;
+    height: 2px;
+    background: transparent;
+    box-shadow: 1796px 1878px #FFF, 1743px 1883px #FFF, 1127px 187px #FFF, 1622px 1721px #FFF, 199px 1269px #FFF, 951px 439px #FFF, 328px 4px #FFF, 239px 647px #FFF, 89px 1413px #FFF, 1246px 789px #FFF, 931px 1080px #FFF, 477px 560px #FFF, 173px 457px #FFF, 728px 446px #FFF, 1885px 1424px #FFF, 1776px 1491px #FFF, 105px 104px #FFF, 893px 1960px #FFF, 1026px 1059px #FFF, 1620px 212px #FFF, 1479px 837px #FFF, 622px 131px #FFF, 1345px 928px #FFF, 647px 789px #FFF, 1743px 1741px #FFF, 951px 1095px #FFF, 1605px 1908px #FFF, 197px 1399px #FFF, 1455px 1447px #FFF, 1092px 1973px #FFF, 1847px 1833px #FFF, 528px 454px #FFF, 571px 215px #FFF, 369px 1327px #FFF, 523px 268px #FFF, 1176px 323px #FFF, 777px 1376px #FFF, 289px 153px #FFF, 1087px 1415px #FFF, 1409px 771px #FFF, 282px 1340px #FFF, 1588px 212px #FFF, 303px 243px #FFF, 1516px 1150px #FFF, 761px 1825px #FFF, 1217px 510px #FFF, 356px 1774px #FFF, 1712px 1274px #FFF, 403px 1130px #FFF, 1592px 1553px #FFF, 1516px 1353px #FFF, 361px 158px #FFF, 1728px 339px #FFF, 1413px 905px #FFF, 1502px 546px #FFF, 242px 1142px #FFF, 1352px 111px #FFF, 924px 552px #FFF, 505px 1124px #FFF, 1877px 1249px #FFF, 1077px 1565px #FFF, 1912px 1744px #FFF, 1952px 482px #FFF, 311px 58px #FFF, 1106px 1123px #FFF, 1086px 1603px #FFF, 1965px 1201px #FFF, 1240px 878px #FFF, 1856px 1123px #FFF, 254px 225px #FFF, 1187px 1197px #FFF, 118px 255px #FFF, 1966px 1266px #FFF, 1770px 1163px #FFF, 1637px 471px #FFF, 716px 1258px #FFF, 233px 855px #FFF, 1218px 298px #FFF, 1627px 110px #FFF, 1267px 322px #FFF, 755px 1930px #FFF, 1332px 17px #FFF, 75px 951px #FFF, 634px 685px #FFF, 162px 340px #FFF, 1843px 1504px #FFF, 794px 54px #FFF, 603px 1893px #FFF, 1053px 1407px #FFF, 647px 1955px #FFF, 1055px 934px #FFF, 1568px 1744px #FFF, 1596px 1802px #FFF, 412px 1700px #FFF, 878px 1551px #FFF, 1233px 683px #FFF, 559px 1859px #FFF, 929px 990px #FFF, 1648px 277px #FFF, 1537px 1623px #FFF, 1286px 763px #FFF, 1513px 1840px #FFF, 98px 1563px #FFF, 1462px 829px #FFF, 246px 1310px #FFF, 715px 1716px #FFF, 162px 1548px #FFF, 911px 93px #FFF, 1665px 758px #FFF, 1500px 191px #FFF, 1838px 866px #FFF, 268px 1326px #FFF, 775px 621px #FFF, 191px 1095px #FFF, 785px 695px #FFF, 248px 1090px #FFF, 421px 1530px #FFF, 177px 760px #FFF, 1871px 1943px #FFF, 65px 855px #FFF, 345px 1465px #FFF, 1592px 1122px #FFF, 7px 748px #FFF, 480px 1051px #FFF, 1223px 443px #FFF, 1094px 1189px #FFF, 1824px 1546px #FFF, 117px 695px #FFF, 375px 980px #FFF, 635px 178px #FFF, 115px 1259px #FFF, 505px 742px #FFF, 1000px 1216px #FFF, 728px 120px #FFF, 880px 1080px #FFF, 1140px 475px #FFF, 903px 916px #FFF, 1584px 1957px #FFF, 16px 185px #FFF, 1641px 1048px #FFF, 1166px 465px #FFF, 367px 1659px #FFF, 1249px 1069px #FFF, 1007px 295px #FFF, 738px 596px #FFF, 1473px 205px #FFF, 417px 834px #FFF, 241px 425px #FFF, 894px 1049px #FFF, 696px 1505px #FFF, 1029px 461px #FFF, 881px 1703px #FFF, 1735px 345px #FFF, 602px 1043px #FFF, 443px 304px #FFF, 642px 1923px #FFF, 587px 567px #FFF, 1764px 122px #FFF, 1706px 536px #FFF, 218px 1295px #FFF, 514px 1283px #FFF, 1057px 1558px #FFF, 858px 1481px #FFF, 294px 13px #FFF, 677px 1085px #FFF, 1161px 659px #FFF, 783px 1534px #FFF, 357px 250px #FFF, 1278px 1001px #FFF, 1861px 1643px #FFF, 1825px 709px #FFF, 584px 904px #FFF, 503px 1505px #FFF, 408px 1004px #FFF, 438px 679px #FFF, 410px 1566px #FFF, 650px 1743px #FFF, 1753px 1700px #FFF, 1156px 160px #FFF, 1070px 314px #FFF, 954px 1780px #FFF, 415px 6px #FFF, 1605px 538px #FFF, 1042px 747px #FFF, 983px 1868px #FFF, 1930px 831px #FFF, 683px 1774px #FFF, 1352px 1959px #FFF, 786px 1845px #FFF, 1390px 1987px #FFF, 1273px 201px #FFF, 480px 548px #FFF, 627px 979px #FFF, 694px 535px #FFF, 1686px 1335px #FFF, 853px 1903px #FFF, 215px 242px #FFF, 41px 892px #FFF, 697px 1101px #FFF, 1187px 268px #FFF;
+    animation: animStar 100s linear infinite;
+  }
+
+  #stars2:after {
+    content: " ";
+    position: absolute;
+    top: 2000px;
+    width: 2px;
+    height: 2px;
+    background: transparent;
+    box-shadow: 1796px 1878px #FFF, 1743px 1883px #FFF, 1127px 187px #FFF, 1622px 1721px #FFF, 199px 1269px #FFF, 951px 439px #FFF, 328px 4px #FFF, 239px 647px #FFF, 89px 1413px #FFF, 1246px 789px #FFF, 931px 1080px #FFF, 477px 560px #FFF, 173px 457px #FFF, 728px 446px #FFF, 1885px 1424px #FFF, 1776px 1491px #FFF, 105px 104px #FFF, 893px 1960px #FFF, 1026px 1059px #FFF, 1620px 212px #FFF, 1479px 837px #FFF, 622px 131px #FFF, 1345px 928px #FFF, 647px 789px #FFF, 1743px 1741px #FFF, 951px 1095px #FFF, 1605px 1908px #FFF, 197px 1399px #FFF, 1455px 1447px #FFF, 1092px 1973px #FFF, 1847px 1833px #FFF, 528px 454px #FFF, 571px 215px #FFF, 369px 1327px #FFF, 523px 268px #FFF, 1176px 323px #FFF, 777px 1376px #FFF, 289px 153px #FFF, 1087px 1415px #FFF, 1409px 771px #FFF, 282px 1340px #FFF, 1588px 212px #FFF, 303px 243px #FFF, 1516px 1150px #FFF, 761px 1825px #FFF, 1217px 510px #FFF, 356px 1774px #FFF, 1712px 1274px #FFF, 403px 1130px #FFF, 1592px 1553px #FFF, 1516px 1353px #FFF, 361px 158px #FFF, 1728px 339px #FFF, 1413px 905px #FFF, 1502px 546px #FFF, 242px 1142px #FFF, 1352px 111px #FFF, 924px 552px #FFF, 505px 1124px #FFF, 1877px 1249px #FFF, 1077px 1565px #FFF, 1912px 1744px #FFF, 1952px 482px #FFF, 311px 58px #FFF, 1106px 1123px #FFF, 1086px 1603px #FFF, 1965px 1201px #FFF, 1240px 878px #FFF, 1856px 1123px #FFF, 254px 225px #FFF, 1187px 1197px #FFF, 118px 255px #FFF, 1966px 1266px #FFF, 1770px 1163px #FFF, 1637px 471px #FFF, 716px 1258px #FFF, 233px 855px #FFF, 1218px 298px #FFF, 1627px 110px #FFF, 1267px 322px #FFF, 755px 1930px #FFF, 1332px 17px #FFF, 75px 951px #FFF, 634px 685px #FFF, 162px 340px #FFF, 1843px 1504px #FFF, 794px 54px #FFF, 603px 1893px #FFF, 1053px 1407px #FFF, 647px 1955px #FFF, 1055px 934px #FFF, 1568px 1744px #FFF, 1596px 1802px #FFF, 412px 1700px #FFF, 878px 1551px #FFF, 1233px 683px #FFF, 559px 1859px #FFF, 929px 990px #FFF, 1648px 277px #FFF, 1537px 1623px #FFF, 1286px 763px #FFF, 1513px 1840px #FFF, 98px 1563px #FFF, 1462px 829px #FFF, 246px 1310px #FFF, 715px 1716px #FFF, 162px 1548px #FFF, 911px 93px #FFF, 1665px 758px #FFF, 1500px 191px #FFF, 1838px 866px #FFF, 268px 1326px #FFF, 775px 621px #FFF, 191px 1095px #FFF, 785px 695px #FFF, 248px 1090px #FFF, 421px 1530px #FFF, 177px 760px #FFF, 1871px 1943px #FFF, 65px 855px #FFF, 345px 1465px #FFF, 1592px 1122px #FFF, 7px 748px #FFF, 480px 1051px #FFF, 1223px 443px #FFF, 1094px 1189px #FFF, 1824px 1546px #FFF, 117px 695px #FFF, 375px 980px #FFF, 635px 178px #FFF, 115px 1259px #FFF, 505px 742px #FFF, 1000px 1216px #FFF, 728px 120px #FFF, 880px 1080px #FFF, 1140px 475px #FFF, 903px 916px #FFF, 1584px 1957px #FFF, 16px 185px #FFF, 1641px 1048px #FFF, 1166px 465px #FFF, 367px 1659px #FFF, 1249px 1069px #FFF, 1007px 295px #FFF, 738px 596px #FFF, 1473px 205px #FFF, 417px 834px #FFF, 241px 425px #FFF, 894px 1049px #FFF, 696px 1505px #FFF, 1029px 461px #FFF, 881px 1703px #FFF, 1735px 345px #FFF, 602px 1043px #FFF, 443px 304px #FFF, 642px 1923px #FFF, 587px 567px #FFF, 1764px 122px #FFF, 1706px 536px #FFF, 218px 1295px #FFF, 514px 1283px #FFF, 1057px 1558px #FFF, 858px 1481px #FFF, 294px 13px #FFF, 677px 1085px #FFF, 1161px 659px #FFF, 783px 1534px #FFF, 357px 250px #FFF, 1278px 1001px #FFF, 1861px 1643px #FFF, 1825px 709px #FFF, 584px 904px #FFF, 503px 1505px #FFF, 408px 1004px #FFF, 438px 679px #FFF, 410px 1566px #FFF, 650px 1743px #FFF, 1753px 1700px #FFF, 1156px 160px #FFF, 1070px 314px #FFF, 954px 1780px #FFF, 415px 6px #FFF, 1605px 538px #FFF, 1042px 747px #FFF, 983px 1868px #FFF, 1930px 831px #FFF, 683px 1774px #FFF, 1352px 1959px #FFF, 786px 1845px #FFF, 1390px 1987px #FFF, 1273px 201px #FFF, 480px 548px #FFF, 627px 979px #FFF, 694px 535px #FFF, 1686px 1335px #FFF, 853px 1903px #FFF, 215px 242px #FFF, 41px 892px #FFF, 697px 1101px #FFF, 1187px 268px #FFF;
+  }
+
+  #stars3 {
+    width: 3px;
+    height: 3px;
+    background: transparent;
+    box-shadow: 1678px 975px #FFF, 196px 700px #FFF, 778px 1666px #FFF, 845px 1797px #FFF, 521px 1519px #FFF, 213px 876px #FFF, 778px 1513px #FFF, 311px 746px #FFF, 1873px 1093px #FFF, 540px 333px #FFF, 128px 954px #FFF, 460px 1988px #FFF, 1195px 1678px #FFF, 849px 1593px #FFF, 1501px 1799px #FFF, 36px 111px #FFF, 1823px 16px #FFF, 30px 633px #FFF, 330px 284px #FFF, 891px 1302px #FFF, 1596px 753px #FFF, 605px 416px #FFF, 702px 1782px #FFF, 1266px 1297px #FFF, 1178px 1506px #FFF, 921px 258px #FFF, 354px 980px #FFF, 366px 1497px #FFF, 123px 1499px #FFF, 41px 579px #FFF, 1505px 103px #FFF, 324px 1877px #FFF, 248px 606px #FFF, 1238px 1647px #FFF, 376px 97px #FFF, 1669px 1324px #FFF, 1667px 295px #FFF, 470px 357px #FFF, 1679px 734px #FFF, 709px 1938px #FFF, 464px 1048px #FFF, 245px 1694px #FFF, 489px 421px #FFF, 953px 1579px #FFF, 1935px 302px #FFF, 275px 78px #FFF, 812px 908px #FFF, 1572px 1526px #FFF, 313px 254px #FFF, 1950px 731px #FFF, 557px 1761px #FFF, 240px 434px #FFF, 255px 1823px #FFF, 701px 1269px #FFF, 474px 774px #FFF, 194px 948px #FFF, 1492px 829px #FFF, 1962px 916px #FFF, 62px 678px #FFF, 882px 889px #FFF, 1886px 203px #FFF, 222px 1440px #FFF, 581px 592px #FFF, 248px 1128px #FFF, 1647px 1697px #FFF, 1025px 1938px #FFF, 513px 1303px #FFF, 128px 1939px #FFF, 1859px 623px #FFF, 823px 1771px #FFF, 904px 819px #FFF, 887px 1593px #FFF, 542px 825px #FFF, 1478px 165px #FFF, 831px 1821px #FFF, 199px 1407px #FFF, 1405px 1412px #FFF, 651px 285px #FFF, 564px 253px #FFF, 103px 1391px #FFF, 1125px 368px #FFF, 1937px 255px #FFF, 359px 1459px #FFF, 1133px 527px #FFF, 1174px 147px #FFF, 105px 1360px #FFF, 1876px 573px #FFF, 251px 1482px #FFF, 648px 655px #FFF, 1391px 177px #FFF, 1409px 281px #FFF, 244px 1829px #FFF, 538px 53px #FFF, 414px 268px #FFF, 1113px 1820px #FFF, 492px 1317px #FFF, 1874px 85px #FFF, 1192px 826px #FFF, 1480px 1514px #FFF, 1372px 1199px #FFF;
+    animation: animStar 150s linear infinite;
+  }
+
+  #stars3:after {
+    content: " ";
+    position: absolute;
+    top: 2000px;
+    width: 3px;
+    height: 3px;
+    background: transparent;
+    box-shadow: 1678px 975px #FFF, 196px 700px #FFF, 778px 1666px #FFF, 845px 1797px #FFF, 521px 1519px #FFF, 213px 876px #FFF, 778px 1513px #FFF, 311px 746px #FFF, 1873px 1093px #FFF, 540px 333px #FFF, 128px 954px #FFF, 460px 1988px #FFF, 1195px 1678px #FFF, 849px 1593px #FFF, 1501px 1799px #FFF, 36px 111px #FFF, 1823px 16px #FFF, 30px 633px #FFF, 330px 284px #FFF, 891px 1302px #FFF, 1596px 753px #FFF, 605px 416px #FFF, 702px 1782px #FFF, 1266px 1297px #FFF, 1178px 1506px #FFF, 921px 258px #FFF, 354px 980px #FFF, 366px 1497px #FFF, 123px 1499px #FFF, 41px 579px #FFF, 1505px 103px #FFF, 324px 1877px #FFF, 248px 606px #FFF, 1238px 1647px #FFF, 376px 97px #FFF, 1669px 1324px #FFF, 1667px 295px #FFF, 470px 357px #FFF, 1679px 734px #FFF, 709px 1938px #FFF, 464px 1048px #FFF, 245px 1694px #FFF, 489px 421px #FFF, 953px 1579px #FFF, 1935px 302px #FFF, 275px 78px #FFF, 812px 908px #FFF, 1572px 1526px #FFF, 313px 254px #FFF, 1950px 731px #FFF, 557px 1761px #FFF, 240px 434px #FFF, 255px 1823px #FFF, 701px 1269px #FFF, 474px 774px #FFF, 194px 948px #FFF, 1492px 829px #FFF, 1962px 916px #FFF, 62px 678px #FFF, 882px 889px #FFF, 1886px 203px #FFF, 222px 1440px #FFF, 581px 592px #FFF, 248px 1128px #FFF, 1647px 1697px #FFF, 1025px 1938px #FFF, 513px 1303px #FFF, 128px 1939px #FFF, 1859px 623px #FFF, 823px 1771px #FFF, 904px 819px #FFF, 887px 1593px #FFF, 542px 825px #FFF, 1478px 165px #FFF, 831px 1821px #FFF, 199px 1407px #FFF, 1405px 1412px #FFF, 651px 285px #FFF, 564px 253px #FFF, 103px 1391px #FFF, 1125px 368px #FFF, 1937px 255px #FFF, 359px 1459px #FFF, 1133px 527px #FFF, 1174px 147px #FFF, 105px 1360px #FFF, 1876px 573px #FFF, 251px 1482px #FFF, 648px 655px #FFF, 1391px 177px #FFF, 1409px 281px #FFF, 244px 1829px #FFF, 538px 53px #FFF, 414px 268px #FFF, 1113px 1820px #FFF, 492px 1317px #FFF, 1874px 85px #FFF, 1192px 826px #FFF, 1480px 1514px #FFF, 1372px 1199px #FFF;
+  }
+
+  @keyframes animStar {
+    from {
+      transform: translateY(0px);
+    }
+
+    to {
+      transform: translateY(-2000px);
+    }
+  }
+</style>
+
+<body>
+
+  <link href='https://fonts.googleapis.com/css?family=Lato:300,400,700' rel='stylesheet' type='text/css'>
+  <div id='stars'></div>
+  <div id='stars2'></div>
+  <div id='stars3'></div>
+
+
+  <!-- Loading 界面的 HTML 结构 -->
+  <div class="loading-screen">
+    <div class="cube-wrapper">
+      <div class="cube-folding">
+        <span class="leaf1"></span>
+        <span class="leaf2"></span>
+        <span class="leaf3"></span>
+        <span class="leaf4"></span>
+      </div>
+    </div>
+    <div class="=game-explanation">
+      正在加载中，请稍候...<br />
+      首次打开可能耗时较长</div>
+  </div>
+
+
+  <!--header-->
+  <div class="schmenu">
+    <ul>
+      <li><a onclick="gohome()">返回主页</a></li>
+      <li><a href=https://github.com/shandongde target="_blank">去TA的CSDN主页</a></li>
+      <li><a onclick="ifunsign_Popup()">排行榜</a></li>
+    </ul>
+  </div>
+
+  <!-- 图片用于切换播放/暂停音乐 -->
+  <div style="float: right;">
+    <img src="image/player.png" alt="点击播放音乐" onclick="toggleMusic()" ondblclick="playNext()" style="cursor:pointer;"
+      width="80">
+
+    <!-- 音频元素 -->
+    <audio id="myAudio" autoplay onended="playNext()">
+      <source src="audio/notice.mp3" type="audio/mpeg">
+      <source src="audio/Guitar.mp3" type="audio/ogg">
+      <source src="audio/AniFace.mp3" type="audio/ogg">
+      <source src="audio/Czzy.mp3" type="audio/ogg">
+    </audio>
+  </div>
+
+
+  <div class="container">
+    <div class="heading">
+      <h1 class="title">2048-Cube</h1>
+      <div class="scores-container">
+        <div class="score-container">0</div>
+        <div class="best-container">0</div>
+      </div>
+    </div>
+    <div class="game-container">
+      <div class="game-message">
+        <p></p>
+        <div class="lower">
+          <a class="keep-playing-button">牛逼</a>
+          <a class="retry-button">牢玩，会赢的</a>
+        </div>
+      </div>
+
+      <div class="grid-container">
+        <div class="grid-inner">
+          <div class="cube cube-1-1-1">
+            <div class="cube-face cube-face-u"></div>
+            <div class="cube-face cube-face-d"></div>
+            <div class="cube-face cube-face-l"></div>
+            <div class="cube-face cube-face-r"></div>
+            <div class="cube-face cube-face-f"></div>
+            <div class="cube-face cube-face-b"></div>
+          </div>
+          <div class="cube cube-1-1-2">
+            <div class="cube-face cube-face-u"></div>
+            <div class="cube-face cube-face-d"></div>
+            <div class="cube-face cube-face-l"></div>
+            <div class="cube-face cube-face-r"></div>
+            <div class="cube-face cube-face-f"></div>
+            <div class="cube-face cube-face-b"></div>
+          </div>
+          <div class="cube cube-1-1-3">
+            <div class="cube-face cube-face-u"></div>
+            <div class="cube-face cube-face-d"></div>
+            <div class="cube-face cube-face-l"></div>
+            <div class="cube-face cube-face-r"></div>
+            <div class="cube-face cube-face-f"></div>
+            <div class="cube-face cube-face-b"></div>
+          </div>
+          <div class="cube cube-1-2-1">
+            <div class="cube-face cube-face-u"></div>
+            <div class="cube-face cube-face-d"></div>
+            <div class="cube-face cube-face-l"></div>
+            <div class="cube-face cube-face-r"></div>
+            <div class="cube-face cube-face-f"></div>
+            <div class="cube-face cube-face-b"></div>
+          </div>
+          <div class="cube cube-1-2-2">
+            <div class="cube-face cube-face-u"></div>
+            <div class="cube-face cube-face-d"></div>
+            <div class="cube-face cube-face-l"></div>
+            <div class="cube-face cube-face-r"></div>
+            <div class="cube-face cube-face-f"></div>
+            <div class="cube-face cube-face-b"></div>
+          </div>
+          <div class="cube cube-1-2-3">
+            <div class="cube-face cube-face-u"></div>
+            <div class="cube-face cube-face-d"></div>
+            <div class="cube-face cube-face-l"></div>
+            <div class="cube-face cube-face-r"></div>
+            <div class="cube-face cube-face-f"></div>
+            <div class="cube-face cube-face-b"></div>
+          </div>
+          <div class="cube cube-1-3-1">
+            <div class="cube-face cube-face-u"></div>
+            <div class="cube-face cube-face-d"></div>
+            <div class="cube-face cube-face-l"></div>
+            <div class="cube-face cube-face-r"></div>
+            <div class="cube-face cube-face-f"></div>
+            <div class="cube-face cube-face-b"></div>
+          </div>
+          <div class="cube cube-1-3-2">
+            <div class="cube-face cube-face-u"></div>
+            <div class="cube-face cube-face-d"></div>
+            <div class="cube-face cube-face-l"></div>
+            <div class="cube-face cube-face-r"></div>
+            <div class="cube-face cube-face-f"></div>
+            <div class="cube-face cube-face-b"></div>
+          </div>
+          <div class="cube cube-1-3-3">
+            <div class="cube-face cube-face-u"></div>
+            <div class="cube-face cube-face-d"></div>
+            <div class="cube-face cube-face-l"></div>
+            <div class="cube-face cube-face-r"></div>
+            <div class="cube-face cube-face-f"></div>
+            <div class="cube-face cube-face-b"></div>
+          </div>
+          <div class="cube cube-2-1-1">
+            <div class="cube-face cube-face-u"></div>
+            <div class="cube-face cube-face-d"></div>
+            <div class="cube-face cube-face-l"></div>
+            <div class="cube-face cube-face-r"></div>
+            <div class="cube-face cube-face-f"></div>
+            <div class="cube-face cube-face-b"></div>
+          </div>
+          <div class="cube cube-2-1-2">
+            <div class="cube-face cube-face-u"></div>
+            <div class="cube-face cube-face-d"></div>
+            <div class="cube-face cube-face-l"></div>
+            <div class="cube-face cube-face-r"></div>
+            <div class="cube-face cube-face-f"></div>
+            <div class="cube-face cube-face-b"></div>
+          </div>
+          <div class="cube cube-2-1-3">
+            <div class="cube-face cube-face-u"></div>
+            <div class="cube-face cube-face-d"></div>
+            <div class="cube-face cube-face-l"></div>
+            <div class="cube-face cube-face-r"></div>
+            <div class="cube-face cube-face-f"></div>
+            <div class="cube-face cube-face-b"></div>
+          </div>
+          <div class="cube cube-2-2-1">
+            <div class="cube-face cube-face-u"></div>
+            <div class="cube-face cube-face-d"></div>
+            <div class="cube-face cube-face-l"></div>
+            <div class="cube-face cube-face-r"></div>
+            <div class="cube-face cube-face-f"></div>
+            <div class="cube-face cube-face-b"></div>
+          </div>
+          <div class="cube cube-2-2-2">
+            <div class="cube-face cube-face-u"></div>
+            <div class="cube-face cube-face-d"></div>
+            <div class="cube-face cube-face-l"></div>
+            <div class="cube-face cube-face-r"></div>
+            <div class="cube-face cube-face-f"></div>
+            <div class="cube-face cube-face-b"></div>
+          </div>
+          <div class="cube cube-2-2-3">
+            <div class="cube-face cube-face-u"></div>
+            <div class="cube-face cube-face-d"></div>
+            <div class="cube-face cube-face-l"></div>
+            <div class="cube-face cube-face-r"></div>
+            <div class="cube-face cube-face-f"></div>
+            <div class="cube-face cube-face-b"></div>
+          </div>
+          <div class="cube cube-2-3-1">
+            <div class="cube-face cube-face-u"></div>
+            <div class="cube-face cube-face-d"></div>
+            <div class="cube-face cube-face-l"></div>
+            <div class="cube-face cube-face-r"></div>
+            <div class="cube-face cube-face-f"></div>
+            <div class="cube-face cube-face-b"></div>
+          </div>
+          <div class="cube cube-2-3-2">
+            <div class="cube-face cube-face-u"></div>
+            <div class="cube-face cube-face-d"></div>
+            <div class="cube-face cube-face-l"></div>
+            <div class="cube-face cube-face-r"></div>
+            <div class="cube-face cube-face-f"></div>
+            <div class="cube-face cube-face-b"></div>
+          </div>
+          <div class="cube cube-2-3-3">
+            <div class="cube-face cube-face-u"></div>
+            <div class="cube-face cube-face-d"></div>
+            <div class="cube-face cube-face-l"></div>
+            <div class="cube-face cube-face-r"></div>
+            <div class="cube-face cube-face-f"></div>
+            <div class="cube-face cube-face-b"></div>
+          </div>
+          <div class="cube cube-3-1-1">
+            <div class="cube-face cube-face-u"></div>
+            <div class="cube-face cube-face-d"></div>
+            <div class="cube-face cube-face-l"></div>
+            <div class="cube-face cube-face-r"></div>
+            <div class="cube-face cube-face-f"></div>
+            <div class="cube-face cube-face-b"></div>
+          </div>
+          <div class="cube cube-3-1-2">
+            <div class="cube-face cube-face-u"></div>
+            <div class="cube-face cube-face-d"></div>
+            <div class="cube-face cube-face-l"></div>
+            <div class="cube-face cube-face-r"></div>
+            <div class="cube-face cube-face-f"></div>
+            <div class="cube-face cube-face-b"></div>
+          </div>
+          <div class="cube cube-3-1-3">
+            <div class="cube-face cube-face-u"></div>
+            <div class="cube-face cube-face-d"></div>
+            <div class="cube-face cube-face-l"></div>
+            <div class="cube-face cube-face-r"></div>
+            <div class="cube-face cube-face-f"></div>
+            <div class="cube-face cube-face-b"></div>
+          </div>
+          <div class="cube cube-3-2-1">
+            <div class="cube-face cube-face-u"></div>
+            <div class="cube-face cube-face-d"></div>
+            <div class="cube-face cube-face-l"></div>
+            <div class="cube-face cube-face-r"></div>
+            <div class="cube-face cube-face-f"></div>
+            <div class="cube-face cube-face-b"></div>
+          </div>
+          <div class="cube cube-3-2-2">
+            <div class="cube-face cube-face-u"></div>
+            <div class="cube-face cube-face-d"></div>
+            <div class="cube-face cube-face-l"></div>
+            <div class="cube-face cube-face-r"></div>
+            <div class="cube-face cube-face-f"></div>
+            <div class="cube-face cube-face-b"></div>
+          </div>
+          <div class="cube cube-3-2-3">
+            <div class="cube-face cube-face-u"></div>
+            <div class="cube-face cube-face-d"></div>
+            <div class="cube-face cube-face-l"></div>
+            <div class="cube-face cube-face-r"></div>
+            <div class="cube-face cube-face-f"></div>
+            <div class="cube-face cube-face-b"></div>
+          </div>
+          <div class="cube cube-3-3-1">
+            <div class="cube-face cube-face-u"></div>
+            <div class="cube-face cube-face-d"></div>
+            <div class="cube-face cube-face-l"></div>
+            <div class="cube-face cube-face-r"></div>
+            <div class="cube-face cube-face-f"></div>
+            <div class="cube-face cube-face-b"></div>
+          </div>
+          <div class="cube cube-3-3-2">
+            <div class="cube-face cube-face-u"></div>
+            <div class="cube-face cube-face-d"></div>
+            <div class="cube-face cube-face-l"></div>
+            <div class="cube-face cube-face-r"></div>
+            <div class="cube-face cube-face-f"></div>
+            <div class="cube-face cube-face-b"></div>
+          </div>
+          <div class="cube cube-3-3-3">
+            <div class="cube-face cube-face-u"></div>
+            <div class="cube-face cube-face-d"></div>
+            <div class="cube-face cube-face-l"></div>
+            <div class="cube-face cube-face-r"></div>
+            <div class="cube-face cube-face-f"></div>
+            <div class="cube-face cube-face-b"></div>
+          </div>
+          <div class="tile-container">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="touch-buttons">
+      <div class="button-group">
+        <div class="touch-button tap" data-type="move" data-value="4">F</div>
+        <div class="touch-button tap" data-type="move" data-value="5">B</div>
+        <div class="touch-button tap" data-type="rotate">Rotate</div>
+      </div>
+      <div class="button-group">
+        <div class="touch-button long-tap">1</div>
+        <div class="touch-button long-tap">2</div>
+        <div class="touch-button long-tap">3</div>
+      </div>
+    </div>
+
+    <p class="game-explanation">
+      &nbsp; &nbsp;&nbsp; &nbsp;&nbsp;<strong class="important">玩法:</strong> 使用 <strong>方向键 WS AD QE</strong>
+      去移动立方，任何无用的字母键都能实现旋转，按住1、2或3到隐藏层，。当两个具有相同数字的立方体接触时，它们 <strong>合二为一</strong>
+      <br />
+      <br />
+      右上角的播放音乐按键按一下播放或暂停音乐，双击切歌，不点击循环播放歌单
+    </p>
+    <hr style="width: 115%;">
+  </div>
+
+
+  <!--广告-->
+  <div id="ad-container">
+    <a id="ad-link" href="http://www.upc.edu.cn/" target="_blank">
+      <img class="ad-img" src="image/ad.jpg" alt="Advertisement">
+    </a>
+
+    <div class="cancel-btn" id="cancel-btn">X</div>
+    <div class="timer" id="timer">还剩 <span id="countdown">15</span> 秒可关闭广告</div>
+    <div class="close-btn" id="close-now"></div>
+  </div>
+
+</body>
+<script src='js/jquery.min.js'></script>
+<script>
+  // 在页面加载完成后隐藏 loading 界面
+  window.addEventListener('load', function () {
+    var loadingScreen = document.querySelector('.loading-screen');
+    loadingScreen.style.display = 'none';
+  });
+
+  // Wait for the page to load
+  window.addEventListener('load', function () {
+    // Hide the loading animation
+    var loader = document.querySelector('.cube-wrapper');
+    loader.style.display = 'none';
+
+    // Show the content
+    var content = document.querySelector('.content');
+    content.style.display = 'block';
+  });
+
+
+  (function (i, s, o, g, r, a, m) {
+    i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+      (i[r].q = i[r].q || []).push(arguments)
+    }, i[r].l = 1 * new Date(); a = s.createElement(o),
+      m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+  })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+  ga('create', 'UA-3512083-5');
+  ga('send', 'pageview');
+
+
+  var audio = document.getElementById("myAudio");
+  var currentSong = 0; // 当前播放的歌曲索引
+  var isMuted = false; // 是否静音标志
+
+  // 切换播放/暂停音乐
+  function toggleMusic() {
+    if (audio.paused) {
+      audio.play();
+    } else {
+      audio.pause();
+    }
+  }
+
+  // 静音/取消静音
+  function toggleMute() {
+    if (audio.muted) {
+      audio.muted = false;
+      isMuted = false;
+      document.querySelector("button").innerText = "静音";
+    } else {
+      audio.muted = true;
+      isMuted = true;
+      document.querySelector("button").innerText = "取消静音";
+    }
+  }
+
+  // 播放完当前歌曲后自动播放下一首
+  function playNext() {
+    currentSong = (currentSong + 1) % audio.getElementsByTagName('source').length; // 循环播放
+    audio.src = audio.getElementsByTagName('source')[currentSong].src;
+    if (!isMuted) { // 如果不是静音状态，则继续播放
+      audio.play();
+    }
+  }
+
+
+  //广告
+  document.addEventListener('DOMContentLoaded', function () {
+    const adContainer = document.getElementById('ad-container');
+    const cancelBtn = document.getElementById('cancel-btn');
+    const timer = document.getElementById('timer');
+    const countdown = document.getElementById('countdown');
+    const closeNowBtn = document.getElementById('close-now');
+
+    let timerInterval;
+    let secondsRemaining = 15;
+
+    function animateAd() {
+      let posX = window.innerWidth / 2 - adContainer.offsetWidth / 2;
+      let posY = window.innerHeight / 2 - adContainer.offsetHeight / 2;
+      let speedX = 2;
+      let speedY = 2;
+
+      adContainer.style.display = 'block';
+
+      function moveAd() {
+        if (!animationPaused) {
+          posX += speedX;
+          posY += speedY;
+
+          if (posX + adContainer.offsetWidth > window.innerWidth || posX < 0) {
+            speedX = -speedX;
+          }
+          if (posY + adContainer.offsetHeight > window.innerHeight || posY < 0) {
+            speedY = -speedY;
+          }
+
+          adContainer.style.left = posX + 'px';
+          adContainer.style.top = posY + 'px';
+
+          requestAnimationFrame(moveAd);
+        }
+      }
+
+      requestAnimationFrame(moveAd);
+
+      timerInterval = setInterval(updateTimer, 1000);
+
+      function updateTimer() {
+        secondsRemaining--;
+        countdown.textContent = secondsRemaining;
+
+        if (secondsRemaining <= 0) {
+          clearInterval(timerInterval);
+          countdown.textContent = '0';
+          timer.style.display = 'none';
+          closeNowBtn.style.display = 'block';
+          cancelBtn.style.display = 'block';
+        }
+      }
+
+      let animationPaused = false;
+
+      adContainer.addEventListener('mouseenter', function () {
+        animationPaused = true;
+      });
+
+      adContainer.addEventListener('mouseleave', function () {
+        animationPaused = false;
+        requestAnimationFrame(moveAd);
+      });
+
+      cancelBtn.addEventListener('click', closeAd);
+      closeNowBtn.addEventListener('click', closeAd);
+
+      function closeAd() {
+        adContainer.style.display = 'none';
+        cancelBtn.style.display = 'none';
+        timer.style.display = 'none';
+        closeNowBtn.style.display = 'none';
+        clearInterval(timerInterval);
+      }
+    }
+
+    animateAd();
+  });
+
+
+  (function () {
+    var lastTime = 0;
+    var vendors = ['webkit', 'moz'];
+    for (var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
+      window.requestAnimationFrame = window[vendors[x] + 'RequestAnimationFrame'];
+      window.cancelAnimationFrame =
+        window[vendors[x] + 'CancelAnimationFrame'] || window[vendors[x] + 'CancelRequestAnimationFrame'];
+    }
+
+    if (!window.requestAnimationFrame) {
+      window.requestAnimationFrame = function (callback, element) {
+        var currTime = new Date().getTime();
+        var timeToCall = Math.max(0, 16 - (currTime - lastTime));
+        var id = window.setTimeout(function () { callback(currTime + timeToCall); },
+          timeToCall);
+        lastTime = currTime + timeToCall;
+        return id;
+      };
+    }
+
+    if (!window.cancelAnimationFrame) {
+      window.cancelAnimationFrame = function (id) {
+        clearTimeout(id);
+      };
+    }
+  }());
+
+  function KeyboardInputManager() {
+    this.events = {};
+
+    this.listen();
+  }
+
+  KeyboardInputManager.prototype.on = function (event, callback) {
+    if (!this.events[event]) {
+      this.events[event] = [];
+    }
+    this.events[event].push(callback);
+  };
+
+  KeyboardInputManager.prototype.emit = function (event, data) {
+    var callbacks = this.events[event];
+    if (callbacks) {
+      callbacks.forEach(function (callback) {
+        callback(data);
+      });
+    }
+  };
+
+  KeyboardInputManager.prototype.listen = function () {
+    var self = this;
+
+    var map = {
+      38: 0, // Up
+      39: 1, // Right
+      40: 2, // Down
+      37: 3, // Left
+      75: 0, // vim keybindings
+      76: 1,
+      74: 2,
+      72: 3,
+      87: 0, // W
+      68: 1, // D
+      83: 2, // S
+      65: 3, // A
+      81: 5, // Q
+      70: 4, // F
+      82: 5, // R
+      69: 4  // E
+    };
+
+    var holdingMap = {
+      49: 1,
+      50: 2,
+      51: 3
+    };
+
+    var restartMap = [
+      8, //backspace
+      27, //esc
+      48 //0
+    ];
+
+    var slice = [].slice;
+
+    document.addEventListener("keydown", function (event) {
+      var modifiers = event.altKey || event.ctrlKey || event.metaKey ||
+        event.shiftKey;
+      var mapped = map[event.which];
+      var holdingMapped = holdingMap[event.which];
+
+      if (!modifiers) {
+        if (mapped !== undefined) {
+          event.preventDefault();
+          self.emit("move", mapped);
+        } else if (holdingMapped !== undefined) {
+          event.preventDefault();
+          self.emit("hidden", holdingMapped);
+        } else if (event.which >= 65 && event.which <= 90) {
+          event.preventDefault();
+          self.emit("rotate");
+        }
+
+        if (restartMap.indexOf(event.which) > -1) {
+          event.preventDefault();
+          self.restart.bind(self)(event);
+        }
+      }
+    });
+    document.addEventListener('keyup', function (event) {
+      var holdingMapped = holdingMap[event.which];
+      if (holdingMapped !== undefined) {
+        event.preventDefault();
+        self.emit("hidden", false);
+      }
+    });
+    var retry = document.querySelector(".retry-button");
+    retry.addEventListener("click", this.restart.bind(this));
+    retry.addEventListener("touchend", this.restart.bind(this));
+
+    var keepPlaying = document.querySelector(".keep-playing-button");
+    keepPlaying.addEventListener("click", this.keepPlaying.bind(this));
+    keepPlaying.addEventListener("touchend", this.keepPlaying.bind(this));
+
+    // Listen to swipe events
+    var touchStartClientX, touchStartClientY;
+    var gameContainer = document.getElementsByClassName("game-container")[0];
+
+    gameContainer.addEventListener("touchstart", function (event) {
+      if (event.touches.length > 1) return;
+
+      touchStartClientX = event.touches[0].clientX;
+      touchStartClientY = event.touches[0].clientY;
+      event.preventDefault();
+    });
+
+    gameContainer.addEventListener("touchmove", function (event) {
+      event.preventDefault();
+    });
+
+    gameContainer.addEventListener("touchend", function (event) {
+      if (event.touches.length > 0) return;
+
+      var dx = event.changedTouches[0].clientX - touchStartClientX;
+      var absDx = Math.abs(dx);
+
+      var dy = event.changedTouches[0].clientY - touchStartClientY;
+      var absDy = Math.abs(dy);
+
+      if (Math.max(absDx, absDy) > 10) {
+        // (right : left) : (down : up)
+        self.emit("move", absDx > absDy ? (dx > 0 ? 1 : 3) : (dy > 0 ? 2 : 0));
+      }
+    });
+    //touch buttons
+    slice.call(document.querySelectorAll('.touch-button.long-tap')).forEach(function (button) {
+      var layer = button.textContent;
+      button.addEventListener('touchstart', function (event) {
+        event.preventDefault();
+        self.emit("hidden", layer);
+      });
+      button.addEventListener('touchstart', function (event) {
+        event.preventDefault();
+      });
+      button.addEventListener('touchend', function (event) {
+        self.emit("hidden", false);
+      });
+    });
+    slice.call(document.querySelectorAll('.touch-button.tap')).forEach(function (button) {
+      var touchStartClientX, touchStartClientY;
+      button.addEventListener("touchstart", function (event) {
+        if (event.touches.length > 1) return;
+
+        touchStartClientX = event.touches[0].clientX;
+        touchStartClientY = event.touches[0].clientY;
+        event.preventDefault();
+      });
+
+      button.addEventListener("touchmove", function (event) {
+        event.preventDefault();
+      });
+
+      button.addEventListener("touchend", function (event) {
+        if (event.touches.length > 0) return;
+
+        var dx = event.changedTouches[0].clientX - touchStartClientX;
+        var absDx = Math.abs(dx);
+
+        var dy = event.changedTouches[0].clientY - touchStartClientY;
+        var absDy = Math.abs(dy);
+
+        if (Math.max(absDx, absDy) < 20) {
+          var type = button.dataset.type || 'rotate';
+          var value = button.dataset.value || 0;
+          self.emit(type, value);
+        }
+      });
+    });
+  };
+
+  KeyboardInputManager.prototype.restart = function (event) {
+    event.preventDefault();
+    this.emit("restart");
+  };
+
+  KeyboardInputManager.prototype.keepPlaying = function (event) {
+    event.preventDefault();
+    this.emit("keepPlaying");
+  };
+
+  function HTMLActuator() {
+    this.gridContainer = document.querySelector(".grid-container");
+    this.tileContainer = document.querySelector(".tile-container");
+    this.scoreContainer = document.querySelector(".score-container");
+    this.bestContainer = document.querySelector(".best-container");
+    this.messageContainer = document.querySelector(".game-message");
+
+    this.score = 0;
+    var clearUselessTile = this.clearUselessTile.bind(this);
+    ['webkitTransitionEnd', 'oTransitionEnd', 'transitionend'].forEach(function (eventName) {
+      document.addEventListener(eventName, clearUselessTile);
+    })
+  }
+
+  HTMLActuator.prototype.rotate = function (rotated) {
+    if (rotated) {
+      this.gridContainer.classList.add('rotated');
+    } else {
+      this.gridContainer.classList.remove('rotated');
+    }
+  };
+
+  HTMLActuator.prototype.hidden = function (layer, size) {
+    if (layer === false || layer === undefined) {
+      var dom = document.querySelectorAll('.cube.hidden');
+      [].slice.call(dom).forEach(function (d) {
+        d.classList.remove('hidden');
+      });
+    } else {
+      for (var x = 0; x < size; x++) {
+        for (var y = 0; y < size; y++) {
+          for (var z = 0; z < size; z++) {
+            if (z + 1 == layer) {
+              continue;
+            }
+            [].slice.call(document.querySelectorAll('.' + this.positionClass({
+              x: x,
+              y: y,
+              z: z
+            }).replace(/ .+/g, ''))).forEach(function (d) {
+              d.classList.add('hidden');
+            });
+          }
+        }
+      }
+    }
+  };
+
+  HTMLActuator.prototype.clearUselessTile = function () {
+    var self = this;
+    [].slice.call(document.querySelectorAll('.tile-useless')).forEach(function (d) {
+      self.tileContainer.removeChild(d.parentNode);
+    });
+  }
+
+  HTMLActuator.prototype.actuate = function (grid, metadata) {
+    var self = this;
+
+    window.requestAnimationFrame(function () {
+      self.clearContainer(self.tileContainer);
+      grid.cells.forEach(function (face) {
+        face.forEach(function (column) {
+          column.forEach(function (cell) {
+            if (cell) {
+              self.addTile(cell);
+            }
+          });
+        });
+      });
+
+      self.updateScore(metadata.score);
+      self.updateBestScore(metadata.bestScore);
+
+      if (metadata.terminated) {
+        if (metadata.over) {
+          self.message(false); // You lose
+        } else if (metadata.won) {
+          self.message(true); // You win!
+        }
+      }
+
+    });
+  };
+
+  // Continues the game (both restart and keep playing)
+  HTMLActuator.prototype.continue = function (restart) {
+    if (typeof ga !== "undefined") {
+      ga("send", "event", window.gameName || "game", restart ? "restart" : "keep playing");
+    }
+    this.clearMessage();
+  };
+
+  HTMLActuator.prototype.clearContainer = function (container) {
+    while (container.firstChild) {
+      container.removeChild(container.firstChild);
+    }
+  };
+
+  HTMLActuator.prototype.addTile = function (tile) {
+    var self = this;
+
+    var wrapper = document.createElement("div");
+    var inner = document.createElement("div");
+    var position = tile.previousPosition || { x: tile.x, y: tile.y, z: tile.z };
+    var positionClass = this.positionClass(position);
+
+    // We can't use classlist because it somehow glitches when replacing classes
+    var classes = ["tile", "tile-" + tile.value, 'cube', positionClass, "tile-" + tile.type];
+    var value = tile.value;
+    if (value > 8192) {
+      (function () {
+        var i = 1, n = value;
+        while (n > 2) {
+          i++;
+          n /= 2;
+        }
+        value = '2^' + i;
+      })();
+    }
+
+    if (tile.value > 2048) classes.push("tile-super");
+
+    this.applyClasses(wrapper, classes);
+
+    ['u', 'd', 'l', 'r', 'f', 'b'].forEach(function (f) {
+      var face = document.createElement("div");
+      self.applyClasses(face, ['cube-face', 'cube-face-' + f]);
+      face.textContent = value;
+      inner.appendChild(face);
+    });
+
+    if (tile.previousPosition) {
+      // Make sure that the tile gets rendered in the previous position first
+      window.requestAnimationFrame(function () {
+        classes[3] = self.positionClass({ x: tile.x, y: tile.y, z: tile.z });
+        self.applyClasses(wrapper, classes); // Update the position
+      });
+      if (tile.merged) {
+        inner.classList.add("tile-useless");
+      }
+    } else if (tile.mergedFrom) {
+      inner.classList.add("tile-merged");
+
+      // Render the tiles that merged
+      tile.mergedFrom.forEach(function (merged) {
+        self.addTile(merged);
+      });
+    } else {
+      inner.classList.add("tile-new");
+    }
+
+    // Add the inner part of the tile to the wrapper
+    wrapper.appendChild(inner);
+
+    // Put the tile on the board
+    this.tileContainer.appendChild(wrapper);
+  };
+
+  HTMLActuator.prototype.applyClasses = function (element, classes) {
+    element.setAttribute("class", classes.join(" "));
+  };
+
+  HTMLActuator.prototype.normalizePosition = function (position) {
+    return { x: position.x + 1, y: position.y + 1, z: position.z + 1 };
+  };
+
+  HTMLActuator.prototype.positionClass = function (position) {
+    position = this.normalizePosition(position);
+    return "cube-" + position.x + "-" + position.y + "-" + position.z + ' x-' + position.x + ' y-' + position.y + ' z-' + position.z;
+  };
+
+  HTMLActuator.prototype.updateScore = function (score) {
+    this.clearContainer(this.scoreContainer);
+
+    var difference = score - this.score;
+    this.score = score;
+
+    this.scoreContainer.textContent = this.score;
+
+    if (difference > 0) {
+      var addition = document.createElement("div");
+      addition.classList.add("score-addition");
+      addition.textContent = "+" + difference;
+
+      this.scoreContainer.appendChild(addition);
+    }
+  };
+
+  HTMLActuator.prototype.updateBestScore = function (bestScore) {
+    this.bestContainer.textContent = bestScore;
+  };
+
+  HTMLActuator.prototype.message = function (won) {
+    var type = won ? "game-won" : "game-over";
+    var message = won ? "成功" : "发配古镇口，无期徒刑";
+    if (typeof ga !== "undefined") {
+      ga("send", "event", window.gameName || "game", "end", type, this.score);
+    }
+
+    this.messageContainer.classList.add(type);
+    this.messageContainer.getElementsByTagName("p")[0].textContent = message;
+  };
+
+  HTMLActuator.prototype.clearMessage = function () {
+    // IE only takes one value to remove at a time.
+    this.messageContainer.classList.remove("game-won");
+    this.messageContainer.classList.remove("game-over");
+  };
+
+  function Grid(size) {
+    this.size = size;
+
+    this.cells = [];
+
+    this.build();
+  }
+
+  // Build a grid of the specified size
+  Grid.prototype.build = function () {
+    for (var x = 0; x < this.size; x++) {
+      var face = this.cells[x] = [];
+      for (var y = 0; y < this.size; y++) {
+        var row = face[y] = [];
+        for (var z = 0; z < this.size; z++) {
+          row.push(null);
+        }
+      }
+    }
+  };
+
+  // Find the first available random position
+  Grid.prototype.randomAvailableCell = function () {
+    var cells = this.availableCells();
+
+    if (cells.length) {
+      return cells[Math.floor(Math.random() * cells.length)];
+    }
+  };
+
+  Grid.prototype.availableCells = function () {
+    var cells = [];
+
+    this.eachCell(function (x, y, z, tile) {
+      if (!tile) {
+        cells.push({ x: x, y: y, z: z });
+      }
+    });
+
+    return cells;
+  };
+
+  // Call callback for every cell
+  Grid.prototype.eachCell = function (callback) {
+    for (var x = 0; x < this.size; x++) {
+      for (var y = 0; y < this.size; y++) {
+        for (var z = 0; z < this.size; z++) {
+          callback(x, y, z, this.cells[x][y][z]);
+        }
+      }
+    }
+  };
+
+  // Check if there are any cells available
+  Grid.prototype.cellsAvailable = function () {
+    return !!this.availableCells().length;
+  };
+
+  // Check if the specified cell is taken
+  Grid.prototype.cellAvailable = function (cell) {
+    return !this.cellOccupied(cell);
+  };
+
+  Grid.prototype.cellOccupied = function (cell) {
+    return !!this.cellContent(cell);
+  };
+
+  Grid.prototype.cellContent = function (cell) {
+    if (this.withinBounds(cell)) {
+      return this.cells[cell.x][cell.y][cell.z];
+    } else {
+      return null;
+    }
+  };
+
+  // Inserts a tile at its position
+  Grid.prototype.insertTile = function (tile) {
+    this.cells[tile.x][tile.y][tile.z] = tile;
+  };
+
+  Grid.prototype.removeTile = function (tile) {
+    this.cells[tile.x][tile.y][tile.z] = null;
+  };
+
+  Grid.prototype.withinBounds = function (position) {
+    return position.x >= 0 && position.x < this.size &&
+      position.y >= 0 && position.y < this.size &&
+      position.z >= 0 && position.z < this.size;
+  };
+
+  function Tile(position, value, type) {
+    this.x = position.x;
+    this.y = position.y;
+    this.z = position.z;
+    this.value = value || 2;
+    this.type = type || 'number';
+
+    this.previousPosition = null;
+    this.mergedFrom = null; // Tracks tiles that merged together
+    this.merged = false;
+  }
+
+  Tile.prototype.savePosition = function () {
+    this.previousPosition = { x: this.x, y: this.y, z: this.z };
+  };
+
+  Tile.prototype.updatePosition = function (position) {
+    this.x = position.x;
+    this.y = position.y;
+    this.z = position.z;
+  };
+
+  window.fakeStorage = {
+    _data: {},
+
+    setItem: function (id, val) {
+      return this._data[id] = String(val);
+    },
+
+    getItem: function (id) {
+      return this._data.hasOwnProperty(id) ? this._data[id] : undefined;
+    },
+
+    removeItem: function (id) {
+      return delete this._data[id];
+    },
+
+    clear: function () {
+      return this._data = {};
+    }
+  };
+
+  function LocalScoreManager() {
+    this.key = (window.gameName || "") + "-bestScore";
+
+    var supported = this.localStorageSupported();
+    this.storage = supported ? window.localStorage : window.fakeStorage;
+  }
+
+  LocalScoreManager.prototype.localStorageSupported = function () {
+    var testKey = "test";
+    var storage = window.localStorage;
+
+    try {
+      storage.setItem(testKey, "1");
+      storage.removeItem(testKey);
+      return true;
+    } catch (error) {
+      return false;
+    }
+  };
+
+  LocalScoreManager.prototype.get = function () {
+    return this.storage.getItem(this.key) || 0;
+  };
+
+  LocalScoreManager.prototype.set = function (score) {
+    this.storage.setItem(this.key, score);
+  };
+
+  function GameManager(size, InputManager, Actuator, ScoreManager) {
+    this.size = size; // Size of the grid
+    this.inputManager = new InputManager;
+    this.scoreManager = new ScoreManager;
+    this.actuator = new Actuator;
+    this.rotated = false;
+    this.startTiles = 2;
+
+    this.inputManager.on("move", this.move.bind(this));
+    this.inputManager.on("rotate", this.rotate.bind(this));
+    this.inputManager.on("hidden", this.hidden.bind(this));
+    this.inputManager.on("restart", this.restart.bind(this));
+    this.inputManager.on("keepPlaying", this.keepPlaying.bind(this));
+
+    this.setup();
+  }
+
+  // Rotate the container
+  GameManager.prototype.rotate = function () {
+    this.rotated = !this.rotated;
+    this.actuator.rotate(this.rotated);
+  };
+
+  // Hide some layers
+  GameManager.prototype.hidden = function (layer) {
+    this.actuator.hidden(layer, this.size);
+  };
+
+  // Restart the game
+  GameManager.prototype.restart = function () {
+    this.actuator.continue(true);
+    this.setup();
+  };
+
+  // Keep playing after winning
+  GameManager.prototype.keepPlaying = function () {
+    this.keepPlaying = true;
+    this.actuator.continue();
+  };
+
+  GameManager.prototype.isGameTerminated = function () {
+    if (this.over || (this.won && !this.keepPlaying)) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
+  // Set up the game
+  GameManager.prototype.setup = function () {
+    this.grid = new Grid(this.size);
+
+    this.score = 0;
+    this.over = false;
+    this.won = false;
+    this.keepPlaying = false;
+    this.bonus = {};
+    this.max = 2;
+
+    // Add the initial tiles
+    this.addStartTiles();
+
+    // Update the actuator
+    this.actuate();
+  };
+
+  // Set up the initial tiles to start the game with
+  GameManager.prototype.addStartTiles = function () {
+    for (var i = 0; i < this.startTiles; i++) {
+      this.addRandomTile();
+    }
+  };
+
+  // Adds a tile in a random position
+  GameManager.prototype.addRandomTile = function () {
+    if (this.grid.cellsAvailable()) {
+      var value = Math.random() < 0.9 ? 2 : 4;
+      var tile = new Tile(this.grid.randomAvailableCell(), value);
+
+      this.grid.insertTile(tile);
+    }
+  };
+
+  // Add bonus tile
+  GameManager.prototype.addBonus = function () {
+    if (Math.random() > 0.2 * this.grid.availableCells().length / Math.pow(this.size, 3)) {
+      return;
+    }
+    var maxBonus = 0;
+    var values = [4, 64, 256];
+    var value = values[Math.floor(Math.random() * values.length)];
+    if (this.bonus[value] === undefined) {
+      this.bonus[value] = 0;
+    }
+    if (this.bonus[value] == 2) {
+      return;
+    }
+    for (var num in this.bonus) {
+      maxBonus -= this.bonus[num];
+    }
+    if (maxBonus <= 0) {
+      return;
+    }
+    if (this.grid.cellsAvailable()) {
+      this.bonus[value]++;
+      var tile = new Tile(this.grid.randomAvailableCell(), value, 'bonus');
+      this.grid.insertTile(tile);
+    }
+  };
+
+  // remove bonus tile
+  GameManager.prototype.removeBonus = function (value) {
+    if (this.bonus[value] !== undefined) {
+      delete this.bonus[value];
+    }
+  };
+
+  // Sends the updated grid to the actuator
+  GameManager.prototype.actuate = function () {
+    if (this.scoreManager.get() < this.score) {
+      this.scoreManager.set(this.score);
+      if (username != "none") {//__________________________________________________________________发送最高分数到服务器
+        send("3dscore=" + this.score + ",name=" + username + ";");
+      }
+    }
+
+    this.actuator.actuate(this.grid, {
+      score: this.score,
+      over: this.over,
+      won: this.won,
+      bestScore: this.scoreManager.get(),
+      terminated: this.isGameTerminated()
+    });
+
+  };
+
+  // Save all tile positions and remove merger info
+  GameManager.prototype.prepareTiles = function () {
+    var self = this;
+    this.grid.eachCell(function (x, y, z, tile) {
+      if (tile) {
+        if (tile.type === 'bonused') {
+          self.grid.removeTile({ x: x, y: y, z: z });
+        } else {
+          tile.mergedFrom = null;
+          tile.savePosition();
+        }
+      }
+    });
+  };
+
+  // Move a tile and its representation
+  GameManager.prototype.moveTile = function (tile, cell) {
+    this.grid.cells[tile.x][tile.y][tile.z] = null;
+    this.grid.cells[cell.x][cell.y][cell.z] = tile;
+    tile.updatePosition(cell);
+  };
+
+  // Move tiles on the grid in the specified direction
+  GameManager.prototype.move = function (direction) {
+    // 0: up, 1: right, 2:down, 3: left
+    var self = this;
+
+    if (this.isGameTerminated()) return; // Don't do anything if the game's over
+
+    var cell, tile;
+
+    var vector = this.getVector(direction);
+    var traversals = this.buildTraversals(vector);
+    var moved = false;
+    // Save the current tile positions and remove merger information
+    this.prepareTiles();
+    // Traverse the grid in the right direction and move tiles
+    traversals.x.forEach(function (x) {
+      traversals.y.forEach(function (y) {
+        traversals.z.forEach(function (z) {
+          cell = { x: x, y: y, z: z };
+          tile = self.grid.cellContent(cell);
+
+          if (tile) {
+            var positions = self.findFarthestPosition(cell, vector);
+            var next = self.grid.cellContent(positions.next);
+
+            // Only one merger per row traversal?
+            if (next && next.value === tile.value && next.type === tile.type && !next.mergedFrom) {
+              var type = next.type === 'number' ? 'number' : 'bonused';
+              var merged = new Tile(positions.next, tile.value * 2, type);
+              merged.mergedFrom = [tile, next];
+              tile.merged = next.merged = true;
+
+              self.grid.insertTile(merged);
+              self.grid.removeTile(tile);
+              if (tile.type === 'bonus') {
+                self.removeBonus(tile.value);
+              }
+
+              // Converge the two tiles' positions
+              tile.updatePosition(positions.next);
+
+              // Update the score
+              self.score += merged.value;
+              if (merged.value > self.max) {
+                self.max = merged.value;
+              }
+              // The mighty 2048 tile
+              if (merged.value === 2048 && merged.type === 'number') self.won = true;
+            } else {
+              self.moveTile(tile, positions.farthest);
+            }
+
+            if (!self.positionsEqual(cell, tile)) {
+              moved = true; // The tile moved from its original cell!
+            }
+          }
+        });
+      });
+    });
+
+    if (moved) {
+      this.addRandomTile();
+      this.addBonus();
+
+      if (!this.movesAvailable()) {
+        this.over = true; // Game over!
+      }
+
+      this.actuate();
+    }
+  };
+
+  // Get the vector representing the chosen direction
+  GameManager.prototype.getVector = function (direction) {
+    // Vectors representing tile movement
+    var map = !this.rotated ? {
+      0: { x: 0, y: -1, z: 0 }, // up
+      1: { x: 1, y: 0, z: 0 },  // right
+      2: { x: 0, y: 1, z: 0 },  // down
+      3: { x: -1, y: 0, z: 0 },  // left
+      4: { x: 0, y: 0, z: 1 },  // front
+      5: { x: 0, y: 0, z: -1 }   // back
+    } : {
+      0: { x: 0, y: -1, z: 0 }, // up
+      1: { x: 0, y: 0, z: 1 },  // right should be front
+      2: { x: 0, y: 1, z: 0 },  // down
+      3: { x: 0, y: 0, z: -1 },  // left should be back
+      4: { x: -1, y: 0, z: 0 },  // front should be left
+      5: { x: 1, y: 0, z: 0 }   // back should be right
+    };
+    return map[direction];
+  };
+
+  // Build a list of positions to traverse in the right order
+  GameManager.prototype.buildTraversals = function (vector) {
+    var traversals = { x: [], y: [], z: [] };
+
+    for (var pos = 0; pos < this.size; pos++) {
+      traversals.x.push(pos);
+      traversals.y.push(pos);
+      traversals.z.push(pos);
+    }
+
+    // Always traverse from the farthest cell in the chosen direction
+    if (vector.x === 1) traversals.x = traversals.x.reverse();
+    if (vector.y === 1) traversals.y = traversals.y.reverse();
+    if (vector.z === 1) traversals.z = traversals.z.reverse();
+
+    return traversals;
+  };
+
+  GameManager.prototype.findFarthestPosition = function (cell, vector) {
+    var previous;
+
+    // Progress towards the vector direction until an obstacle is found
+    do {
+      previous = cell;
+      cell = { x: previous.x + vector.x, y: previous.y + vector.y, z: previous.z + vector.z };
+    } while (this.grid.withinBounds(cell) &&
+      this.grid.cellAvailable(cell));
+
+    return {
+      farthest: previous,
+      next: cell // Used to check if a merge is required
+    };
+  };
+
+  GameManager.prototype.movesAvailable = function () {
+    return this.grid.cellsAvailable() || this.tileMatchesAvailable();
+  };
+
+  // Check for available matches between tiles (more expensive check)
+  GameManager.prototype.tileMatchesAvailable = function () {
+    var self = this;
+    var tile;
+
+    for (var x = 0; x < this.size; x++) {
+      for (var y = 0; y < this.size; y++) {
+        for (var z = 0; z < this.size; z++) {
+          tile = this.grid.cellContent({ x: x, y: y, z: z });
+
+          if (tile) {
+            for (var direction = 0; direction < 6; direction++) {
+              var vector = self.getVector(direction);
+              var cell = { x: x + vector.x, y: y + vector.y, z: z + vector.z };
+
+              var other = self.grid.cellContent(cell);
+
+              if (other && other.value === tile.value && other.type === tile.type) {
+                return true; // These two tiles can be merged
+              }
+            }
+          }
+        }
+      }
+    }
+    return false;
+  };
+
+  GameManager.prototype.positionsEqual = function (first, second) {
+    return first.x === second.x && first.y === second.y && first.z === second.z;
+  };
+
+  // Wait till the browser is ready to render the game (avoids glitches)
+  window.requestAnimationFrame(function () {
+    window.gameName = '2048-3d';
+    window.game = new GameManager(3, KeyboardInputManager, HTMLActuator, LocalScoreManager);
+    'ontouchstart' in window && (document.querySelector('.touch-buttons').classList.add('show'));
+  });
+
+  try {//==========================================================================================================xvyanfei
+    var username = decodeURIComponent(atob(getParameter("uid")));//从传参尝试解析用户名
+  }
+  catch (err) {
+    var username = "none"
+  }
+  if (username == "" || username != window.localStorage.getItem('username') || getDay() != window.localStorage.getItem('loginday')) {
+    username = "none";
+  }
+
+  function goback() {
+    var backlink = document.referrer;
+    if ((username) == "none" || (backlink.search("uid") != -1)) {
+      window.location.href = backlink;
+    } else {
+      window.location.href = backlink + "?uid=" + btoa(encodeURIComponent(username));
+    }
+  }
+
+  function gohome() {
+      if (username == "none") {
+        window.location.href = "home.html";
+      } else {
+        window.location.href = "home.html?uid=" + btoa(encodeURIComponent(username));
+      }
+    }
+
+  function send(retdata) {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function () {
+      if (this.readyState == 4 && this.status == 200) {
+        return this.responseText;
+      }
+    };
+    xhttp.open("POST", retdata, true);
+    xhttp.send();
+  }
+
+  function getParameter(name) {
+    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); // 构建一个含有目标参数的正则表达式对象
+    var r = window.location.search.substr(1).match(reg); // 匹配目标参数
+    if (r != null) {
+      if (unescape(r[2]) == "null" || unescape(r[2]) == "none") {
+        return "";
+      }
+      return unescape(r[2]);
+    } else {
+      return "";
+    }
+  }
+
+  function ifunsign_Popup() {//---------点击排行榜判断是否登录
+      if (username == "none") {//跳转登录页面
+        alert("请登录后查看");
+      } else {
+        window.location.href = "ranklist.html?uid=" + btoa(encodeURIComponent(username));
+      }
+    }
+
+</script>
+<script>(function () { function t(e, t) { return [].slice.call((t || document).querySelectorAll(e)) } if (!window.addEventListener) return; var e = window.StyleFix = { link: function (t) { try { if (t.rel !== "stylesheet" || t.hasAttribute("data-noprefix")) return } catch (n) { return } var r = t.href || t.getAttribute("data-href"), i = r.replace(/[^\/]+$/, ""), s = t.parentNode, o = new XMLHttpRequest, u; o.onreadystatechange = function () { o.readyState === 4 && u() }; u = function () { var n = o.responseText; if (n && t.parentNode && (!o.status || o.status < 400 || o.status > 600)) { n = e.fix(n, !0, t); if (i) { n = n.replace(/url\(\s*?((?:"|')?)(.+?)\1\s*?\)/gi, function (e, t, n) { return /^([a-z]{3,10}:|\/|#)/i.test(n) ? e : 'url("' + i + n + '")' }); var r = i.replace(/([\\\^\$*+[\]?{}.=!:(|)])/g, "\\$1"); n = n.replace(RegExp("\\b(behavior:\\s*?url\\('?\"?)" + r, "gi"), "$1") } var u = document.createElement("style"); u.textContent = n; u.media = t.media; u.disabled = t.disabled; u.setAttribute("data-href", t.getAttribute("href")); s.insertBefore(u, t); s.removeChild(t); u.media = t.media } }; try { o.open("GET", r); o.send(null) } catch (n) { if (typeof XDomainRequest != "undefined") { o = new XDomainRequest; o.onerror = o.onprogress = function () { }; o.onload = u; o.open("GET", r); o.send(null) } } t.setAttribute("data-inprogress", "") }, styleElement: function (t) { if (t.hasAttribute("data-noprefix")) return; var n = t.disabled; t.textContent = e.fix(t.textContent, !0, t); t.disabled = n }, styleAttribute: function (t) { var n = t.getAttribute("style"); n = e.fix(n, !1, t); t.setAttribute("style", n) }, process: function () { t('link[rel="stylesheet"]:not([data-inprogress])').forEach(StyleFix.link); t("style").forEach(StyleFix.styleElement); t("[style]").forEach(StyleFix.styleAttribute) }, register: function (t, n) { (e.fixers = e.fixers || []).splice(n === undefined ? e.fixers.length : n, 0, t) }, fix: function (t, n, r) { for (var i = 0; i < e.fixers.length; i++)t = e.fixers[i](t, n, r) || t; return t }, camelCase: function (e) { return e.replace(/-([a-z])/g, function (e, t) { return t.toUpperCase() }).replace("-", "") }, deCamelCase: function (e) { return e.replace(/[A-Z]/g, function (e) { return "-" + e.toLowerCase() }) } }; (function () { setTimeout(function () { t('link[rel="stylesheet"]').forEach(StyleFix.link) }, 10); document.addEventListener("DOMContentLoaded", StyleFix.process, !1) })() })(); (function (e) { function t(e, t, r, i, s) { e = n[e]; if (e.length) { var o = RegExp(t + "(" + e.join("|") + ")" + r, "gi"); s = s.replace(o, i) } return s } if (!window.StyleFix || !window.getComputedStyle) return; var n = window.PrefixFree = { prefixCSS: function (e, r, i) { var s = n.prefix; n.functions.indexOf("linear-gradient") > -1 && (e = e.replace(/(\s|:|,)(repeating-)?linear-gradient\(\s*(-?\d*\.?\d*)deg/ig, function (e, t, n, r) { return t + (n || "") + "linear-gradient(" + (90 - r) + "deg" })); e = t("functions", "(\\s|:|,)", "\\s*\\(", "$1" + s + "$2(", e); e = t("keywords", "(\\s|:)", "(\\s|;|\\}|$)", "$1" + s + "$2$3", e); e = t("properties", "(^|\\{|\\s|;)", "\\s*:", "$1" + s + "$2:", e); if (n.properties.length) { var o = RegExp("\\b(" + n.properties.join("|") + ")(?!:)", "gi"); e = t("valueProperties", "\\b", ":(.+?);", function (e) { return e.replace(o, s + "$1") }, e) } if (r) { e = t("selectors", "", "\\b", n.prefixSelector, e); e = t("atrules", "@", "\\b", "@" + s + "$1", e) } e = e.replace(RegExp("-" + s, "g"), "-"); e = e.replace(/-\*-(?=[a-z]+)/gi, n.prefix); return e }, property: function (e) { return (n.properties.indexOf(e) ? n.prefix : "") + e }, value: function (e, r) { e = t("functions", "(^|\\s|,)", "\\s*\\(", "$1" + n.prefix + "$2(", e); e = t("keywords", "(^|\\s)", "(\\s|$)", "$1" + n.prefix + "$2$3", e); return e }, prefixSelector: function (e) { return e.replace(/^:{1,2}/, function (e) { return e + n.prefix }) }, prefixProperty: function (e, t) { var r = n.prefix + e; return t ? StyleFix.camelCase(r) : r } }; (function () { var e = {}, t = [], r = {}, i = getComputedStyle(document.documentElement, null), s = document.createElement("div").style, o = function (n) { if (n.charAt(0) === "-") { t.push(n); var r = n.split("-"), i = r[1]; e[i] = ++e[i] || 1; while (r.length > 3) { r.pop(); var s = r.join("-"); u(s) && t.indexOf(s) === -1 && t.push(s) } } }, u = function (e) { return StyleFix.camelCase(e) in s }; if (i.length > 0) for (var a = 0; a < i.length; a++)o(i[a]); else for (var f in i) o(StyleFix.deCamelCase(f)); var l = { uses: 0 }; for (var c in e) { var h = e[c]; l.uses < h && (l = { prefix: c, uses: h }) } n.prefix = "-" + l.prefix + "-"; n.Prefix = StyleFix.camelCase(n.prefix); n.properties = []; for (var a = 0; a < t.length; a++) { var f = t[a]; if (f.indexOf(n.prefix) === 0) { var p = f.slice(n.prefix.length); u(p) || n.properties.push(p) } } n.Prefix == "Ms" && !("transform" in s) && !("MsTransform" in s) && "msTransform" in s && n.properties.push("transform", "transform-origin"); n.properties.sort() })(); (function () { function i(e, t) { r[t] = ""; r[t] = e; return !!r[t] } var e = { "linear-gradient": { property: "backgroundImage", params: "red, teal" }, calc: { property: "width", params: "1px + 5%" }, element: { property: "backgroundImage", params: "#foo" }, "cross-fade": { property: "backgroundImage", params: "url(a.png), url(b.png), 50%" } }; e["repeating-linear-gradient"] = e["repeating-radial-gradient"] = e["radial-gradient"] = e["linear-gradient"]; var t = { initial: "color", "zoom-in": "cursor", "zoom-out": "cursor", box: "display", flexbox: "display", "inline-flexbox": "display", flex: "display", "inline-flex": "display" }; n.functions = []; n.keywords = []; var r = document.createElement("div").style; for (var s in e) { var o = e[s], u = o.property, a = s + "(" + o.params + ")"; !i(a, u) && i(n.prefix + a, u) && n.functions.push(s) } for (var f in t) { var u = t[f]; !i(f, u) && i(n.prefix + f, u) && n.keywords.push(f) } })(); (function () { function s(e) { i.textContent = e + "{}"; return !!i.sheet.cssRules.length } var t = { ":read-only": null, ":read-write": null, ":any-link": null, "::selection": null }, r = { keyframes: "name", viewport: null, document: 'regexp(".")' }; n.selectors = []; n.atrules = []; var i = e.appendChild(document.createElement("style")); for (var o in t) { var u = o + (t[o] ? "(" + t[o] + ")" : ""); !s(u) && s(n.prefixSelector(u)) && n.selectors.push(o) } for (var a in r) { var u = a + " " + (r[a] || ""); !s("@" + u) && s("@" + n.prefix + u) && n.atrules.push(a) } e.removeChild(i) })(); n.valueProperties = ["transition", "transition-property"]; e.className += " " + n.prefix; StyleFix.register(n.prefixCSS) })(document.documentElement);</script>
+
+</html>

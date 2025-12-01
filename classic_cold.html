@@ -1,0 +1,3109 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>2048</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: #ebfdff;
+      color: #044d48cb;
+      font-family: "Clear Sans", "Helvetica Neue", Arial, sans-serif;
+      font-size: 18px;
+    }
+
+    body {
+      margin: 80px 0;
+    }
+
+    .heading:after {
+      content: "";
+      display: block;
+      clear: both;
+    }
+
+    h1.title {
+      font-size: 80px;
+      font-weight: bold;
+      margin: 0;
+      display: block;
+      float: left;
+    }
+
+    @-webkit-keyframes move-up {
+      0% {
+        top: 25px;
+        opacity: 1;
+      }
+
+      100% {
+        top: -50px;
+        opacity: 0;
+      }
+    }
+
+    @-moz-keyframes move-up {
+      0% {
+        top: 25px;
+        opacity: 1;
+      }
+
+      100% {
+        top: -50px;
+        opacity: 0;
+      }
+    }
+
+    @keyframes move-up {
+      0% {
+        top: 25px;
+        opacity: 1;
+      }
+
+      100% {
+        top: -50px;
+        opacity: 0;
+      }
+    }
+
+    .scores-container {
+      float: right;
+      text-align: right;
+    }
+
+    .score-container,
+    .best-container {
+      position: relative;
+      display: inline-block;
+      background: #00d6af;
+      padding: 15px 25px;
+      font-size: 25px;
+      height: 25px;
+      line-height: 47px;
+      font-weight: bold;
+      border-radius: 3px;
+      color: white;
+      margin-top: 8px;
+      text-align: center;
+    }
+
+    .score-container:after,
+    .best-container:after {
+      position: absolute;
+      width: 100%;
+      top: 10px;
+      left: 0;
+      text-transform: uppercase;
+      font-size: 13px;
+      line-height: 13px;
+      text-align: center;
+      color: #daeeee;
+    }
+
+    .score-container .score-addition,
+    .best-container .score-addition {
+      position: absolute;
+      right: 30px;
+      color: rgba(0, 255, 200, 0.498);
+      font-size: 25px;
+      line-height: 25px;
+      font-weight: bold;
+      color: rgba(8, 254, 242, 0.457);
+      z-index: 100;
+      -webkit-animation: move-up 600ms ease-in;
+      -moz-animation: move-up 600ms ease-in;
+      animation: move-up 600ms ease-in;
+      -webkit-animation-fill-mode: both;
+      -moz-animation-fill-mode: both;
+      animation-fill-mode: both;
+    }
+
+    .score-container:after {
+      content: "得分";
+    }
+
+    .best-container:after {
+      content: "历史最佳";
+    }
+
+    p {
+      margin-top: 0;
+      margin-bottom: 10px;
+      line-height: 1.65;
+    }
+
+    a {
+      color: #074739;
+      font-weight: bold;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+
+    strong.important {
+      text-transform: uppercase;
+    }
+
+    hr {
+      border: none;
+      border-bottom: 1px solid #007979;
+      margin-top: 20px;
+      margin-bottom: 30px;
+    }
+
+    .container {
+      width: 500px;
+      margin: 0 auto;
+    }
+
+    @-webkit-keyframes fade-in {
+      0% {
+        opacity: 0;
+      }
+
+      100% {
+        opacity: 1;
+      }
+    }
+
+    @-moz-keyframes fade-in {
+      0% {
+        opacity: 0;
+      }
+
+      100% {
+        opacity: 1;
+      }
+    }
+
+    @keyframes fade-in {
+      0% {
+        opacity: 0;
+      }
+
+      100% {
+        opacity: 1;
+      }
+    }
+
+    .game-container {
+      margin-top: 40px;
+      position: relative;
+      padding: 15px;
+      cursor: default;
+      -webkit-touch-callout: none;
+      -ms-touch-callout: none;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      -ms-touch-action: none;
+      touch-action: none;
+      background: #01918c;
+      border-radius: 6px;
+      width: 500px;
+      height: 500px;
+      -webkit-box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      box-sizing: border-box;
+    }
+
+    .game-container .game-message {
+      display: none;
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      background: rgba(218, 238, 234, 0.5);
+      z-index: 100;
+      text-align: center;
+      -webkit-animation: fade-in 800ms ease 1200ms;
+      -moz-animation: fade-in 800ms ease 1200ms;
+      animation: fade-in 800ms ease 1200ms;
+      -webkit-animation-fill-mode: both;
+      -moz-animation-fill-mode: both;
+      animation-fill-mode: both;
+    }
+
+    .game-container .game-message p {
+      font-size: 60px;
+      font-weight: bold;
+      height: 60px;
+      line-height: 60px;
+      margin-top: 222px;
+    }
+
+    .game-container .game-message .lower {
+      display: block;
+      margin-top: 59px;
+    }
+
+    .game-container .game-message a {
+      display: inline-block;
+      background: #bfeaf0;
+      border-radius: 3px;
+      padding: 0 20px;
+      text-decoration: none;
+      color: #f2f9f7;
+      height: 40px;
+      line-height: 42px;
+      margin-left: 9px;
+    }
+
+    .game-container .game-message a.keep-playing-button {
+      display: none;
+    }
+
+    .game-container .game-message.game-won {
+      background: rgba(13, 112, 96, 0.5);
+      color: #f9f6f2;
+    }
+
+    .game-container .game-message.game-won a.keep-playing-button {
+      display: inline-block;
+    }
+
+    .game-container .game-message.game-won,
+    .game-container .game-message.game-over {
+      display: block;
+    }
+
+    .grid-container {
+      position: absolute;
+      z-index: 1;
+    }
+
+    .grid-row {
+      margin-bottom: 15px;
+    }
+
+    .grid-row:last-child {
+      margin-bottom: 0;
+    }
+
+    .grid-row:after {
+      content: "";
+      display: block;
+      clear: both;
+    }
+
+    .grid-cell {
+      width: 106.25px;
+      height: 106.25px;
+      margin-right: 15px;
+      float: left;
+      border-radius: 3px;
+      background: rgba(0, 248, 210, 0.436);
+    }
+
+    .grid-cell:last-child {
+      margin-right: 0;
+    }
+
+    .tile-container {
+      position: absolute;
+      z-index: 2;
+    }
+
+    .tile,
+    .tile .tile-inner {
+      width: 107px;
+      height: 107px;
+      line-height: 107px;
+    }
+
+    .tile.tile-position-1-1 {
+      -webkit-transform: translate(0px, 0px);
+      -moz-transform: translate(0px, 0px);
+      -ms-transform: translate(0px, 0px);
+      transform: translate(0px, 0px);
+    }
+
+    .tile.tile-position-1-2 {
+      -webkit-transform: translate(0px, 121px);
+      -moz-transform: translate(0px, 121px);
+      -ms-transform: translate(0px, 121px);
+      transform: translate(0px, 121px);
+    }
+
+    .tile.tile-position-1-3 {
+      -webkit-transform: translate(0px, 242px);
+      -moz-transform: translate(0px, 242px);
+      -ms-transform: translate(0px, 242px);
+      transform: translate(0px, 242px);
+    }
+
+    .tile.tile-position-1-4 {
+      -webkit-transform: translate(0px, 363px);
+      -moz-transform: translate(0px, 363px);
+      -ms-transform: translate(0px, 363px);
+      transform: translate(0px, 363px);
+    }
+
+    .tile.tile-position-2-1 {
+      -webkit-transform: translate(121px, 0px);
+      -moz-transform: translate(121px, 0px);
+      -ms-transform: translate(121px, 0px);
+      transform: translate(121px, 0px);
+    }
+
+    .tile.tile-position-2-2 {
+      -webkit-transform: translate(121px, 121px);
+      -moz-transform: translate(121px, 121px);
+      -ms-transform: translate(121px, 121px);
+      transform: translate(121px, 121px);
+    }
+
+    .tile.tile-position-2-3 {
+      -webkit-transform: translate(121px, 242px);
+      -moz-transform: translate(121px, 242px);
+      -ms-transform: translate(121px, 242px);
+      transform: translate(121px, 242px);
+    }
+
+    .tile.tile-position-2-4 {
+      -webkit-transform: translate(121px, 363px);
+      -moz-transform: translate(121px, 363px);
+      -ms-transform: translate(121px, 363px);
+      transform: translate(121px, 363px);
+    }
+
+    .tile.tile-position-3-1 {
+      -webkit-transform: translate(242px, 0px);
+      -moz-transform: translate(242px, 0px);
+      -ms-transform: translate(242px, 0px);
+      transform: translate(242px, 0px);
+    }
+
+    .tile.tile-position-3-2 {
+      -webkit-transform: translate(242px, 121px);
+      -moz-transform: translate(242px, 121px);
+      -ms-transform: translate(242px, 121px);
+      transform: translate(242px, 121px);
+    }
+
+    .tile.tile-position-3-3 {
+      -webkit-transform: translate(242px, 242px);
+      -moz-transform: translate(242px, 242px);
+      -ms-transform: translate(242px, 242px);
+      transform: translate(242px, 242px);
+    }
+
+    .tile.tile-position-3-4 {
+      -webkit-transform: translate(242px, 363px);
+      -moz-transform: translate(242px, 363px);
+      -ms-transform: translate(242px, 363px);
+      transform: translate(242px, 363px);
+    }
+
+    .tile.tile-position-4-1 {
+      -webkit-transform: translate(363px, 0px);
+      -moz-transform: translate(363px, 0px);
+      -ms-transform: translate(363px, 0px);
+      transform: translate(363px, 0px);
+    }
+
+    .tile.tile-position-4-2 {
+      -webkit-transform: translate(363px, 121px);
+      -moz-transform: translate(363px, 121px);
+      -ms-transform: translate(363px, 121px);
+      transform: translate(363px, 121px);
+    }
+
+    .tile.tile-position-4-3 {
+      -webkit-transform: translate(363px, 242px);
+      -moz-transform: translate(363px, 242px);
+      -ms-transform: translate(363px, 242px);
+      transform: translate(363px, 242px);
+    }
+
+    .tile.tile-position-4-4 {
+      -webkit-transform: translate(363px, 363px);
+      -moz-transform: translate(363px, 363px);
+      -ms-transform: translate(363px, 363px);
+      transform: translate(363px, 363px);
+    }
+
+    .tile {
+      position: absolute;
+      -webkit-transition: 100ms ease-in-out;
+      -moz-transition: 100ms ease-in-out;
+      transition: 100ms ease-in-out;
+      -webkit-transition-property: -webkit-transform;
+      -moz-transition-property: -moz-transform;
+      transition-property: transform;
+    }
+
+    .tile .tile-inner {
+      border-radius: 3px;
+      background: #0a6b4e;
+      text-align: center;
+      font-weight: bold;
+      z-index: 10;
+      font-size: 55px;
+    }
+
+    .tile.tile-2 .tile-inner {
+      background: #aaeaea;
+      box-shadow: 0 0 30px 10px rgba(116, 243, 222, 0.447), inset 0 0 0 1px rgba(255, 255, 255, 0);
+    }
+
+    .tile.tile-4 .tile-inner {
+      background: #c8e7ed;
+      box-shadow: 0 0 30px 10px rgba(116, 243, 222, 0), inset 0 0 0 1px rgba(255, 255, 255, 0);
+    }
+
+    .tile.tile-8 .tile-inner {
+      color: #f2f6f9;
+      background: #79d4f2;
+    }
+
+    .tile.tile-16 .tile-inner {
+      color: #f9f6f2;
+      background: #63c2f5;
+    }
+
+    .tile.tile-32 .tile-inner {
+      color: #f9f6f2;
+      background: #5f91f6;
+    }
+
+    .tile.tile-64 .tile-inner {
+      color: #f9f6f2;
+      background: #3b5af6;
+    }
+
+    .tile.tile-128 .tile-inner {
+      color: #f9f6f2;
+      background: #8472ed;
+      box-shadow: 0 0 30px 10px rgba(116, 243, 211, 0.4), inset 0 0 0 1px rgba(255, 255, 255, 0.756);
+      font-size: 45px;
+    }
+
+    @media screen and (max-width: 520px) {
+      .tile.tile-128 .tile-inner {
+        font-size: 25px;
+      }
+    }
+
+    .tile.tile-256 .tile-inner {
+      color: #f9f6f2;
+      background: #a761ed;
+      box-shadow: 0 0 30px 10px rgba(116, 243, 243, 0.317), inset 0 0 0 1px rgba(255, 255, 255, 0.19048);
+      font-size: 45px;
+    }
+
+    @media screen and (max-width: 520px) {
+      .tile.tile-256 .tile-inner {
+        font-size: 25px;
+      }
+    }
+
+    .tile.tile-512 .tile-inner {
+      color: #f9f6f2;
+      background: #ae50ed;
+      box-shadow: 0 0 30px 10px rgba(116, 243, 224, 0.397), inset 0 0 0 1px rgba(255, 255, 255, 0.238);
+      font-size: 45px;
+    }
+
+    @media screen and (max-width: 520px) {
+      .tile.tile-512 .tile-inner {
+        font-size: 25px;
+      }
+    }
+
+    .tile.tile-1024 .tile-inner {
+      color: #f9f6f2;
+      background: #8f26f9;
+      box-shadow: 0 0 30px 10px rgba(196, 116, 243, 0.476), inset 0 0 0 1px rgba(255, 255, 255, 0.28571);
+      font-size: 35px;
+    }
+
+    @media screen and (max-width: 520px) {
+      .tile.tile-1024 .tile-inner {
+        font-size: 15px;
+      }
+    }
+
+    .tile.tile-2048 .tile-inner {
+      color: #f9f6f2;
+      background: #7e04b2;
+      box-shadow: 0 0 30px 10px rgba(179, 116, 243, 0.556), inset 0 0 0 1px rgba(255, 255, 255, 0.33333);
+      font-size: 35px;
+    }
+
+    @media screen and (max-width: 520px) {
+      .tile.tile-2048 .tile-inner {
+        font-size: 15px;
+      }
+    }
+
+    .tile.tile-super .tile-inner {
+      color: #f2f9f9;
+      background: #ffffff;
+      font-size: 30px;
+    }
+
+    @media screen and (max-width: 520px) {
+      .tile.tile-super .tile-inner {
+        font-size: 10px;
+      }
+    }
+
+    @-webkit-keyframes appear {
+      0% {
+        opacity: 0;
+        -webkit-transform: scale(0);
+        -moz-transform: scale(0);
+        -ms-transform: scale(0);
+        transform: scale(0);
+      }
+
+      100% {
+        opacity: 1;
+        -webkit-transform: scale(1);
+        -moz-transform: scale(1);
+        -ms-transform: scale(1);
+        transform: scale(1);
+      }
+    }
+
+    @-moz-keyframes appear {
+      0% {
+        opacity: 0;
+        -webkit-transform: scale(0);
+        -moz-transform: scale(0);
+        -ms-transform: scale(0);
+        transform: scale(0);
+      }
+
+      100% {
+        opacity: 1;
+        -webkit-transform: scale(1);
+        -moz-transform: scale(1);
+        -ms-transform: scale(1);
+        transform: scale(1);
+      }
+    }
+
+    @keyframes appear {
+      0% {
+        opacity: 0;
+        -webkit-transform: scale(0);
+        -moz-transform: scale(0);
+        -ms-transform: scale(0);
+        transform: scale(0);
+      }
+
+      100% {
+        opacity: 1;
+        -webkit-transform: scale(1);
+        -moz-transform: scale(1);
+        -ms-transform: scale(1);
+        transform: scale(1);
+      }
+    }
+
+    .tile-new .tile-inner {
+      -webkit-animation: appear 200ms ease 100ms;
+      -moz-animation: appear 200ms ease 100ms;
+      animation: appear 200ms ease 100ms;
+      -webkit-animation-fill-mode: backwards;
+      -moz-animation-fill-mode: backwards;
+      animation-fill-mode: backwards;
+    }
+
+    @-webkit-keyframes pop {
+      0% {
+        -webkit-transform: scale(0);
+        -moz-transform: scale(0);
+        -ms-transform: scale(0);
+        transform: scale(0);
+      }
+
+      50% {
+        -webkit-transform: scale(1.2);
+        -moz-transform: scale(1.2);
+        -ms-transform: scale(1.2);
+        transform: scale(1.2);
+      }
+
+      100% {
+        -webkit-transform: scale(1);
+        -moz-transform: scale(1);
+        -ms-transform: scale(1);
+        transform: scale(1);
+      }
+    }
+
+    @-moz-keyframes pop {
+      0% {
+        -webkit-transform: scale(0);
+        -moz-transform: scale(0);
+        -ms-transform: scale(0);
+        transform: scale(0);
+      }
+
+      50% {
+        -webkit-transform: scale(1.2);
+        -moz-transform: scale(1.2);
+        -ms-transform: scale(1.2);
+        transform: scale(1.2);
+      }
+
+      100% {
+        -webkit-transform: scale(1);
+        -moz-transform: scale(1);
+        -ms-transform: scale(1);
+        transform: scale(1);
+      }
+    }
+
+    @keyframes pop {
+      0% {
+        -webkit-transform: scale(0);
+        -moz-transform: scale(0);
+        -ms-transform: scale(0);
+        transform: scale(0);
+      }
+
+      50% {
+        -webkit-transform: scale(1.2);
+        -moz-transform: scale(1.2);
+        -ms-transform: scale(1.2);
+        transform: scale(1.2);
+      }
+
+      100% {
+        -webkit-transform: scale(1);
+        -moz-transform: scale(1);
+        -ms-transform: scale(1);
+        transform: scale(1);
+      }
+    }
+
+    .tile-merged .tile-inner {
+      z-index: 20;
+      -webkit-animation: pop 200ms ease 100ms;
+      -moz-animation: pop 200ms ease 100ms;
+      animation: pop 200ms ease 100ms;
+      -webkit-animation-fill-mode: backwards;
+      -moz-animation-fill-mode: backwards;
+      animation-fill-mode: backwards;
+    }
+
+    .above-game:after {
+      content: "";
+      display: block;
+      clear: both;
+    }
+
+    .game-intro {
+      float: left;
+      line-height: 42px;
+      margin-bottom: 0;
+    }
+
+    .restart-button {
+      display: inline-block;
+      background: #68bbd9;
+      border-radius: 3px;
+      padding: 0 20px;
+      text-decoration: none;
+      color: #f9f6f2;
+      height: 40px;
+      line-height: 42px;
+      display: block;
+      text-align: center;
+      float: right;
+    }
+
+    .game-explanation {
+      margin-top: 50px;
+    }
+
+    /* 平板和小屏幕响应式布局 */
+    @media screen and (max-width: 1024px) {
+      /* 左右两列改为垂直排列 */
+      div[style*="width:70%"],
+      div[style*="width:350px"] {
+        width: 100% !important;
+        float: none !important;
+        max-width: 100%;
+      }
+
+      /* 右侧按钮容器居中 */
+      div[style*="width:350px"] > div[style*="float: right"] {
+        float: none !important;
+        text-align: center;
+        margin: 20px auto;
+        width: 100%;
+      }
+
+      /* 切换主题按钮调整 */
+      .style-button {
+        position: relative !important;
+        margin: 0 10px !important;
+        display: inline-block;
+      }
+
+      /* 排行榜容器 */
+      .leaderboard {
+        float: none !important;
+        margin: 20px auto;
+        max-width: 500px;
+      }
+
+      /* 信息卡片 */
+      .info-card {
+        margin: 20px auto;
+      }
+    }
+
+    @media screen and (max-width: 520px) {
+
+      html,
+      body {
+        font-size: 15px;
+      }
+
+      body {
+        margin: 20px 0;
+        padding: 0 20px;
+      }
+
+      h1.title {
+        font-size: 27px;
+        margin-top: 15px;
+      }
+
+      .container {
+        width: 280px;
+        margin: 0 auto;
+      }
+
+      .score-container,
+      .best-container {
+        margin-top: 0;
+        padding: 15px 10px;
+        min-width: 40px;
+      }
+
+      .heading {
+        margin-bottom: 10px;
+      }
+
+      .game-intro {
+        width: 55%;
+        display: block;
+        box-sizing: border-box;
+        line-height: 1.65;
+      }
+
+      .restart-button {
+        width: 42%;
+        padding: 0;
+        display: block;
+        box-sizing: border-box;
+        margin-top: 2px;
+      }
+
+      .game-container {
+        margin-top: 17px;
+        position: relative;
+        padding: 10px;
+        cursor: default;
+        -webkit-touch-callout: none;
+        -ms-touch-callout: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        -ms-touch-action: none;
+        touch-action: none;
+        background: #378ff3;
+        border-radius: 6px;
+        width: 280px;
+        height: 280px;
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+      }
+
+      .game-container .game-message {
+        display: none;
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        background: rgba(218, 238, 238, 0.5);
+        z-index: 100;
+        text-align: center;
+        -webkit-animation: fade-in 800ms ease 1200ms;
+        -moz-animation: fade-in 800ms ease 1200ms;
+        animation: fade-in 800ms ease 1200ms;
+        -webkit-animation-fill-mode: both;
+        -moz-animation-fill-mode: both;
+        animation-fill-mode: both;
+      }
+
+      .game-container .game-message p {
+        font-size: 60px;
+        font-weight: bold;
+        height: 60px;
+        line-height: 60px;
+        margin-top: 222px;
+      }
+
+      .game-container .game-message .lower {
+        display: block;
+        margin-top: 59px;
+      }
+
+      .game-container .game-message a {
+        display: inline-block;
+        background: #cafefe;
+        border-radius: 3px;
+        padding: 0 20px;
+        text-decoration: none;
+        color: #f2f9f9;
+        height: 40px;
+        line-height: 42px;
+        margin-left: 9px;
+      }
+
+      .game-container .game-message a.keep-playing-button {
+        display: none;
+      }
+
+      .game-container .game-message.game-won {
+        background: rgba(46, 237, 234, 0.5);
+        color: #f9f6f2;
+      }
+
+      .game-container .game-message.game-won a.keep-playing-button {
+        display: inline-block;
+      }
+
+      .game-container .game-message.game-won,
+      .game-container .game-message.game-over {
+        display: block;
+      }
+
+      .grid-container {
+        position: absolute;
+        z-index: 1;
+      }
+
+      .grid-row {
+        margin-bottom: 10px;
+      }
+
+      .grid-row:last-child {
+        margin-bottom: 0;
+      }
+
+      .grid-row:after {
+        content: "";
+        display: block;
+        clear: both;
+      }
+
+      .grid-cell {
+        width: 57.5px;
+        height: 57.5px;
+        margin-right: 10px;
+        float: left;
+        border-radius: 3px;
+        background: rgb(255, 255, 255);
+      }
+
+      .grid-cell:last-child {
+        margin-right: 0;
+      }
+
+      .tile-container {
+        position: absolute;
+        z-index: 2;
+      }
+
+      .tile,
+      .tile .tile-inner {
+        width: 58px;
+        height: 58px;
+        line-height: 58px;
+      }
+
+      .tile.tile-position-1-1 {
+        -webkit-transform: translate(0px, 0px);
+        -moz-transform: translate(0px, 0px);
+        -ms-transform: translate(0px, 0px);
+        transform: translate(0px, 0px);
+      }
+
+      .tile.tile-position-1-2 {
+        -webkit-transform: translate(0px, 67px);
+        -moz-transform: translate(0px, 67px);
+        -ms-transform: translate(0px, 67px);
+        transform: translate(0px, 67px);
+      }
+
+      .tile.tile-position-1-3 {
+        -webkit-transform: translate(0px, 135px);
+        -moz-transform: translate(0px, 135px);
+        -ms-transform: translate(0px, 135px);
+        transform: translate(0px, 135px);
+      }
+
+      .tile.tile-position-1-4 {
+        -webkit-transform: translate(0px, 202px);
+        -moz-transform: translate(0px, 202px);
+        -ms-transform: translate(0px, 202px);
+        transform: translate(0px, 202px);
+      }
+
+      .tile.tile-position-2-1 {
+        -webkit-transform: translate(67px, 0px);
+        -moz-transform: translate(67px, 0px);
+        -ms-transform: translate(67px, 0px);
+        transform: translate(67px, 0px);
+      }
+
+      .tile.tile-position-2-2 {
+        -webkit-transform: translate(67px, 67px);
+        -moz-transform: translate(67px, 67px);
+        -ms-transform: translate(67px, 67px);
+        transform: translate(67px, 67px);
+      }
+
+      .tile.tile-position-2-3 {
+        -webkit-transform: translate(67px, 135px);
+        -moz-transform: translate(67px, 135px);
+        -ms-transform: translate(67px, 135px);
+        transform: translate(67px, 135px);
+      }
+
+      .tile.tile-position-2-4 {
+        -webkit-transform: translate(67px, 202px);
+        -moz-transform: translate(67px, 202px);
+        -ms-transform: translate(67px, 202px);
+        transform: translate(67px, 202px);
+      }
+
+      .tile.tile-position-3-1 {
+        -webkit-transform: translate(135px, 0px);
+        -moz-transform: translate(135px, 0px);
+        -ms-transform: translate(135px, 0px);
+        transform: translate(135px, 0px);
+      }
+
+      .tile.tile-position-3-2 {
+        -webkit-transform: translate(135px, 67px);
+        -moz-transform: translate(135px, 67px);
+        -ms-transform: translate(135px, 67px);
+        transform: translate(135px, 67px);
+      }
+
+      .tile.tile-position-3-3 {
+        -webkit-transform: translate(135px, 135px);
+        -moz-transform: translate(135px, 135px);
+        -ms-transform: translate(135px, 135px);
+        transform: translate(135px, 135px);
+      }
+
+      .tile.tile-position-3-4 {
+        -webkit-transform: translate(135px, 202px);
+        -moz-transform: translate(135px, 202px);
+        -ms-transform: translate(135px, 202px);
+        transform: translate(135px, 202px);
+      }
+
+      .tile.tile-position-4-1 {
+        -webkit-transform: translate(202px, 0px);
+        -moz-transform: translate(202px, 0px);
+        -ms-transform: translate(202px, 0px);
+        transform: translate(202px, 0px);
+      }
+
+      .tile.tile-position-4-2 {
+        -webkit-transform: translate(202px, 67px);
+        -moz-transform: translate(202px, 67px);
+        -ms-transform: translate(202px, 67px);
+        transform: translate(202px, 67px);
+      }
+
+      .tile.tile-position-4-3 {
+        -webkit-transform: translate(202px, 135px);
+        -moz-transform: translate(202px, 135px);
+        -ms-transform: translate(202px, 135px);
+        transform: translate(202px, 135px);
+      }
+
+      .tile.tile-position-4-4 {
+        -webkit-transform: translate(202px, 202px);
+        -moz-transform: translate(202px, 202px);
+        -ms-transform: translate(202px, 202px);
+        transform: translate(202px, 202px);
+      }
+
+      .tile .tile-inner {
+        font-size: 35px;
+      }
+
+      .game-message p {
+        font-size: 30px !important;
+        height: 30px !important;
+        line-height: 30px !important;
+        margin-top: 90px !important;
+      }
+
+      .game-message .lower {
+        margin-top: 30px !important;
+      }
+    }
+
+        /* 手机端按钮布局 */
+      .btn-open-popup {
+        padding: 8px 16px;
+        font-size: 14px;
+        margin: 5px;
+      }
+
+      .style-button {
+        position: relative !important;
+        margin: 5px !important;
+        display: inline-block;
+        padding: 8px 16px;
+        font-size: 14px;
+      }
+
+      /* Theme-aligned control buttons */
+      .controls-top-right .btn-open-popup,
+      .controls-top-right .style-button {
+        background: linear-gradient(180deg, #f3e8dc 0%, #e7d6c2 100%);
+        border: 1px solid rgba(0,0,0,0.08);
+        color: #5b4a3f;
+        padding: 10px 14px;
+        font-weight: 600;
+        border-radius: 8px;
+        box-shadow: 4px 4px 8px rgba(0,0,0,0.08), inset -2px -2px 6px rgba(255,255,255,0.7);
+        transition: transform 120ms ease, box-shadow 160ms ease, background 120ms ease;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .controls-top-right .btn-open-popup:hover,
+      .controls-top-right .style-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 6px 8px 16px rgba(0,0,0,0.12), inset -1px -1px 3px rgba(255,255,255,0.6);
+        background: linear-gradient(180deg, #f7efe2 0%, #ead8bf 100%);
+      }
+
+      .controls-top-right .btn-open-popup:active,
+      .controls-top-right .style-button:active {
+        transform: translateY(0);
+        box-shadow: 2px 2px 6px rgba(0,0,0,0.06) inset;
+        background: linear-gradient(180deg, #e9d9c4 0%, #dcc8ad 100%);
+
+      }
+    
+    /*-------------------------------------------------------------------------------------------登录弹窗↓*/
+    .btn-open-popup {
+      padding: 12px 24px;
+      font-size: 18px;
+      background-color: rgb(0, 169, 155);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .btn-open-popup:hover {
+      background-color: #4caf50;
+    }
+
+    .overlay-container {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      z-index: 9999;
+    }
+
+    .popup-box {
+      background: #fff;
+      padding: 24px;
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+      width: 320px;
+      text-align: center;
+      opacity: 0;
+      transform: scale(0.8);
+      animation: fadeInUp 0.5s ease-out forwards;
+    }
+
+    .form-container {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .form-label {
+      margin-bottom: 10px;
+      font-size: 16px;
+      color: #444444;
+      text-align: left;
+    }
+
+    .form-input {
+      padding: 10px;
+      margin-bottom: 20px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 16px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .btn-submit,
+    .btn-close-popup {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .btn-submit {
+      background-color: rgb(0, 151, 136);
+      color: #fff;
+    }
+
+    .btn-close-popup {
+      margin-top: 12px;
+      background-color: #3ce7ab;
+      color: #fff;
+    }
+
+    .btn-submit:hover,
+    .btn-close-popup:hover {
+      background-color: #4caf50;
+    }
+
+    /* ----------------------------淡入淡出动画的关键帧 */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* -------------------------------弹窗动画 */
+    .overlay-container.show {
+      display: flex;
+      opacity: 1;
+    }
+
+
+    /*-----------------------------------------------------------------------------------------------排行榜↓*/
+    leaderboard,
+    leaderboard::before,
+    leaderboard::after {
+      box-sizing: border-box;
+    }
+
+    /*--------------------
+Leaderboard
+--------------------*/
+    .leaderboard {
+      position: relative;
+      top: 0%;
+      left: 0%;
+      transform: translate(-10%, 40%);
+      width: 385px;
+      height: 380px;
+      background: linear-gradient(to bottom, #3a4b4d, #182623);
+      border-radius: 10px;
+      box-shadow: 10px 25px 30px rgba(9, 58, 62, 0.3);
+    }
+
+    .leaderboard h1 {
+      font-size: 22px;
+      color: #e1e1e1;
+      padding: 12px 13px 1px;
+    }
+
+    .leaderboard h1 svg {
+      width: 25px;
+      height: 26px;
+      position: relative;
+      top: 3px;
+      margin-right: 6px;
+      vertical-align: baseline;
+      padding: 0px 10px 0px 0px;
+    }
+
+    .leaderboard ol {
+      counter-reset: leaderboard;
+    }
+
+    .leaderboard ol li {
+      position: relative;
+      z-index: 1;
+      font-size: 18px;
+      counter-increment: leaderboard;
+      padding: 18px 10px 18px 50px;
+      cursor: pointer;
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
+      transform: translateZ(0) scale(1, 1);
+    }
+
+    .leaderboard ol li::before {
+      /*-------------------------------序号*/
+      content: counter(leaderboard);
+      position: absolute;
+      z-index: 2;
+      top: 15px;
+      left: 15px;
+      width: 20px;
+      height: 20px;
+      line-height: 20px;
+      color: #44c2a9;
+      background: #fff;
+      border-radius: 20px;
+      text-align: center;
+    }
+
+    .leaderboard ol li mark {
+      /*---------------------------------用户名*/
+      position: absolute;
+      z-index: 2;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      padding: 18px 10px 18px 50px;
+      margin: 0;
+      background: none;
+      color: #193a2d;
+      font-weight: bold;
+    }
+
+    .leaderboard ol li mark::before,
+    .leaderboard ol li mark::after {
+      /*-----------------------小三角*/
+      content: "";
+      position: absolute;
+      z-index: 1;
+      bottom: 25px;
+      left: -9px;
+      border-top: 0px solid #44c2b5;
+      border-left: 10px solid transparent;
+      transition: all 0.1s ease-in-out;
+      opacity: 0;
+    }
+
+    .leaderboard ol li mark::after {
+      /*-----------------------小三角*/
+      left: 0;
+      right: 49px;
+      border-left: none;
+      border-right: 10px solid transparent;
+    }
+
+    .leaderboard ol li small {
+      /*------------------------------数值*/
+      position: relative;
+      color: #004e46;
+      z-index: 2;
+      display: block;
+      text-align: right;
+      font-weight: bold;
+    }
+
+    .leaderboard ol li::after {
+      content: "";
+      position: absolute;
+      z-index: 1;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #55faad;
+      box-shadow: 0 3px 0 rgba(7, 64, 59, 0.568);
+      transition: all 0.3s ease-in-out;
+      opacity: 0;
+    }
+
+    .leaderboard ol li:nth-child(1) {
+      background: #d5fdf0;
+    }
+
+    .leaderboard ol li:nth-child(1)::after {
+      background: #95e9c6;
+      box-shadow: 0 5.5px 5px rgba(5, 81, 71, 0.589);
+    }
+
+    .leaderboard ol li:nth-child(1) mark::before,
+    .leaderboard ol li:nth-child(1) mark::after {
+      border-top: 6px solid #3fad7d;
+      bottom: 31px;
+    }
+
+    .leaderboard ol li:nth-child(2) {
+      background: #bdf1e5;
+    }
+
+    .leaderboard ol li:nth-child(2)::after {
+      background: #95e9c6;
+      box-shadow: 0 5.5px 5px rgba(0, 0, 0, 0.08);
+    }
+
+    .leaderboard ol li:nth-child(2) mark::before,
+    .leaderboard ol li:nth-child(2) mark::after {
+      border-top: 6px solid #3fad7d;
+      bottom: 30px;
+    }
+
+    .leaderboard ol li:nth-child(3) {
+      background: #a9e7cf;
+    }
+
+    .leaderboard ol li:nth-child(3)::after {
+      background: #95e9c6;
+      box-shadow: 0 5.5px 5px rgba(0, 0, 0, 0.11);
+    }
+
+    .leaderboard ol li:nth-child(3) mark::before,
+    .leaderboard ol li:nth-child(3) mark::after {
+      border-top: 2px solid #3fad7d;
+      bottom: 34px;
+    }
+
+    .leaderboard ol li:nth-child(4) {
+      background: #9bdfcc;
+    }
+
+    .leaderboard ol li:nth-child(4)::after {
+      background: #95e9c6;
+      box-shadow: 0 5.5px 5px rgba(0, 0, 0, 0.15);
+    }
+
+    .leaderboard ol li:nth-child(4) mark::before,
+    .leaderboard ol li:nth-child(4) mark::after {
+      top: -7px;
+      bottom: auto;
+      border-top: none;
+      border-bottom: 6px solid #3fad7d;
+    }
+
+    .leaderboard ol li:nth-child(5) {
+      background: #8ad3c2;
+    }
+
+    .leaderboard ol li:nth-child(5)::after {
+      background: #95e9c6;
+      box-shadow: 0 5.5px 5pxx rgba(0, 0, 0, 0.12);
+    }
+
+    .leaderboard ol li:nth-child(5) mark::before,
+    .leaderboard ol li:nth-child(5) mark::after {
+      top: -9px;
+      bottom: auto;
+      border-top: none;
+      border-bottom: 8px solid #3fad7d;
+    }
+
+    .leaderboard ol li:nth-child(6) {
+      background: #7ac7b8;
+      border-radius: 0 0 10px 10px;
+    }
+
+    .leaderboard ol li:nth-child(6)::after {
+      background: #95e9c6;
+      box-shadow: 0 5.5px 5px rgba(0, 0, 0, 0.12);
+      border-radius: 0 0 10px 10px;
+    }
+
+    .leaderboard ol li:nth-child(6) mark::before,
+    .leaderboard ol li:nth-child(6) mark::after {
+      top: -9px;
+      bottom: auto;
+      border-top: none;
+      border-bottom: 8px solid #3fad7d;
+    }
+
+    .leaderboard ol li:hover {
+      z-index: 2;
+      overflow: visible;
+    }
+
+    .leaderboard ol li:hover::after {
+      opacity: 1;
+      transform: scaleX(1.06) scaleY(1.03);
+    }
+
+    .leaderboard ol li:hover mark::before,
+    .leaderboard ol li:hover mark::after {
+      opacity: 1;
+      transition: all 0.35s ease-in-out;
+    }
+
+    .the-most {
+      position: fixed;
+      z-index: 1;
+      bottom: 0;
+      left: 0;
+      width: 50vw;
+      max-width: 200px;
+      padding: 10px;
+    }
+
+    .the-most img {
+      max-width: 100%;
+    }
+
+    body,
+    /*-----------------------------------------删除body后页面效果不同*/
+    ol,
+    li,
+    video {
+      margin: 0;
+      padding: 0;
+      border: 0;
+      font-size: 100%;
+      font: inherit;
+      vertical-align: baseline
+    }
+
+    ol,
+    ul {
+      list-style: none
+    }
+
+    .card-slot {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-right: 20px;
+      padding: 15px;
+      border: 2px dashed #bbb;
+      background-color: #f9f9f9;
+      border-radius: 10px;
+      height: 40px;
+      width: 100px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      margin-top: 10px;
+    }
+
+    .half-card {
+      padding: 10px 20px;
+      background-color: #ffcc00;
+      border: 2px solid #e6b800;
+      border-radius: 5px;
+      cursor: grab;
+      font-size: 16px;
+      font-weight: bold;
+      color: #fff;
+      text-align: center;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+      transition: transform 0.2s ease;
+    }
+
+    .half-card:active {
+      cursor: grabbing;
+    }
+
+    .half-card:hover {
+      transform: scale(1.1);
+    }
+
+    @keyframes half-animation {
+      0% {
+        transform: scale(1);
+      }
+
+      50% {
+        transform: scale(1.2);
+      }
+
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    .tile {
+      transition: background-color 0.2s, transform 0.2s;
+    }
+
+    .halfed {
+      animation: half-animation 0.4s ease-in-out;
+    }
+
+    .blocked {
+      animation: shake 0.4s ease-in-out;
+    }
+
+    @keyframes shake {
+
+      0%,
+      100% {
+        transform: translateX(0);
+      }
+
+      25% {
+        transform: translateX(-10px);
+      }
+
+      75% {
+        transform: translateX(10px);
+      }
+    }
+
+    .sig {
+      width: 80px;
+      height: 38px;
+      border-radius: 10px;
+      background-color: #7ec2b1;
+      border-color: #fff;
+      color: #ffffff;
+      margin-top: 15px;
+    }
+
+    @keyframes wow {
+
+      50% {
+        color: white;
+        text-shadow: 0px 0px 2px white;
+      }
+
+    }
+
+    .info-card {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-around;
+      font-size: 1.2rem;
+      width: 100%;
+      max-width: 500px;
+      background: #52a3957a;
+      border-radius: 0.7rem;
+      padding: 3px;
+      margin-top: 50px;
+    }
+
+    .info-card:hover {
+      background-color: #e2fff6;
+      /* 鼠标悬停时的颜色 */
+      color: rgb(226, 255, 251);
+    }
+
+    .info-card * {
+      height: 100%;
+      padding: 1rem 2px 1rem 2px;
+      margin: 0;
+      border-radius: .7rem;
+    }
+
+    .info-icon {
+      align-self: center;
+      border-top-right-radius: 3px;
+      border-bottom-right-radius: 3px;
+      background: #00ff9d6e;
+      text-align: center;
+      border-right: 1px solid #036647;
+    }
+
+    .info-text {
+      flex: 1 1 0;
+      text-align: center;
+      background: #4fa08a7a;
+      border-top-left-radius: 0px;
+      border-bottom-left-radius: 0em;
+      animation: 1.3s wow infinite;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #4fa080;
+      font-family: sans-serif;
+    }
+
+    .style-button {
+      display: inline-block;
+      transition: all 0.2s ease-in;
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+      color: #090909;
+      padding: 0.6em 1em;
+      cursor: pointer;
+      font-size: 18px;
+      border-radius: 0.5em;
+      background: #e8e8e8;
+      border: 1px solid #e8e8e8;
+      box-shadow: 6px 6px 12px #c5c5c5, -6px -6px 12px #ffffff;
+    }
+
+    .style-button:active {
+      color: #666;
+      box-shadow: inset 4px 4px 12px #c5c5c5, inset -4px -4px 12px #ffffff;
+    }
+
+    .style-button:before {
+      content: "";
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%) scaleY(1) scaleX(1.25);
+      top: 100%;
+      width: 140%;
+      height: 180%;
+      background-color: rgba(0, 0, 0, 0.05);
+      border-radius: 50%;
+      display: block;
+      transition: all 0.5s 0.1s cubic-bezier(0.55, 0, 0.1, 1);
+      z-index: -1;
+    }
+
+    .style-button:after {
+      content: "";
+      position: absolute;
+      left: 55%;
+      transform: translateX(-50%) scaleY(1) scaleX(1.45);
+      top: 180%;
+      width: 160%;
+      height: 190%;
+      background-color: #009087;
+      border-radius: 50%;
+      display: block;
+      transition: all 0.5s 0.1s cubic-bezier(0.55, 0, 0.1, 1);
+      z-index: -1;
+    }
+
+
+    .style-button:hover {
+      color: #ffffff;
+      border: 1px solid #009087;
+    }
+
+    .style-button:hover:before {
+      top: -35%;
+      background-color: #009087;
+      transform: translateX(-50%) scaleY(1.3) scaleX(0.8);
+    }
+
+    .style-button:hover:after {
+      top: -45%;
+      background-color: #009087;
+      transform: translateX(-50%) scaleY(1.3) scaleX(0.8);
+    }
+
+    /* 固定右上角的控制按钮 */
+    .controls-top-right {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      z-index: 1000;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      pointer-events: auto;
+    }
+
+    .controls-top-right .btn-open-popup,
+    .controls-top-right .style-button {
+      margin: 0;
+    }
+
+    /* 小屏幕时稍微缩小并增加可点面积 */
+    @media screen and (max-width: 520px) {
+      .controls-top-right {
+        top: 10px;
+        right: 10px;
+        gap: 6px;
+      }
+
+      .controls-top-right .btn-open-popup,
+      .controls-top-right .style-button {
+        padding: 8px 10px;
+        font-size: 14px;
+      }
+    }
+  </style>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport"
+  content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0, maximum-scale=1, user-scalable=no, minimal-ui">
+</head>
+
+<body>
+<div style="height:100%;width:70%;float:left;">
+  <input type="image" src="image/group.png" style="width: 160px;padding-top: 10px;" onclick="gohome()">
+  <div class="container">
+    <div class="heading">
+      <img src="image/2048.png" style="width: 220px;">
+      <div class="scores-container">
+        <div class="score-container">0</div>
+        <div class="best-container" id="bests">0</div>
+      </div>
+    </div>
+
+  <!-- controls are placed in the right sidebar to match classic layout -->
+
+    <!-- 新增减半卡槽 -->
+    <div class="card-slot" style="float: left;">
+      <div class="half-card" draggable="true">减半卡</div>
+    </div><br />
+    <span id="sign_in">未登录</span>
+
+    <div class="above-game">
+      <p class="game-intro">快来玩 <strong>2048吧!</strong></p>
+      <a class="restart-button">重新开始</a>
+    </div>
+    <div class="game-container">
+      <div class="game-message">
+        <p></p>
+        <div class="lower">
+          <a class="keep-playing-button">继续游戏</a>
+          <a class="retry-button">再来一次</a>
+        </div>
+      </div>
+
+      <div class="grid-container">
+        <div class="grid-row">
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+        </div>
+        <div class="grid-row">
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+        </div>
+        <div class="grid-row">
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+        </div>
+        <div class="grid-row">
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+        </div>
+      </div>
+
+      <div class="tile-container">
+
+      </div>
+    </div>
+
+
+    <p class="game-explanation">
+      <strong class="important">玩法指导:</strong> 使用 <strong>方向键/WASD/HJKL键</strong> 移动方块。 两个同样数字的方块相碰会
+      <strong>合并成为一个！</strong>
+    </p>
+
+  </div>
+  <div id="popupOverlay" class="overlay-container">
+    <div class="popup-box">
+      <h2 style="color: green;">用户登录</h2>
+      <form class="form-container">
+        <label class="form-label" for="name">
+          用户名:
+        </label>
+        <input class="form-input" type="text" placeholder="请输入用户名" id="name" name="name" required>
+
+        <label class="form-label" for="password">密码:</label>
+        <input class="form-input" type="password" placeholder="请输入密码" id="password" name="password" required>
+
+        <button class="btn-submit" type="button" onclick="signin()">
+          确定
+        </button>
+      </form>
+
+      <button class="btn-close-popup" onclick="togglePopup()">
+        关闭
+      </button>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+      <button type="primary" class="btn-close-popup" onclick="toRegister()">注册</button>
+    </div>
+  </div>
+  <span id="debug"></span>
+  </div>
+  <div style="height:100%;width:350px;float:right;">
+    <div class="controls-top-right">
+      <button class="btn-open-popup" onclick="undo()">悔棋</button>
+      <span class="style-button" onclick="theme()">切换主题</span>
+      <button class="btn-open-popup" onclick="togglePopup()"><div id="sibt">登录</div></button>
+    </div>
+    <div class="leaderboard" style="float: left;">
+    <div onclick="ifunsign_Popup()">
+      <h1>
+        <svg class="ico-cup">
+          <use xlink:href="#cup"></use>
+        </svg>
+        <span id="rank_title">登录后查看排行榜</span>
+      </h1>
+      <ol>
+        <li>
+          <mark id="rank1name">--------</mark>
+          <small id="rank1num">----</small>
+        </li>
+        <li>
+          <mark id="rank2name">--------</mark>
+          <small id="rank2num">----</small>
+        </li>
+        <li>
+          <mark id="rank3name">--------</mark>
+          <small id="rank3num">----</small>
+        </li>
+        <li>
+          <mark id="rank4name">--------</mark>
+          <small id="rank4num">----</small>
+        </li>
+        <li>
+          <mark id="rank5name">--------</mark>
+          <small id="rank5num">----</small>
+        </li>
+        <li>
+          <mark id="rank6name">--------</mark>
+          <small id="rank6num">----</small>
+        </li>
+      </ol>
+    </div>
+    <div class="info-card" onclick="toMultiplayer()">
+      <p class="info-icon">📲</p>
+      <p class="info-text">一个人玩太孤单？来试试联机模式！</p>
+    </div>
+  </div>
+
+
+  <svg style="display: none;">
+    <symbol id="cup" x="0px" y="0px" width="25px" height="26px" viewBox="0 0 25 26" enable-background="new 0 0 25 26"
+      xml:space="preserve">
+      <path fill="#F26856" d="M21.215,1.428c-0.744,0-1.438,0.213-2.024,0.579V0.865c0-0.478-0.394-0.865-0.88-0.865H6.69
+    C6.204,0,5.81,0.387,5.81,0.865v1.142C5.224,1.641,4.53,1.428,3.785,1.428C1.698,1.428,0,3.097,0,5.148
+    C0,7.2,1.698,8.869,3.785,8.869h1.453c0.315,0,0.572,0.252,0.572,0.562c0,0.311-0.257,0.563-0.572,0.563
+    c-0.486,0-0.88,0.388-0.88,0.865c0,0.478,0.395,0.865,0.88,0.865c0.421,0,0.816-0.111,1.158-0.303
+    c0.318,0.865,0.761,1.647,1.318,2.31c0.686,0.814,1.515,1.425,2.433,1.808c-0.04,0.487-0.154,1.349-0.481,2.191
+    c-0.591,1.519-1.564,2.257-2.975,2.257H5.238c-0.486,0-0.88,0.388-0.88,0.865v4.283c0,0.478,0.395,0.865,0.88,0.865h14.525
+    c0.485,0,0.88-0.388,0.88-0.865v-4.283c0-0.478-0.395-0.865-0.88-0.865h-1.452c-1.411,0-2.385-0.738-2.975-2.257
+    c-0.328-0.843-0.441-1.704-0.482-2.191c0.918-0.383,1.748-0.993,2.434-1.808c0.557-0.663,1-1.445,1.318-2.31
+    c0.342,0.192,0.736,0.303,1.157,0.303c0.486,0,0.88-0.387,0.88-0.865c0-0.478-0.394-0.865-0.88-0.865
+    c-0.315,0-0.572-0.252-0.572-0.563c0-0.31,0.257-0.562,0.572-0.562h1.452C23.303,8.869,25,7.2,25,5.148
+    C25,3.097,23.303,1.428,21.215,1.428z M5.238,7.138H3.785c-1.116,0-2.024-0.893-2.024-1.99c0-1.097,0.908-1.99,2.024-1.99
+    c1.117,0,2.025,0.893,2.025,1.99v2.06C5.627,7.163,5.435,7.138,5.238,7.138z M18.883,21.717v2.553H6.118v-2.553H18.883
+    L18.883,21.717z M13.673,18.301c0.248,0.65,0.566,1.214,0.947,1.686h-4.24c0.381-0.472,0.699-1.035,0.947-1.686
+    c0.33-0.865,0.479-1.723,0.545-2.327c0.207,0.021,0.416,0.033,0.627,0.033c0.211,0,0.42-0.013,0.627-0.033
+    C13.195,16.578,13.344,17.436,13.673,18.301z M12.5,14.276c-2.856,0-4.93-2.638-4.93-6.273V1.73h9.859v6.273
+    C17.43,11.638,15.357,14.276,12.5,14.276z M21.215,7.138h-1.452c-0.197,0-0.39,0.024-0.572,0.07v-2.06
+    c0-1.097,0.908-1.99,2.024-1.99c1.117,0,2.025,0.893,2.025,1.99C23.241,6.246,22.333,7.138,21.215,7.138z" />
+    </symbol>
+  </svg>
+</div>
+<script>
+  const tapAudio = new Audio('./audio/tap.mp3');
+  let history = [];//历史记录栈
+  (function () {//动画兼容性处理
+    var lastTime = 0;
+    var vendors = ['webkit', 'moz'];
+    for (var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
+      window.requestAnimationFrame = window[vendors[x] + 'RequestAnimationFrame'];
+      window.cancelAnimationFrame = window[vendors[x] + 'CancelAnimationFrame'] ||
+        window[vendors[x] + 'CancelRequestAnimationFrame'];
+    }
+
+    if (!window.requestAnimationFrame) {
+      window.requestAnimationFrame = function (callback) {
+        var currTime = new Date().getTime();
+        var timeToCall = Math.max(0, 16 - (currTime - lastTime));
+        var id = window.setTimeout(function () {
+          callback(currTime + timeToCall);
+        },
+          timeToCall);
+        lastTime = currTime + timeToCall;
+        return id;
+      };
+    }
+
+    if (!window.cancelAnimationFrame) {
+      window.cancelAnimationFrame = function (id) {
+        clearTimeout(id);
+      };
+    }
+  }());
+
+  //等待浏览器准备好渲染游戏（避免出现故障）
+  window.requestAnimationFrame(function () {
+    // addEvent(new GameManager(4, KeyboardInputManager, HTMLActuator, LocalStorageManager))
+  });
+
+  Function.prototype.bind = Function.prototype.bind || function (target) {//函数绑定，使得在调用这个新函数时，原函数被指定的对象作为上下文执行，并且可以传入预设的参数。
+    var self = this;
+    return function (args) {
+      if (!(args instanceof Array)) {
+        args = [args];
+      }
+      self.apply(target, args);
+    };
+  };
+
+  (function () {//在不支持 classList 属性的旧版本浏览器中，手动实现 classList 的功能
+    if (typeof window.Element === "undefined" ||
+      "classList" in document.documentElement) {
+      return;
+    }
+
+    var prototype = Array.prototype,
+      push = prototype.push,
+      splice = prototype.splice,
+      join = prototype.join;
+
+    function DOMTokenList(el) {
+      this.el = el;
+      // 类名需要在空格处进行修剪和拆分以检索类的列表。
+      var classes = el.className.replace(/^\s+|\s+$/g, '').split(/\s+/);
+      for (var i = 0; i < classes.length; i++) {
+        push.call(this, classes[i]);
+      }
+    }
+
+    DOMTokenList.prototype = {
+      add: function (token) {
+        if (this.contains(token)) return;
+        push.call(this, token);
+        this.el.className = this.toString();
+      },
+      contains: function (token) {
+        return this.el.className.indexOf(token) != -1;
+      },
+      item: function (index) {
+        return this[index] || null;
+      },
+      remove: function (token) {
+        if (!this.contains(token)) return;
+        for (var i = 0; i < this.length; i++) {
+          if (this[i] == token) break;
+        }
+        splice.call(this, i, 1);
+        this.el.className = this.toString();
+      },
+      toString: function () {
+        return join.call(this, ' ');
+      },
+      toggle: function (token) {
+        if (!this.contains(token)) {
+          this.add(token);
+        } else {
+          this.remove(token);
+        }
+
+        return this.contains(token);
+      }
+    };
+
+    window.DOMTokenList = DOMTokenList;
+
+    function defineElementGetter(obj, prop, getter) {
+      if (Object.defineProperty) {
+        Object.defineProperty(obj, prop, {
+          get: getter
+        });
+      } else {
+        obj.__defineGetter__(prop, getter);
+      }
+    }
+
+    defineElementGetter(HTMLElement.prototype, 'classList', function () {
+      return new DOMTokenList(this);
+    });
+  })();
+
+  function GameManager(size, InputManager, Actuator, StorageManager) {
+    this.size = size; // 网格的大小
+    this.inputManager = new InputManager; // new 运算符允许开发人员创建一个用户定义的对象类型的实例或具有构造函数的内置对象的实例。
+    this.storageManager = new StorageManager;
+    this.actuator = new Actuator;
+
+    this.startTiles = 2; // 开始时tile的数量
+
+    this.inputManager.on("move", this.move.bind(this)); // 注册move回调函数
+    /* 如果你把 this.move.bind(this) 中的 this 改成 GameManager，会导致绑定失败，
+    因为 GameManager 不是一个实例，而是一个构造函数。绑定方法需要将 this 绑定到一个具体的对象实例，
+    而不是一个类（构造函数）。*/
+    this.inputManager.on("restart", this.restart.bind(this)); // 注册restart回调函数
+    this.inputManager.on("keepPlaying", this.keepPlaying.bind(this));  // 注册keepPlaying回调函数
+
+    this.setup();
+  }
+
+  // Restart the game
+  GameManager.prototype.restart = function () {
+    this.storageManager.clearGameState();
+    this.actuator.continueGame(); // Clear the game won/lost message
+    this.setup();
+  };
+
+  // 当2048赢了之后，游戏继续
+  GameManager.prototype.keepPlaying = function () {
+    this.keepPlaying = true;
+    this.actuator.continueGame(); // Clear the game won/lost message
+  };
+
+  // 判断游戏是否结束 结束——>true 继续——>false
+  GameManager.prototype.isGameTerminated = function () {
+    return this.over || (this.won && !this.keepPlaying);
+  };
+
+  // Set up the game
+  GameManager.prototype.setup = function () {
+    var previousState = this.storageManager.getGameState();
+
+    // Reload the game from a previous game if present
+    if (previousState) {
+      this.grid = new Grid(previousState.grid.size,
+        previousState.grid.cells); // Reload grid
+      this.score = previousState.score;
+      this.over = previousState.over;
+      this.won = previousState.won;
+      this.keepPlaying = previousState.keepPlaying;
+    } else {
+      this.grid = new Grid(this.size);
+      this.score = 0;
+      this.over = false;
+      this.won = false;
+      this.keepPlaying = false;
+
+      while (history.length > 0) {
+        history.pop();
+      }
+      // 添加开始的格子，格子数量由StartTiles决定
+      this.addStartTiles();
+    }
+
+    // 更新画面
+    this.actuate();
+  };
+
+  // Set up the initial tiles to start the game with
+  GameManager.prototype.addStartTiles = function () {
+    for (var i = 0; i < this.startTiles; i++) {
+      this.addRandomTile();
+    }
+  };
+
+  // Adds a tile in a random position
+  GameManager.prototype.addRandomTile = function () {
+    if (this.grid.cellsAvailable()) {
+      var value = Math.random() < 0.9 ? 2 : 4;
+      var tile = new Tile(this.grid.randomAvailableCell(), value);
+      this.grid.insertTile(tile);
+    }
+  };
+
+  // Sends the updated grid to the actuator把更新的grid送到actuator
+  GameManager.prototype.actuate = function () {
+    if (this.storageManager.getBestScore() < this.score) {
+      this.storageManager.setBestScore(this.score);
+      if (username != "none") {//__________________________________________________________________xvyanfei发送最高分数到服务器
+        send("score=" + this.score + ",name=" + username + ";");
+      }
+      signscore = this.score;
+    }
+
+    // 如果游戏结束，则不再更新actuator，删除数据(game over only, not win)
+    if (this.over) {
+      this.storageManager.clearGameState();
+    } else {
+      this.storageManager.setGameState(this.serialize());
+
+    }
+
+    this.actuator.actuate(this.grid, {
+      score: this.score,
+      over: this.over,
+      won: this.won,
+      bestScore: this.storageManager.getBestScore(),
+      terminated: this.isGameTerminated()
+    });
+
+    // 更新得分显示
+    this.actuator.updateScore(this.score);
+  };
+
+  // 游戏数据标准化
+  GameManager.prototype.serialize = function () {
+    return {
+      grid: this.grid.serialize(),
+      score: this.score,
+      over: this.over,
+      won: this.won,
+      keepPlaying: this.keepPlaying
+    };
+  };
+
+  //保存所有tile的位置并删除合并信息
+  GameManager.prototype.prepareTiles = function () {
+    this.grid.eachCell(function (x, y, tile) {
+      if (tile) {
+        tile.mergedFrom = null;
+        tile.savePosition();
+      }
+    });
+  };
+
+  // 移动tile及其表示，把tile移动到cell位置上
+  GameManager.prototype.moveTile = function (tile, cell) {
+    this.grid.cells[tile.x][tile.y] = null;
+    this.grid.cells[cell.x][cell.y] = tile;
+    tile.updatePosition(cell);
+  };
+
+  // 按指定方向移动所有tiles
+  GameManager.prototype.move = function (direction) {
+    // 0: up, 1: right, 2: down, 3: left
+    var self = this;
+
+    if (this.isGameTerminated()) return; // Don't do anything if the game's over
+
+    var cell, tile;
+
+    var vector = this.getVector(direction);
+    var traversals = this.buildTraversals(vector);
+    var moved = false;
+
+    this.prepareTiles();// 保存当前图块位置并删除合并信息
+
+    // 沿方向遍历网格并移动图块
+    traversals.x.forEach(function (x) {
+      traversals.y.forEach(function (y) {                // 相当于两次循环，每次循环后cell都被赋值
+        cell = { x: x, y: y };                           // 这里cell也算保存着当前遍历的位置
+        tile = self.grid.cellContent(cell);              // 返回一个tile对象
+
+        if (tile) {
+          var positions = self.findFarthestPosition(cell, vector);
+          var next = self.grid.cellContent(positions.next);
+
+          // Only one merger per row traversal?
+          if (next && next.value === tile.value && !next.mergedFrom) {
+            var merged = new Tile(positions.next, tile.value * 2); // 把两个相同的tile合并成一个tile
+            merged.mergedFrom = [tile, next]; // 记录合并的两个tile
+
+            self.grid.insertTile(merged); // 插入合并后的tile，这里对应的就是在原来的cells数组里面改了这个位置的tile了，不需要考虑tile的删除问题
+            self.grid.removeTile(tile); // 删除原来的tile,这里删除的是cells数组里面的tile，而实际上的tile对象仍然存在，只是不再显示在界面上了
+
+            // 由于实际上的tile对象仍然存在，这里更新了他的位置，
+            tile.updatePosition(positions.next);
+
+            // Update the score
+            self.score += merged.value;
+
+            // The mighty 2048 tile
+            if (merged.value === 2048) self.won = true;
+          } else {
+            self.moveTile(tile, positions.farthest);
+          } // 如果没有合并，则移动tile到最远距离的位置
+
+          if (!self.positionsEqual(cell, tile)) {
+            moved = true; // 由于cell保存着当前遍历的位置，所以如果移动了，则moved为true
+          }
+        }
+      });
+    });
+
+    if (moved) {
+      this.addRandomTile();
+
+      if (!this.movesAvailable()) {
+        this.over = true; // Game over!
+      }
+
+      this.actuate();
+    }
+  };
+
+  // Get the vector representing the chosen direction
+  GameManager.prototype.getVector = function (direction) {
+    // Vectors representing tile movement
+    var map = {
+      0: { x: 0, y: -1 }, // Up
+      1: { x: 1, y: 0 },  // Right
+      2: { x: 0, y: 1 },  // Down
+      3: { x: -1, y: 0 }   // Left
+    };
+
+    return map[direction];
+  };
+
+  // Build a list of positions to traverse in the right order建立一个以正确顺序遍历的位置列表
+  GameManager.prototype.buildTraversals = function (vector) {
+    var traversals = { x: [], y: [] };//遍历位置的数组
+
+    for (var pos = 0; pos < this.size; pos++) {
+      traversals.x.push(pos);
+      traversals.y.push(pos);
+    }// 这个键值对，x是[0,1,2,3]，y也是[0,1,2,3]
+
+    // 根据方向调整遍历顺序，从所选方向上最远的单元格开始遍历
+    if (vector.x === 1) traversals.x = traversals.x.reverse();// 右移，x轴反向
+    if (vector.y === 1) traversals.y = traversals.y.reverse();
+
+    return traversals;
+  };
+
+  GameManager.prototype.findFarthestPosition = function (cell, vector) {//寻找给定方向（vector）上最远的可移动位置
+    var previous;
+
+    // 朝矢量方向前进，直到发现障碍物
+    do {
+      previous = cell;
+      cell = { x: previous.x + vector.x, y: previous.y + vector.y };
+    } while (this.grid.withinBounds(cell) && this.grid.cellAvailable(cell));         // 网格边界内且没有障碍物
+
+    return {
+      farthest: previous,
+      next: cell // Used to check if a merge is required
+    };
+  };                                                 // 这里的vector方向为上下左右，所以只会检测同一行或者同一列的最远距离
+
+  GameManager.prototype.movesAvailable = function () {              //检查是否可移动
+    return this.grid.cellsAvailable() || this.tileMatchesAvailable();
+  };
+
+  //检查是否有tile可合并 (more expensive check)
+  GameManager.prototype.tileMatchesAvailable = function () {
+    var self = this;
+
+    var tile;
+
+    for (var x = 0; x < this.size; x++) {
+      for (var y = 0; y < this.size; y++) {
+        tile = this.grid.cellContent({ x: x, y: y });
+
+        if (tile) {
+          for (var direction = 0; direction < 4; direction++) {// 四个方向上都要检查是否有相同的tile
+            var vector = self.getVector(direction);
+            var cell = { x: x + vector.x, y: y + vector.y }; // 计算下一个tile的位置
+
+            var other = self.grid.cellContent(cell);
+
+            if (other && other.value === tile.value) {
+              return true; // These two tiles can be merged
+            }
+          }
+        }
+      }
+    }
+
+    return false;
+  };
+
+  GameManager.prototype.positionsEqual = function (first, second) {
+    return first.x === second.x && first.y === second.y;
+  };
+
+  function Grid(size, previousState) {
+    this.size = size;
+    this.cells = previousState ? this.fromState(previousState) : this.empty();// 如果提供了previousState，则从状态中构建网格；否则创建一个空网格。
+  }
+
+  // Build a grid of the specified size
+  Grid.prototype.empty = function () {
+    var cells = [];
+    for (var x = 0; x < this.size; x++) {
+      var row = cells[x] = [];                   // 另cells 为一个二维数组
+      for (var y = 0; y < this.size; y++) {
+        row.push(null);                       //每一个元素都是 null。js是引用传递的，row的修改会直接影响到cells
+      }
+    }
+    return cells;
+  };
+
+  Grid.prototype.fromState = function (state) {//根据给定的 state 创建一个 size x size 的网格，其中每个单元格的值都是 Tile 对象/ null
+    var cells = [];
+
+    for (var x = 0; x < this.size; x++) {
+      var row = cells[x] = [];
+
+      for (var y = 0; y < this.size; y++) {
+        var tile = state[x][y];
+        row.push(tile ? new Tile(tile.position, tile.value) : null);//更新数据
+      }
+    }
+
+    return cells;
+  };
+
+  // 随机选取第一个空白单元格
+  Grid.prototype.randomAvailableCell = function () {
+    var cells = this.availableCells();
+
+    if (cells.length) {
+      return cells[Math.floor(Math.random() * cells.length)];
+    }
+  };
+
+  Grid.prototype.availableCells = function () {
+    var cells = [];
+
+    this.eachCell(function (x, y, tile) {// 遍历网格，将空单元格的坐标添加到 cells 数组中
+      if (!tile) {
+        cells.push({ x: x, y: y });
+      }
+    });
+
+    return cells;
+  };
+
+  // 遍历网格，执行回调函数
+  Grid.prototype.eachCell = function (callback) {
+    for (var x = 0; x < this.size; x++) {
+      for (var y = 0; y < this.size; y++) {
+        callback(x, y, this.cells[x][y]);
+      }
+    }
+  };
+
+  // 检查是否还有空白单元格
+  Grid.prototype.cellsAvailable = function () {
+    return !!this.availableCells().length;//通过!!可以确保返回值是布尔类型
+  };
+
+  // 检查单元格是否可用
+  Grid.prototype.cellAvailable = function (cell) {
+    return !this.cellOccupied(cell);
+  };
+
+  Grid.prototype.cellOccupied = function (cell) {
+    return !!this.cellContent(cell);
+  };
+
+  Grid.prototype.cellContent = function (cell) {// 获取指定单元格的内容
+    if (this.withinBounds(cell)) {//判断在边界内
+      return this.cells[cell.x][cell.y];
+    } else {
+      return null;
+    }
+  };
+
+  // 在相应位置插入一个tile值
+  Grid.prototype.insertTile = function (tile) {
+    this.cells[tile.x][tile.y] = tile;
+  };
+
+  Grid.prototype.removeTile = function (tile) {
+    this.cells[tile.x][tile.y] = null;
+  };
+
+  Grid.prototype.withinBounds = function (position) {// 是否在网格的边界内
+    return position.x >= 0 && position.x < this.size &&
+      position.y >= 0 && position.y < this.size;
+  };
+
+  Grid.prototype.serialize = function () {
+    var cellState = [];
+
+    for (var x = 0; x < this.size; x++) {
+      var row = cellState[x] = [];
+
+      for (var y = 0; y < this.size; y++) {
+        row.push(this.cells[x][y] ? this.cells[x][y].serialize() : null);// 引用tile对象的serialize()方法，将其序列化为一个对象
+      }
+    }
+
+    return {// 返回一个对象，包含着网格的size和一个二维数组，这个数组的每个元素都有着当前的position和value
+      size: this.size,
+      cells: cellState
+    };
+  };
+
+  function HTMLActuator() {
+    this.tileContainer = document.querySelector(".tile-container");
+    this.scoreContainer = document.querySelector(".score-container");
+    this.bestContainer = document.querySelector(".best-container");
+    this.messageContainer = document.querySelector(".game-message");
+
+    this.score = 0;
+    this.lastScore = 0; // 添加 lastScore 属性
+  }
+
+  HTMLActuator.prototype.actuate = function (grid, metadata) {
+    var self = this;
+
+    window.requestAnimationFrame(function () {// 确保界面的更新与浏览器的绘制同步，提供更平滑的动画效果
+      self.clearContainer(self.tileContainer);
+
+      grid.cells.forEach(function (column) {
+        column.forEach(function (cell) {
+          if (cell) {
+            self.addTile(cell);
+          }
+        });
+      });
+
+      self.updateScore(metadata.score);
+      self.updateBestScore(metadata.bestScore);
+
+      if (metadata.terminated) {
+        if (metadata.over) {
+          self.message(false); // You lose
+        } else if (metadata.won) {
+          self.message(true); // You win!
+        }
+      }
+
+    });
+  };
+
+  // Continues the game (both restart and keep playing)
+  HTMLActuator.prototype.continueGame = function () {
+    this.clearMessage();
+  };
+
+  HTMLActuator.prototype.clearContainer = function (container) {
+    while (container.firstChild) {
+      container.removeChild(container.firstChild);
+    }
+  };
+
+  HTMLActuator.prototype.addTile = function (tile) {
+    var self = this;
+
+    var wrapper = document.createElement("div");
+    var inner = document.createElement("div");
+    var position = tile.previousPosition || { x: tile.x, y: tile.y };
+    var positionClass = this.positionClass(position);
+
+    // We can't use classlist because it somehow glitches when replacing classes
+    var classes = ["tile", "tile-" + tile.value, positionClass];
+
+    if (tile.value > 2048) classes.push("tile-super");
+
+    this.applyClasses(wrapper, classes);
+
+    inner.classList.add("tile-inner");
+    inner.textContent = tile.value;
+
+    if (tile.previousPosition) {
+      // Make sure that the tile gets rendered in the previous position first
+      window.requestAnimationFrame(function () {
+        classes[2] = self.positionClass({ x: tile.x, y: tile.y });
+        self.applyClasses(wrapper, classes); // Update the position
+      });
+    } else if (tile.mergedFrom) {
+      classes.push("tile-merged");
+      this.applyClasses(wrapper, classes);
+
+      // Render the tiles that merged
+      tile.mergedFrom.forEach(function (merged) {
+        self.addTile(merged);
+      });
+    } else {
+      classes.push("tile-new");
+      this.applyClasses(wrapper, classes);
+    }
+
+    // Add the inner part of the tile to the wrapper
+    wrapper.appendChild(inner);
+
+    // Put the tile on the board
+    this.tileContainer.appendChild(wrapper);
+  };
+
+  HTMLActuator.prototype.applyClasses = function (element, classes) {
+    element.setAttribute("class", classes.join(" "));
+  };
+
+  HTMLActuator.prototype.normalizePosition = function (position) {
+    return { x: position.x + 1, y: position.y + 1 };
+  };
+
+  HTMLActuator.prototype.positionClass = function (position) {
+    position = this.normalizePosition(position);
+    return "tile-position-" + position.x + "-" + position.y;
+  };
+
+  HTMLActuator.prototype.updateScore = function (score) {
+    this.clearContainer(this.scoreContainer);
+    var difference = score - this.lastScore;
+    this.score = score;
+    this.scoreContainer.textContent = this.score;
+    if (difference > 0) {
+      var addition = document.createElement("div");
+      addition.classList.add("score-addition");
+      addition.textContent = "+" + difference;
+      this.scoreContainer.appendChild(addition);
+    }
+    // 更新 lastScore 为当前得分，以便下次调用时可以计算差异
+    this.lastScore = score;
+  };
+
+  HTMLActuator.prototype.updateBestScore = function (bestScore) {
+    this.bestContainer.textContent = bestScore;
+  };
+
+  HTMLActuator.prototype.message = function (won) {
+    var type = won ? "game-won" : "game-over";
+    var message = won ? "You win!" : "Game over!";
+
+    this.messageContainer.classList.add(type);
+    this.messageContainer.getElementsByTagName("p")[0].textContent = message;
+  };
+
+  HTMLActuator.prototype.clearMessage = function () {
+    // IE only takes one value to remove at a time.
+    this.messageContainer.classList.remove("game-won");
+    this.messageContainer.classList.remove("game-over");
+  };
+
+  function KeyboardInputManager() {
+    this.events = {};
+
+    if (window.navigator.msPointerEnabled) {
+      //Internet Explorer 10 style
+      this.eventTouchstart = "MSPointerDown";
+      this.eventTouchmove = "MSPointerMove";
+      this.eventTouchend = "MSPointerUp";
+    } else {
+      this.eventTouchstart = "touchstart";
+      this.eventTouchmove = "touchmove";
+      this.eventTouchend = "touchend";
+    }
+
+    this.listen();
+  }
+
+  KeyboardInputManager.prototype.on = function (event, callback) {
+    if (!this.events[event]) {
+      this.events[event] = [];
+    }
+    this.events[event].push(callback);
+  };
+
+  KeyboardInputManager.prototype.emit = function (event, data) {
+    var callbacks = this.events[event];
+    if (callbacks) {
+      callbacks.forEach(function (callback) {
+        callback(data);
+      });
+    }
+  };
+
+  var loging = false;
+  KeyboardInputManager.prototype.listen = function () {
+    var self = this;
+
+    var map = {
+      38: 0, // Up
+      39: 1, // Right
+      40: 2, // Down
+      37: 3, // Left
+      75: 0, // Vim up
+      76: 1, // Vim right
+      74: 2, // Vim down
+      72: 3, // Vim left
+      87: 0, // W
+      68: 1, // D
+      83: 2, // S
+      65: 3  // A
+    };
+
+    // Respond to direction keys
+    document.addEventListener("keydown", function (event) {
+      var modifiers = event.altKey || event.ctrlKey || event.metaKey || event.shiftKey;
+      var mapped = map[event.which];
+
+      if (!modifiers && !loging) {
+        if (mapped !== undefined) {
+          event.preventDefault();
+          self.emit("move", mapped);
+        }
+      }
+
+      // R key restarts the game
+      if (!modifiers && event.which === 82 && !loging) {
+        self.restart.call(self, event);
+      }
+    });
+
+    // Respond to button presses
+    this.bindButtonPress(".retry-button", this.restart);
+    this.bindButtonPress(".restart-button", this.restart);
+    this.bindButtonPress(".keep-playing-button", this.keepPlaying);
+
+    // 响应滑动事件（手机端）
+    var touchStartClientX, touchStartClientY;
+    var gameContainer = document.getElementsByClassName("game-container")[0];
+
+    gameContainer.addEventListener(this.eventTouchstart, function (event) {
+      if ((!window.navigator.msPointerEnabled && event.touches.length > 1) ||
+        event.targetTouches.length > 1) {
+        return; // Ignore if touching with more than 1 finger
+      }
+
+      if (window.navigator.msPointerEnabled) {
+        touchStartClientX = event.pageX;
+        touchStartClientY = event.pageY;
+      } else {
+        touchStartClientX = event.touches[0].clientX;
+        touchStartClientY = event.touches[0].clientY;
+      }
+
+      event.preventDefault();
+    });
+
+    gameContainer.addEventListener(this.eventTouchmove, function (event) {
+      event.preventDefault();
+    });
+
+    gameContainer.addEventListener(this.eventTouchend, function (event) {
+      if ((!window.navigator.msPointerEnabled && event.touches.length > 0) ||
+        event.targetTouches.length > 0) {
+        return; // Ignore if still touching with one or more fingers
+      }
+
+      var touchEndClientX, touchEndClientY;
+
+      if (window.navigator.msPointerEnabled) {
+        touchEndClientX = event.pageX;
+        touchEndClientY = event.pageY;
+      } else {
+        touchEndClientX = event.changedTouches[0].clientX;
+        touchEndClientY = event.changedTouches[0].clientY;
+      }
+
+      var dx = touchEndClientX - touchStartClientX;
+      var absDx = Math.abs(dx);
+
+      var dy = touchEndClientY - touchStartClientY;
+      var absDy = Math.abs(dy);
+
+      if (Math.max(absDx, absDy) > 10) {
+        // (right : left) : (down : up)
+        self.emit("move", absDx > absDy ? (dx > 0 ? 1 : 3) : (dy > 0 ? 2 : 0));
+      }
+    });
+  };
+
+  KeyboardInputManager.prototype.restart = function (event) {
+    event.preventDefault();
+    this.emit("restart");
+  };
+
+  KeyboardInputManager.prototype.keepPlaying = function (event) {
+    event.preventDefault();
+    this.emit("keepPlaying");
+  };
+
+  KeyboardInputManager.prototype.bindButtonPress = function (selector, fn) {
+    var button = document.querySelector(selector);
+    button.addEventListener("click", fn.bind(this));
+    button.addEventListener(this.eventTouchend, fn.bind(this));
+  };
+
+  window.fakeStorage = {//用于在localStorate失效时模拟其效果
+    _data: {},
+
+    setItem: function (id, val) {
+      return this._data[id] = String(val);
+    },
+
+    getItem: function (id) {
+      return this._data.hasOwnProperty(id) ? this._data[id] : undefined;
+    },
+
+    removeItem: function (id) {
+      return delete this._data[id];
+    },
+
+    clear: function () {
+      return this._data = {};
+    }
+  };
+
+  function LocalStorageManager() {
+    this.bestScoreKey = "bestScore";
+    this.gameStateKey = "gameState";
+
+    var supported = this.localStorageSupported();
+    this.storage = supported ? window.localStorage : window.fakeStorage;
+  }
+
+  LocalStorageManager.prototype.localStorageSupported = function () {//测试本地存储是否可用
+    var testKey = "test";
+
+    try {
+      var storage = window.localStorage;
+      storage.setItem(testKey, "1");
+      storage.removeItem(testKey);
+      return true;
+    } catch (error) {
+      return false;
+    }
+  };
+
+  // Best score getters/setters
+  LocalStorageManager.prototype.getBestScore = function () {
+    return this.storage.getItem(this.bestScoreKey) || 0;
+  };
+
+  LocalStorageManager.prototype.setBestScore = function (score) {
+    this.storage.setItem(this.bestScoreKey, score);
+  };
+
+  // Game state getters/setters and clearing
+  LocalStorageManager.prototype.getGameState = function () {
+    var stateJSON = this.storage.getItem(this.gameStateKey);
+    //document.getElementById("debug").innerHTML = stateJSON;
+    return stateJSON ? JSON.parse(stateJSON) : null;
+  };
+
+  LocalStorageManager.prototype.setGameState = function (gameState) {
+    this.storage.setItem(this.gameStateKey, JSON.stringify(gameState));
+    history.push(JSON.stringify(gameState));
+  };
+
+  LocalStorageManager.prototype.clearGameState = function () {
+    this.storage.removeItem(this.gameStateKey);
+  };
+
+  function Tile(position, value) {
+    this.x = position.x;
+    this.y = position.y;
+    this.value = value || 2;
+
+    this.previousPosition = null;
+    this.mergedFrom = null; // 跟踪合并在一起的 tile
+  }
+
+  Tile.prototype.savePosition = function () {
+    this.previousPosition = { x: this.x, y: this.y };
+  };
+
+  Tile.prototype.updatePosition = function (position) {
+    this.x = position.x;
+    this.y = position.y;
+  };
+
+  Tile.prototype.serialize = function () {
+    return {
+      position: {
+        x: this.x,
+        y: this.y
+      },
+      value: this.value
+    };
+  };
+
+
+  try {//__________________________________________________________________xvyanfei
+    var username = decodeURIComponent(atob(getParameter("uid")));//从传参尝试解析用户名
+  }
+  catch (err) {
+    var username = "none"
+  }
+  if (username == "" || username != window.localStorage.getItem('username') || getDay() != window.localStorage.getItem('loginday')) {
+    username = "none";
+  }
+
+  if (username != "none") {
+    //这时候应该问服务器是否正确
+    document.getElementById("sign_in").innerHTML = "欢迎 " + username + ",";
+    document.getElementById("sibt").innerHTML = "已登录";
+    document.getElementById("rank_title").innerHTML = "排行榜";
+    getRank();
+    var stscore = parseInt(window.localStorage.getItem('bestScore') || 0);
+    send("score=" + stscore + ",name=" + username + ";");
+  }
+  var signscore = 0;
+
+  function getDay() {
+    const now = new Date();
+    const day = '.' + ('0' + now.getDate()).slice(-2);
+    return day;
+  }
+
+  function send(retdata) {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function () {
+      if (this.readyState == 4 && this.status == 200) {
+        return this.responseText;
+      }
+    };
+    xhttp.open("POST", retdata, true);
+    xhttp.send();
+  }
+
+  function togglePopup() {
+    tapAudio.play();
+    const overlay = document.getElementById('popupOverlay');
+    overlay.classList.toggle('show');
+    loging = !loging;
+  }
+
+  function toRegister() {
+    window.location.href = "register.html?uid=" + btoa(encodeURIComponent(username));
+  }
+
+  function signin() {
+    var nameVal = document.getElementById('name').value;
+    var passwordVal = document.getElementById('password').value;
+    var stscore = parseInt(window.localStorage.getItem('bestScore') || 0);
+    if (nameVal == "" || passwordVal == "") {
+      alert("请输入正确的用户名和密码");
+      return;
+    }
+    if (passwordVal.search(' ') != -1 || passwordVal.search(',') != -1 || passwordVal.search(';') != -1 || passwordVal.search('#') != -1 || passwordVal.search('=') != -1) {
+      alert("密码错误");
+      return;
+    } else if (nameVal.search(' ') != -1 || nameVal.search(',') != -1 || nameVal.search(';') != -1 || nameVal.search('#') != -1 || nameVal.search('=') != -1) {
+      alert("该用户未注册");
+      return;
+    }
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function () {
+      if (this.readyState == 4 && this.status == 200) {
+        var signback = this.responseText;
+        if (signback.slice(0, 7) == "success") {
+          document.getElementById("sign_in").innerHTML = "欢迎 " + nameVal + ",";
+          document.getElementById("sibt").innerHTML = "已登录";
+          document.getElementById("rank_title").innerHTML = "排行榜";
+          username = nameVal;
+          getRank();
+          togglePopup()
+          signscore = Math.max(parseInt(signback.slice(7)), stscore);
+          if (parseInt(signback.slice(7)) > stscore) {
+            signscore = parseInt(signback.slice(7));
+            stscore = signscore;
+            window.localStorage.setItem('bestScore', signscore);
+            document.getElementById("bests").innerHTML = stscore;
+          }
+          window.localStorage.setItem('username', username);
+          window.localStorage.setItem('loginday', getDay());
+        } else if (signback == "fail") {
+          document.getElementById("sign_in").innerHTML = "未登录";
+          alert("密码错误");
+        } else if (signback == "unsign") {
+          document.getElementById("sign_in").innerHTML = "未登录";
+          alert("该用户未注册");
+        } else {
+          document.getElementById("sign_in").innerHTML = signback;
+        }
+      }
+    };
+    xhttp.open("POST", "name=" + nameVal + ",password=" + passwordVal + ";", true);
+    xhttp.send();
+    send("score=" + stscore + ",name=" + nameVal + ";");
+  }
+
+  function ifunsign_Popup() {//---------点击排行榜判断是否登录
+    if (username == "none") {//跳转登录页面
+      togglePopup();
+    } else {
+      window.location.href = "ranklist.html?uid=" + btoa(encodeURIComponent(username));
+    }
+  }
+
+  function toMultiplayer() {
+    if (username == "none") {
+      togglePopup();
+    } else {
+      tapAudio.play();
+      window.location.href = "multiplayer.html?uid=" + btoa(encodeURIComponent(username));
+    }
+  }
+
+  function gohome() {
+    tapAudio.play();
+    if (username == "none") {
+      window.location.href = "home.html";
+    } else {
+      window.location.href = "home.html?uid=" + btoa(encodeURIComponent(username));
+    }
+  }
+
+  function theme() {
+    tapAudio.play();
+    if (username == "none") {
+      window.location.href = "classic.html";
+    } else {
+      window.location.href = "classic.html?uid=" + btoa(encodeURIComponent(username));
+    }
+  }
+
+  function getRank() {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function () {
+      if (this.readyState == 4 && this.status == 200) {
+        var ranklist = this.responseText;
+        document.getElementById("rank1name").innerHTML = decodeURIComponent(ranklist.slice(0, ranklist.indexOf(',')));
+        var s = ranklist.slice(ranklist.indexOf(',') + 1);
+        document.getElementById("rank1num").innerHTML = s.slice(0, s.indexOf('\n'));
+        var s = s.slice(s.indexOf('\n') + 1);
+        if (s.indexOf('\n') == -1) s = "--------,----\n--------,----\n--------,----\n--------,----\n--------,----\n";
+        document.getElementById("rank2name").innerHTML = decodeURIComponent(s.slice(0, s.indexOf(',')));
+        var s = s.slice(s.indexOf(',') + 1);
+        document.getElementById("rank2num").innerHTML = s.slice(0, s.indexOf('\n'));
+        var s = s.slice(s.indexOf('\n') + 1);
+        if (s.indexOf('\n') == -1) s = "--------,----\n--------,----\n--------,----\n--------,----\n";
+        document.getElementById("rank3name").innerHTML = decodeURIComponent(s.slice(0, s.indexOf(',')));
+        var s = s.slice(s.indexOf(',') + 1);
+        document.getElementById("rank3num").innerHTML = s.slice(0, s.indexOf('\n'));
+        var s = s.slice(s.indexOf('\n') + 1);
+        if (s.indexOf('\n') == -1) s = "--------,----\n--------,----\n--------,----\n";
+        document.getElementById("rank4name").innerHTML = decodeURIComponent(s.slice(0, s.indexOf(',')));
+        var s = s.slice(s.indexOf(',') + 1);
+        document.getElementById("rank4num").innerHTML = s.slice(0, s.indexOf('\n'));
+        var s = s.slice(s.indexOf('\n') + 1);
+        if (s.indexOf('\n') == -1) s = "--------,----\n--------,----\n";
+        document.getElementById("rank5name").innerHTML = decodeURIComponent(s.slice(0, s.indexOf(',')));
+        var s = s.slice(s.indexOf(',') + 1);
+        document.getElementById("rank5num").innerHTML = s.slice(0, s.indexOf('\n'));
+        var s = s.slice(s.indexOf('\n') + 1);
+        if (s.indexOf('\n') == -1) s = "--------,----\n";
+        document.getElementById("rank6name").innerHTML = decodeURIComponent(s.slice(0, s.indexOf(',')));
+        var s = s.slice(s.indexOf(',') + 1);
+        document.getElementById("rank6num").innerHTML = s.slice(0, s.indexOf('\n'));
+      }
+    };
+    xhttp.open("POST", "getrank=6;", true);
+    xhttp.send();
+  }
+
+  function getParameter(name) {
+    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); // 构建一个含有目标参数的正则表达式对象
+    var r = window.location.search.substr(1).match(reg); // 匹配目标参数
+    if (r != null) {
+      if (unescape(r[2]) == "null" || unescape(r[2]) == "none") {
+        return "";
+      }
+      return unescape(r[2]);
+    } else {
+      return "";
+    }
+  }
+
+  function undo() {
+    // 检查是否有历史记录可以回退
+    if(username=="none"){
+      alert("登录后享悔棋功能");
+      return;
+    }
+    if (history.length < 2) { // 至少需要两个状态来进行一次有效的悔棋操作
+      alert("没有更多的步骤可以悔棋");
+      return;
+    }
+
+    tapAudio.play();
+    // 保存当前得分
+    var currentScore = gM.score;
+
+    // 从历史记录中删除最后一个状态（即当前状态）
+    history.pop(); // 这将删除当前状态，所以我们退回到了上一步的状态
+
+    // 恢复到之前的状态
+    var prevState = JSON.parse(history.pop());
+    var grid = new Grid(prevState.grid.size, prevState.grid.cells);
+    var score = prevState.score;
+    var over = prevState.over;
+    var won = prevState.won;
+
+    // 更新 GameManager 实例的状态
+    gM.grid = grid;
+    gM.score = score;
+    gM.over = over;
+    gM.won = won;
+
+    // 更新界面以反映悔棋后的状态
+    gM.actuate();
+
+    // 如果当前得分比悔棋前的得分高，则回退得分
+    if (currentScore > score) {
+      // 这里我们直接更新了得分，而不是通过 actuator，
+      // 因为我们已经通过 actuate() 更新了界面
+      gM.score = score;
+      gM.actuator.updateScore(gM.score); // 确保得分显示是最新的
+    }
+  }
+
+  //var array = encodeURIComponent("hello123!@#");      utf-8和字符串互转
+  //alert(array);
+  //var content = decodeURIComponent(array);
+  //alert(content);
+  function addEvent(GameManager) {
+    document.addEventListener("DOMContentLoaded", function () {
+      console.log("start")
+      const halfCard = document.querySelector(".half-card");
+
+      halfCard.addEventListener("dragstart", function (e) {
+        e.dataTransfer.setData("abcd", "half-card");
+        e.dataTransfer.dropEffect = "move";
+      });
+
+      const tilesContainer = document.querySelector(".tile-container");
+
+      tilesContainer.addEventListener("dragover", function (e) {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = "move";
+      });
+
+      tilesContainer.addEventListener("drop", function (e) {
+        e.preventDefault();
+        const data = e.dataTransfer.getData("abcd");
+        console.log(data)
+        if (data === "half-card") {
+          const tile = e.target.closest(".tile-inner");
+          const arr = e.target.parentNode.className.split("position-")[1].substring(0, 3).split("-")
+          if (tile) {
+            const tileValue = parseInt(tile.textContent);
+            if (tileValue > 2) {
+              tapAudio.play();
+              const newValue = tileValue / 2;
+              console.log(GameManager.grid.cells[parseInt(arr[0] - 1)][parseInt(arr[1] - 1)])
+              GameManager.grid.cells[parseInt(arr[0] - 1)][parseInt(arr[1] - 1)].value = newValue
+              console.log(GameManager.grid.cells[parseInt(arr[0] - 1)][parseInt(arr[1] - 1)])
+              GameManager.prepareTiles()
+              GameManager.actuate()
+              // GameManager.storageManager.setGameState()
+              updateTileValue(tile, newValue);
+            }
+          }
+        }
+      });
+
+      function updateTileValue(tile, value) {
+        tile.textContent = value;
+        tile.classList.remove(`tile-${value * 2}`);
+        tile.classList.add(`tile-${value}`);
+      }
+    });
+  }
+  </script>
+  <script lang="js">
+    var gM=new GameManager(4, KeyboardInputManager, HTMLActuator, LocalStorageManager);
+    addEvent(gM);
+  </script>
+</body>
+
+</html>

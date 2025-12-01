@@ -1,0 +1,3262 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>联机模式</title>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #faf8ef;
+            color: #776e65;
+            font-family: "Clear Sans", "Helvetica Neue", Arial, sans-serif;
+            font-size: 18px;
+        }
+
+        body {
+            margin: 80px 0;
+        }
+
+        .heading:after {
+            content: "";
+            display: block;
+            clear: both;
+        }
+
+        h1.title {
+            font-size: 80px;
+            font-weight: bold;
+            margin: 0;
+            display: block;
+            float: left;
+        }
+
+        @-webkit-keyframes move-up {
+            0% {
+                top: 25px;
+                opacity: 1;
+            }
+
+            100% {
+                top: -50px;
+                opacity: 0;
+            }
+        }
+
+        @-moz-keyframes move-up {
+            0% {
+                top: 25px;
+                opacity: 1;
+            }
+
+            100% {
+                top: -50px;
+                opacity: 0;
+            }
+        }
+
+        @keyframes move-up {
+            0% {
+                top: 25px;
+                opacity: 1;
+            }
+
+            100% {
+                top: -50px;
+                opacity: 0;
+            }
+        }
+
+        .score-container {
+            float: right;
+            text-align: right;
+            position: relative;
+            display: inline-block;
+            background: #bbada0;
+            padding: 15px 25px;
+            font-size: 25px;
+            height: 25px;
+            line-height: 47px;
+            font-weight: bold;
+            border-radius: 3px;
+            color: white;
+            margin-top: 8px;
+            text-align: center;
+        }
+
+        .score-container2 {
+            float: right;
+            text-align: right;
+            position: relative;
+            display: inline-block;
+            background: #bbada0;
+            padding: 15px 25px;
+            font-size: 25px;
+            height: 25px;
+            line-height: 47px;
+            font-weight: bold;
+            border-radius: 3px;
+            color: white;
+            margin-top: 8px;
+            text-align: center;
+        }
+
+        .score-container:after {
+            position: absolute;
+            width: 100%;
+            top: 10px;
+            left: 0;
+            text-transform: uppercase;
+            font-size: 13px;
+            line-height: 13px;
+            text-align: center;
+            color: #eee4da;
+        }
+
+        .score-container2:after {
+            position: absolute;
+            width: 100%;
+            top: 10px;
+            left: 0;
+            text-transform: uppercase;
+            font-size: 13px;
+            line-height: 13px;
+            text-align: center;
+            color: #eee4da;
+        }
+
+        .score-container .score-addition {
+            position: absolute;
+            right: 30px;
+            color: red;
+            font-size: 25px;
+            line-height: 25px;
+            font-weight: bold;
+            color: rgba(119, 110, 101, 0.9);
+            z-index: 100;
+            -webkit-animation: move-up 600ms ease-in;
+            -moz-animation: move-up 600ms ease-in;
+            animation: move-up 600ms ease-in;
+            -webkit-animation-fill-mode: both;
+            -moz-animation-fill-mode: both;
+            animation-fill-mode: both;
+        }
+
+        .score-container2 .score-addition {
+            position: absolute;
+            right: 30px;
+            color: red;
+            font-size: 25px;
+            line-height: 25px;
+            font-weight: bold;
+            color: rgba(119, 110, 101, 0.9);
+            z-index: 100;
+            -webkit-animation: move-up 600ms ease-in;
+            -moz-animation: move-up 600ms ease-in;
+            animation: move-up 600ms ease-in;
+            -webkit-animation-fill-mode: both;
+            -moz-animation-fill-mode: both;
+            animation-fill-mode: both;
+        }
+
+        .score-container:after {
+            content: "得分";
+        }
+
+        .score-container2:after {
+            content: "得分";
+        }
+
+        p {
+            margin-top: 0;
+            margin-bottom: 10px;
+            line-height: 1.65;
+        }
+
+        a {
+            color: #776e65;
+            font-weight: bold;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
+        strong.important {
+            text-transform: uppercase;
+        }
+
+        hr {
+            border: none;
+            border-bottom: 1px solid #d8d4d0;
+            margin-top: 20px;
+            margin-bottom: 30px;
+        }
+
+        .container {
+            width: 500px;
+            margin: 0 auto;
+        }
+
+        @-webkit-keyframes fade-in {
+            0% {
+                opacity: 0;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        @-moz-keyframes fade-in {
+            0% {
+                opacity: 0;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        @keyframes fade-in {
+            0% {
+                opacity: 0;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        .game-container {
+            margin-top: 40px;
+            position: relative;
+            padding: 15px;
+            cursor: default;
+            -webkit-touch-callout: none;
+            -ms-touch-callout: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            -ms-touch-action: none;
+            touch-action: none;
+            background: #bbada0;
+            border-radius: 6px;
+            width: 500px;
+            height: 500px;
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+        }
+
+        .game-container2 {
+            margin-top: 40px;
+            position: relative;
+            padding: 15px;
+            cursor: default;
+            -webkit-touch-callout: none;
+            -ms-touch-callout: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            -ms-touch-action: none;
+            touch-action: none;
+            background: #bbada0;
+            border-radius: 6px;
+            width: 500px;
+            height: 500px;
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+        }
+
+        .game-container .game-message {
+            display: none;
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            background: rgba(238, 228, 218, 0.5);
+            z-index: 100;
+            text-align: center;
+            -webkit-animation: fade-in 800ms ease 1200ms;
+            -moz-animation: fade-in 800ms ease 1200ms;
+            animation: fade-in 800ms ease 1200ms;
+            -webkit-animation-fill-mode: both;
+            -moz-animation-fill-mode: both;
+            animation-fill-mode: both;
+        }
+
+        .game-container2 .game-message2 {
+            display: none;
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            background: rgba(238, 228, 218, 0.5);
+            z-index: 100;
+            text-align: center;
+            -webkit-animation: fade-in 800ms ease 1200ms;
+            -moz-animation: fade-in 800ms ease 1200ms;
+            animation: fade-in 800ms ease 1200ms;
+            -webkit-animation-fill-mode: both;
+            -moz-animation-fill-mode: both;
+            animation-fill-mode: both;
+        }
+
+        .game-container .game-message p {
+            font-size: 60px;
+            font-weight: bold;
+            height: 60px;
+            line-height: 60px;
+            margin-top: 222px;
+        }
+
+        .game-container2 .game-message2 p {
+            font-size: 60px;
+            font-weight: bold;
+            height: 60px;
+            line-height: 60px;
+            margin-top: 222px;
+        }
+
+        .game-container .game-message .lower {
+            display: block;
+            margin-top: 59px;
+        }
+
+        .game-container2 .game-message2 .lower {
+            display: block;
+            margin-top: 59px;
+        }
+
+        .game-container .game-message a {
+            display: inline-block;
+            background: #8f7a66;
+            border-radius: 3px;
+            padding: 0 20px;
+            text-decoration: none;
+            color: #f9f6f2;
+            height: 40px;
+            line-height: 42px;
+            margin-left: 9px;
+        }
+
+        .game-container2 .game-message2 a {
+            display: inline-block;
+            background: #8f7a66;
+            border-radius: 3px;
+            padding: 0 20px;
+            text-decoration: none;
+            color: #f9f6f2;
+            height: 40px;
+            line-height: 42px;
+            margin-left: 9px;
+        }
+
+        .game-container .game-message.game-won {
+            background: rgba(237, 194, 46, 0.5);
+            color: #f9f6f2;
+        }
+
+        .game-container2 .game-message2.game-won {
+            background: rgba(237, 194, 46, 0.5);
+            color: #f9f6f2;
+        }
+
+        .game-container .game-message.game-won,
+        .game-container .game-message.game-over {
+            display: block;
+        }
+
+        .game-container2 .game-message2.game-won,
+        .game-container2 .game-message2.game-over {
+            display: block;
+        }
+
+        .grid-container {
+            position: absolute;
+            z-index: 1;
+        }
+
+        .grid-row {
+            margin-bottom: 15px;
+        }
+
+        .grid-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .grid-row:after {
+            content: "";
+            display: block;
+            clear: both;
+        }
+
+        .grid-cell {
+            width: 106.25px;
+            height: 106.25px;
+            margin-right: 15px;
+            float: left;
+            border-radius: 3px;
+            background: rgba(238, 228, 218, 0.35);
+        }
+
+        .grid-cell:last-child {
+            margin-right: 0;
+        }
+
+        .tile-container {
+            position: absolute;
+            z-index: 2;
+        }
+
+        .tile-container2 {
+            position: absolute;
+            z-index: 2;
+        }
+
+        .tile,
+        .tile .tile-inner {
+            width: 106.25px;
+            height: 106.25px;
+            line-height: 106.25px;
+        }
+
+        .tile.tile-position-1-1 {
+            -webkit-transform: translate(0px, 0px);
+            -moz-transform: translate(0px, 0px);
+            -ms-transform: translate(0px, 0px);
+            transform: translate(0px, 0px);
+        }
+
+        .tile.tile-position-1-2 {
+            -webkit-transform: translate(0px, 121px);
+            -moz-transform: translate(0px, 121px);
+            -ms-transform: translate(0px, 121px);
+            transform: translate(0px, 121px);
+        }
+
+        .tile.tile-position-1-3 {
+            -webkit-transform: translate(0px, 242px);
+            -moz-transform: translate(0px, 242px);
+            -ms-transform: translate(0px, 242px);
+            transform: translate(0px, 242px);
+        }
+
+        .tile.tile-position-1-4 {
+            -webkit-transform: translate(0px, 363px);
+            -moz-transform: translate(0px, 363px);
+            -ms-transform: translate(0px, 363px);
+            transform: translate(0px, 363px);
+        }
+
+        .tile.tile-position-2-1 {
+            -webkit-transform: translate(121px, 0px);
+            -moz-transform: translate(121px, 0px);
+            -ms-transform: translate(121px, 0px);
+            transform: translate(121px, 0px);
+        }
+
+        .tile.tile-position-2-2 {
+            -webkit-transform: translate(121px, 121px);
+            -moz-transform: translate(121px, 121px);
+            -ms-transform: translate(121px, 121px);
+            transform: translate(121px, 121px);
+        }
+
+        .tile.tile-position-2-3 {
+            -webkit-transform: translate(121px, 242px);
+            -moz-transform: translate(121px, 242px);
+            -ms-transform: translate(121px, 242px);
+            transform: translate(121px, 242px);
+        }
+
+        .tile.tile-position-2-4 {
+            -webkit-transform: translate(121px, 363px);
+            -moz-transform: translate(121px, 363px);
+            -ms-transform: translate(121px, 363px);
+            transform: translate(121px, 363px);
+        }
+
+        .tile.tile-position-3-1 {
+            -webkit-transform: translate(242px, 0px);
+            -moz-transform: translate(242px, 0px);
+            -ms-transform: translate(242px, 0px);
+            transform: translate(242px, 0px);
+        }
+
+        .tile.tile-position-3-2 {
+            -webkit-transform: translate(242px, 121px);
+            -moz-transform: translate(242px, 121px);
+            -ms-transform: translate(242px, 121px);
+            transform: translate(242px, 121px);
+        }
+
+        .tile.tile-position-3-3 {
+            -webkit-transform: translate(242px, 242px);
+            -moz-transform: translate(242px, 242px);
+            -ms-transform: translate(242px, 242px);
+            transform: translate(242px, 242px);
+        }
+
+        .tile.tile-position-3-4 {
+            -webkit-transform: translate(242px, 363px);
+            -moz-transform: translate(242px, 363px);
+            -ms-transform: translate(242px, 363px);
+            transform: translate(242px, 363px);
+        }
+
+        .tile.tile-position-4-1 {
+            -webkit-transform: translate(363px, 0px);
+            -moz-transform: translate(363px, 0px);
+            -ms-transform: translate(363px, 0px);
+            transform: translate(363px, 0px);
+        }
+
+        .tile.tile-position-4-2 {
+            -webkit-transform: translate(363px, 121px);
+            -moz-transform: translate(363px, 121px);
+            -ms-transform: translate(363px, 121px);
+            transform: translate(363px, 121px);
+        }
+
+        .tile.tile-position-4-3 {
+            -webkit-transform: translate(363px, 242px);
+            -moz-transform: translate(363px, 242px);
+            -ms-transform: translate(363px, 242px);
+            transform: translate(363px, 242px);
+        }
+
+        .tile.tile-position-4-4 {
+            -webkit-transform: translate(363px, 363px);
+            -moz-transform: translate(363px, 363px);
+            -ms-transform: translate(363px, 363px);
+            transform: translate(363px, 363px);
+        }
+
+        .tile {
+            position: absolute;
+            -webkit-transition: 100ms ease-in-out;
+            -moz-transition: 100ms ease-in-out;
+            transition: 100ms ease-in-out;
+            -webkit-transition-property: -webkit-transform;
+            -moz-transition-property: -moz-transform;
+            transition-property: transform;
+        }
+
+        .tile .tile-inner {
+            border-radius: 3px;
+            background: #eee4da;
+            text-align: center;
+            font-weight: bold;
+            z-index: 10;
+            font-size: 55px;
+        }
+
+        .tile.tile-2 .tile-inner {
+            background: #eee4da;
+            box-shadow: 0 0 30px 10px rgba(243, 215, 116, 0), inset 0 0 0 1px rgba(255, 255, 255, 0);
+        }
+
+        .tile.tile-4 .tile-inner {
+            background: #ede0c8;
+            box-shadow: 0 0 30px 10px rgba(243, 215, 116, 0), inset 0 0 0 1px rgba(255, 255, 255, 0);
+        }
+
+        .tile.tile-8 .tile-inner {
+            color: #f9f6f2;
+            background: #f2b179;
+        }
+
+        .tile.tile-16 .tile-inner {
+            color: #f9f6f2;
+            background: #f59563;
+        }
+
+        .tile.tile-32 .tile-inner {
+            color: #f9f6f2;
+            background: #f67c5f;
+        }
+
+        .tile.tile-64 .tile-inner {
+            color: #f9f6f2;
+            background: #f65e3b;
+        }
+
+        .tile.tile-128 .tile-inner {
+            color: #f9f6f2;
+            background: #edcf72;
+            box-shadow: 0 0 30px 10px rgba(243, 215, 116, 0.2381), inset 0 0 0 1px rgba(255, 255, 255, 0.14286);
+            font-size: 45px;
+        }
+
+        @media screen and (max-width: 520px) {
+            .tile.tile-128 .tile-inner {
+                font-size: 25px;
+            }
+        }
+
+        .tile.tile-256 .tile-inner {
+            color: #f9f6f2;
+            background: #edcc61;
+            box-shadow: 0 0 30px 10px rgba(243, 215, 116, 0.31746), inset 0 0 0 1px rgba(255, 255, 255, 0.19048);
+            font-size: 45px;
+        }
+
+        @media screen and (max-width: 520px) {
+            .tile.tile-256 .tile-inner {
+                font-size: 25px;
+            }
+        }
+
+        .tile.tile-512 .tile-inner {
+            color: #f9f6f2;
+            background: #edc850;
+            box-shadow: 0 0 30px 10px rgba(243, 215, 116, 0.39683), inset 0 0 0 1px rgba(255, 255, 255, 0.2381);
+            font-size: 45px;
+        }
+
+        @media screen and (max-width: 520px) {
+            .tile.tile-512 .tile-inner {
+                font-size: 25px;
+            }
+        }
+
+        .tile.tile-1024 .tile-inner {
+            color: #f9f6f2;
+            background: #edc53f;
+            box-shadow: 0 0 30px 10px rgba(243, 215, 116, 0.47619), inset 0 0 0 1px rgba(255, 255, 255, 0.28571);
+            font-size: 35px;
+        }
+
+        @media screen and (max-width: 520px) {
+            .tile.tile-1024 .tile-inner {
+                font-size: 15px;
+            }
+        }
+
+        .tile.tile-2048 .tile-inner {
+            color: #f9f6f2;
+            background: #edc22e;
+            box-shadow: 0 0 30px 10px rgba(243, 215, 116, 0.55556), inset 0 0 0 1px rgba(255, 255, 255, 0.33333);
+            font-size: 35px;
+        }
+
+        @media screen and (max-width: 520px) {
+            .tile.tile-2048 .tile-inner {
+                font-size: 15px;
+            }
+        }
+
+        .tile.tile-super .tile-inner {
+            color: #f9f6f2;
+            background: #3c3a32;
+            font-size: 30px;
+        }
+
+        @media screen and (max-width: 520px) {
+            .tile.tile-super .tile-inner {
+                font-size: 10px;
+            }
+        }
+
+        @-webkit-keyframes appear {
+            0% {
+                opacity: 0;
+                -webkit-transform: scale(0);
+                -moz-transform: scale(0);
+                -ms-transform: scale(0);
+                transform: scale(0);
+            }
+
+            100% {
+                opacity: 1;
+                -webkit-transform: scale(1);
+                -moz-transform: scale(1);
+                -ms-transform: scale(1);
+                transform: scale(1);
+            }
+        }
+
+        @-moz-keyframes appear {
+            0% {
+                opacity: 0;
+                -webkit-transform: scale(0);
+                -moz-transform: scale(0);
+                -ms-transform: scale(0);
+                transform: scale(0);
+            }
+
+            100% {
+                opacity: 1;
+                -webkit-transform: scale(1);
+                -moz-transform: scale(1);
+                -ms-transform: scale(1);
+                transform: scale(1);
+            }
+        }
+
+        @keyframes appear {
+            0% {
+                opacity: 0;
+                -webkit-transform: scale(0);
+                -moz-transform: scale(0);
+                -ms-transform: scale(0);
+                transform: scale(0);
+            }
+
+            100% {
+                opacity: 1;
+                -webkit-transform: scale(1);
+                -moz-transform: scale(1);
+                -ms-transform: scale(1);
+                transform: scale(1);
+            }
+        }
+
+        .tile-new .tile-inner {
+            -webkit-animation: appear 200ms ease 100ms;
+            -moz-animation: appear 200ms ease 100ms;
+            animation: appear 200ms ease 100ms;
+            -webkit-animation-fill-mode: backwards;
+            -moz-animation-fill-mode: backwards;
+            animation-fill-mode: backwards;
+        }
+
+        @-webkit-keyframes pop {
+            0% {
+                -webkit-transform: scale(0);
+                -moz-transform: scale(0);
+                -ms-transform: scale(0);
+                transform: scale(0);
+            }
+
+            50% {
+                -webkit-transform: scale(1.2);
+                -moz-transform: scale(1.2);
+                -ms-transform: scale(1.2);
+                transform: scale(1.2);
+            }
+
+            100% {
+                -webkit-transform: scale(1);
+                -moz-transform: scale(1);
+                -ms-transform: scale(1);
+                transform: scale(1);
+            }
+        }
+
+        @-moz-keyframes pop {
+            0% {
+                -webkit-transform: scale(0);
+                -moz-transform: scale(0);
+                -ms-transform: scale(0);
+                transform: scale(0);
+            }
+
+            50% {
+                -webkit-transform: scale(1.2);
+                -moz-transform: scale(1.2);
+                -ms-transform: scale(1.2);
+                transform: scale(1.2);
+            }
+
+            100% {
+                -webkit-transform: scale(1);
+                -moz-transform: scale(1);
+                -ms-transform: scale(1);
+                transform: scale(1);
+            }
+        }
+
+        @keyframes pop {
+            0% {
+                -webkit-transform: scale(0);
+                -moz-transform: scale(0);
+                -ms-transform: scale(0);
+                transform: scale(0);
+            }
+
+            50% {
+                -webkit-transform: scale(1.2);
+                -moz-transform: scale(1.2);
+                -ms-transform: scale(1.2);
+                transform: scale(1.2);
+            }
+
+            100% {
+                -webkit-transform: scale(1);
+                -moz-transform: scale(1);
+                -ms-transform: scale(1);
+                transform: scale(1);
+            }
+        }
+
+        .tile-merged .tile-inner {
+            z-index: 20;
+            -webkit-animation: pop 200ms ease 100ms;
+            -moz-animation: pop 200ms ease 100ms;
+            animation: pop 200ms ease 100ms;
+            -webkit-animation-fill-mode: backwards;
+            -moz-animation-fill-mode: backwards;
+            animation-fill-mode: backwards;
+        }
+
+        .game-intro {
+            float: left;
+            line-height: 42px;
+            margin-bottom: 0;
+        }
+
+        .game-explanation {
+            margin-top: 50px;
+        }
+
+        @media screen and (max-width: 520px) {
+
+            html,
+            body {
+                font-size: 15px;
+            }
+
+            body {
+                margin: 20px 0;
+                padding: 0 20px;
+            }
+
+            h1.title {
+                font-size: 27px;
+                margin-top: 15px;
+            }
+
+            .container {
+                width: 280px;
+                margin: 0 auto;
+            }
+
+            .score-container {
+                margin-top: 0;
+                padding: 15px 10px;
+                min-width: 40px;
+            }
+
+            .score-container2 {
+                margin-top: 0;
+                padding: 15px 10px;
+                min-width: 40px;
+            }
+
+            .heading {
+                margin-bottom: 10px;
+            }
+
+            .game-intro {
+                width: 55%;
+                display: block;
+                box-sizing: border-box;
+                line-height: 1.65;
+            }
+
+            .game-container {
+                margin-top: 17px;
+                position: relative;
+                padding: 10px;
+                cursor: default;
+                -webkit-touch-callout: none;
+                -ms-touch-callout: none;
+                -webkit-user-select: none;
+                -moz-user-select: none;
+                -ms-user-select: none;
+                -ms-touch-action: none;
+                touch-action: none;
+                background: #bbada0;
+                border-radius: 6px;
+                width: 280px;
+                height: 280px;
+                -webkit-box-sizing: border-box;
+                -moz-box-sizing: border-box;
+                box-sizing: border-box;
+            }
+
+            .game-container2 {
+                margin-top: 17px;
+                position: relative;
+                padding: 10px;
+                cursor: default;
+                -webkit-touch-callout: none;
+                -ms-touch-callout: none;
+                -webkit-user-select: none;
+                -moz-user-select: none;
+                -ms-user-select: none;
+                -ms-touch-action: none;
+                touch-action: none;
+                background: #bbada0;
+                border-radius: 6px;
+                width: 280px;
+                height: 280px;
+                -webkit-box-sizing: border-box;
+                -moz-box-sizing: border-box;
+                box-sizing: border-box;
+            }
+
+            .game-container .game-message {
+                display: none;
+                position: absolute;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                left: 0;
+                background: rgba(238, 228, 218, 0.5);
+                z-index: 100;
+                text-align: center;
+                -webkit-animation: fade-in 800ms ease 1200ms;
+                -moz-animation: fade-in 800ms ease 1200ms;
+                animation: fade-in 800ms ease 1200ms;
+                -webkit-animation-fill-mode: both;
+                -moz-animation-fill-mode: both;
+                animation-fill-mode: both;
+            }
+
+            .game-container2 .game-message2 {
+                display: none;
+                position: absolute;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                left: 0;
+                background: rgba(238, 228, 218, 0.5);
+                z-index: 100;
+                text-align: center;
+                -webkit-animation: fade-in 800ms ease 1200ms;
+                -moz-animation: fade-in 800ms ease 1200ms;
+                animation: fade-in 800ms ease 1200ms;
+                -webkit-animation-fill-mode: both;
+                -moz-animation-fill-mode: both;
+                animation-fill-mode: both;
+            }
+
+            .game-container .game-message p {
+                font-size: 60px;
+                font-weight: bold;
+                height: 60px;
+                line-height: 60px;
+                margin-top: 222px;
+            }
+
+            .game-container2 .game-message2 p {
+                font-size: 60px;
+                font-weight: bold;
+                height: 60px;
+                line-height: 60px;
+                margin-top: 222px;
+            }
+
+            .game-container .game-message .lower {
+                display: block;
+                margin-top: 59px;
+            }
+
+            .game-container2 .game-message2 .lower {
+                display: block;
+                margin-top: 59px;
+            }
+
+            .game-container .game-message a {
+                display: inline-block;
+                background: #8f7a66;
+                border-radius: 3px;
+                padding: 0 20px;
+                text-decoration: none;
+                color: #f9f6f2;
+                height: 40px;
+                line-height: 42px;
+                margin-left: 9px;
+            }
+
+            .game-container2 .game-message2 a {
+                display: inline-block;
+                background: #8f7a66;
+                border-radius: 3px;
+                padding: 0 20px;
+                text-decoration: none;
+                color: #f9f6f2;
+                height: 40px;
+                line-height: 42px;
+                margin-left: 9px;
+            }
+
+            .game-container .game-message.game-won {
+                background: rgba(237, 194, 46, 0.5);
+                color: #f9f6f2;
+            }
+
+            .game-container2 .game-message2.game-won {
+                background: rgba(237, 194, 46, 0.5);
+                color: #f9f6f2;
+            }
+
+            .game-container .game-message.game-won,
+            .game-container .game-message.game-over {
+                display: block;
+            }
+
+            .game-container2 .game-message2.game-won,
+            .game-container2 .game-message2.game-over {
+                display: block;
+            }
+
+            .grid-container {
+                position: absolute;
+                z-index: 1;
+            }
+
+            .grid-row {
+                margin-bottom: 10px;
+            }
+
+            .grid-row:last-child {
+                margin-bottom: 0;
+            }
+
+            .grid-row:after {
+                content: "";
+                display: block;
+                clear: both;
+            }
+
+            .grid-cell {
+                width: 57.5px;
+                height: 57.5px;
+                margin-right: 10px;
+                float: left;
+                border-radius: 3px;
+                background: rgba(238, 228, 218, 0.35);
+            }
+
+            .grid-cell:last-child {
+                margin-right: 0;
+            }
+
+            .tile-container {
+                position: absolute;
+                z-index: 2;
+            }
+
+            .tile-container2 {
+                position: absolute;
+                z-index: 2;
+            }
+
+            .tile,
+            .tile .tile-inner {
+                width: 58px;
+                height: 58px;
+                line-height: 58px;
+            }
+
+            .tile.tile-position-1-1 {
+                -webkit-transform: translate(0px, 0px);
+                -moz-transform: translate(0px, 0px);
+                -ms-transform: translate(0px, 0px);
+                transform: translate(0px, 0px);
+            }
+
+            .tile.tile-position-1-2 {
+                -webkit-transform: translate(0px, 67px);
+                -moz-transform: translate(0px, 67px);
+                -ms-transform: translate(0px, 67px);
+                transform: translate(0px, 67px);
+            }
+
+            .tile.tile-position-1-3 {
+                -webkit-transform: translate(0px, 135px);
+                -moz-transform: translate(0px, 135px);
+                -ms-transform: translate(0px, 135px);
+                transform: translate(0px, 135px);
+            }
+
+            .tile.tile-position-1-4 {
+                -webkit-transform: translate(0px, 202px);
+                -moz-transform: translate(0px, 202px);
+                -ms-transform: translate(0px, 202px);
+                transform: translate(0px, 202px);
+            }
+
+            .tile.tile-position-2-1 {
+                -webkit-transform: translate(67px, 0px);
+                -moz-transform: translate(67px, 0px);
+                -ms-transform: translate(67px, 0px);
+                transform: translate(67px, 0px);
+            }
+
+            .tile.tile-position-2-2 {
+                -webkit-transform: translate(67px, 67px);
+                -moz-transform: translate(67px, 67px);
+                -ms-transform: translate(67px, 67px);
+                transform: translate(67px, 67px);
+            }
+
+            .tile.tile-position-2-3 {
+                -webkit-transform: translate(67px, 135px);
+                -moz-transform: translate(67px, 135px);
+                -ms-transform: translate(67px, 135px);
+                transform: translate(67px, 135px);
+            }
+
+            .tile.tile-position-2-4 {
+                -webkit-transform: translate(67px, 202px);
+                -moz-transform: translate(67px, 202px);
+                -ms-transform: translate(67px, 202px);
+                transform: translate(67px, 202px);
+            }
+
+            .tile.tile-position-3-1 {
+                -webkit-transform: translate(135px, 0px);
+                -moz-transform: translate(135px, 0px);
+                -ms-transform: translate(135px, 0px);
+                transform: translate(135px, 0px);
+            }
+
+            .tile.tile-position-3-2 {
+                -webkit-transform: translate(135px, 67px);
+                -moz-transform: translate(135px, 67px);
+                -ms-transform: translate(135px, 67px);
+                transform: translate(135px, 67px);
+            }
+
+            .tile.tile-position-3-3 {
+                -webkit-transform: translate(135px, 135px);
+                -moz-transform: translate(135px, 135px);
+                -ms-transform: translate(135px, 135px);
+                transform: translate(135px, 135px);
+            }
+
+            .tile.tile-position-3-4 {
+                -webkit-transform: translate(135px, 202px);
+                -moz-transform: translate(135px, 202px);
+                -ms-transform: translate(135px, 202px);
+                transform: translate(135px, 202px);
+            }
+
+            .tile.tile-position-4-1 {
+                -webkit-transform: translate(202px, 0px);
+                -moz-transform: translate(202px, 0px);
+                -ms-transform: translate(202px, 0px);
+                transform: translate(202px, 0px);
+            }
+
+            .tile.tile-position-4-2 {
+                -webkit-transform: translate(202px, 67px);
+                -moz-transform: translate(202px, 67px);
+                -ms-transform: translate(202px, 67px);
+                transform: translate(202px, 67px);
+            }
+
+            .tile.tile-position-4-3 {
+                -webkit-transform: translate(202px, 135px);
+                -moz-transform: translate(202px, 135px);
+                -ms-transform: translate(202px, 135px);
+                transform: translate(202px, 135px);
+            }
+
+            .tile.tile-position-4-4 {
+                -webkit-transform: translate(202px, 202px);
+                -moz-transform: translate(202px, 202px);
+                -ms-transform: translate(202px, 202px);
+                transform: translate(202px, 202px);
+            }
+
+            .tile .tile-inner {
+                font-size: 35px;
+            }
+
+            .game-message p {
+                font-size: 30px !important;
+                height: 30px !important;
+                line-height: 30px !important;
+                margin-top: 90px !important;
+            }
+
+            .game-message2 p {
+                font-size: 30px !important;
+                height: 30px !important;
+                line-height: 30px !important;
+                margin-top: 90px !important;
+            }
+
+            .game-message .lower {
+                margin-top: 30px !important;
+            }
+
+            .game-message2 .lower {
+                margin-top: 30px !important;
+            }
+        }
+
+
+        .sig {
+            width: 100px;
+            height: 38px;
+            border-radius: 10px;
+            background-color: #a08300;
+            border-color: #000000;
+            color: #ffffff;
+            font-size: 16px;
+            margin-top: 1px;
+        }
+
+        .bg-dark {
+            background-color: #765951 !important
+        }
+
+        .p-4 {
+            padding: 0.1rem !important;
+            position: absolute;
+            top: 0px;
+            width: 100%;
+        }
+
+        .text-center {
+            text-align: center !important
+        }
+
+        .text-white {
+            color: #fff !important
+        }
+
+        /*  begin double css */
+
+        .double {
+            width: 20px;
+            height: 20px;
+            position: relative;
+            margin: -10px;
+        }
+
+        .double-bounce1,
+        .double-bounce2 {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background-color: #333;
+            opacity: 0.6;
+            position: absolute;
+            top: -12px;
+            left: 90px;
+            animation: sk-bounce 2.0s infinite ease-in-out;
+        }
+
+        .double-bounce2 {
+            animation-delay: -1.0s;
+        }
+
+        @keyframes sk-bounce {
+
+            0%,
+            100% {
+                transform: scale(0.0);
+            }
+
+            50% {
+                transform: scale(1.0);
+            }
+        }
+
+        /* 对战区域布局 */
+        .player-area {
+            height: 100%;
+            width: 50%;
+            float: left;
+            box-sizing: border-box;
+            padding: 0 10px;
+        }
+
+        .opponent-area {
+            height: 100%;
+            width: 50%;
+            float: right;
+            box-sizing: border-box;
+            padding: 0 10px;
+        }
+
+        /* 大屏时间在中间 */
+        .timer-area {
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            z-index: 5;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .timer-area h2 {
+            margin: 5px 0;
+            color: #776e65;
+        }
+
+        .timer-area h2:first-child {
+            font-size: 24px;
+        }
+
+        .timer-area h2:last-child {
+            font-size: 32px;
+        }
+
+        /* 小屏幕响应式布局 */
+        @media screen and (max-width: 1200px) {
+            .player-area,
+            .opponent-area {
+                width: 100%;
+                float: none;
+                padding: 20px 10px;
+            }
+
+            /* 时间显示在顶部 */
+            .timer-area {
+                position: relative;
+                left: auto;
+                top: auto;
+                transform: none;
+                padding: 15px 20px;
+                margin: 10px auto 20px;
+                text-align: center;
+                width: 90%;
+                max-width: 500px;
+                background: rgba(187, 173, 160, 0.15);
+                border-radius: 6px;
+                box-shadow: none;
+            }
+
+            .timer-area h2:first-child {
+                font-size: 20px;
+            }
+
+            .timer-area h2:last-child {
+                font-size: 28px;
+            }
+
+            .container {
+                width: 100%;
+                max-width: 500px;
+            }
+
+            body {
+                margin: 80px auto;
+            }
+        }
+
+        /* 中等屏幕 - 缩小游戏容器 */
+        @media screen and (max-width: 900px) {
+            .game-container,
+            .game-container2 {
+                width: 400px;
+                height: 400px;
+                padding: 12px;
+            }
+
+            .grid-row {
+                margin-bottom: 12px;
+            }
+
+            .grid-row:last-child {
+                margin-bottom: 0;
+            }
+
+            .grid-cell {
+                width: 85px;
+                height: 85px;
+                margin-right: 12px;
+            }
+
+            .grid-cell:last-child {
+                margin-right: 0;
+            }
+
+            .tile,
+            .tile .tile-inner {
+                width: 85px;
+                height: 85px;
+                line-height: 85px;
+            }
+
+            /* 更新所有tile位置 - 使用85px + 12px间距 = 97px */
+            .tile.tile-position-1-2 {
+                transform: translate(0px, 97px);
+            }
+
+            .tile.tile-position-1-3 {
+                transform: translate(0px, 194px);
+            }
+
+            .tile.tile-position-1-4 {
+                transform: translate(0px, 291px);
+            }
+
+            .tile.tile-position-2-1 {
+                transform: translate(97px, 0px);
+            }
+
+            .tile.tile-position-2-2 {
+                transform: translate(97px, 97px);
+            }
+
+            .tile.tile-position-2-3 {
+                transform: translate(97px, 194px);
+            }
+
+            .tile.tile-position-2-4 {
+                transform: translate(97px, 291px);
+            }
+
+            .tile.tile-position-3-1 {
+                transform: translate(194px, 0px);
+            }
+
+            .tile.tile-position-3-2 {
+                transform: translate(194px, 97px);
+            }
+
+            .tile.tile-position-3-3 {
+                transform: translate(194px, 194px);
+            }
+
+            .tile.tile-position-3-4 {
+                transform: translate(194px, 291px);
+            }
+
+            .tile.tile-position-4-1 {
+                transform: translate(291px, 0px);
+            }
+
+            .tile.tile-position-4-2 {
+                transform: translate(291px, 97px);
+            }
+
+            .tile.tile-position-4-3 {
+                transform: translate(291px, 194px);
+            }
+
+            .tile.tile-position-4-4 {
+                transform: translate(291px, 291px);
+            }
+
+            .container {
+                max-width: 450px;
+            }
+        }
+
+        /* 小屏幕 - 进一步缩小 */
+        @media screen and (max-width: 500px) {
+            .game-container,
+            .game-container2 {
+                width: 320px;
+                height: 320px;
+                padding: 10px;
+            }
+
+            .grid-row {
+                margin-bottom: 10px;
+            }
+
+            .grid-row:last-child {
+                margin-bottom: 0;
+            }
+
+            .grid-cell {
+                width: 67.5px;
+                height: 67.5px;
+                margin-right: 10px;
+            }
+
+            .grid-cell:last-child {
+                margin-right: 0;
+            }
+
+            .tile,
+            .tile .tile-inner {
+                width: 67.5px;
+                height: 67.5px;
+                line-height: 67.5px;
+                font-size: 35px;
+            }
+
+            /* 更新所有tile位置 - 使用67.5px + 10px间距 = 77.5px */
+            .tile.tile-position-1-2 {
+                transform: translate(0px, 77.5px);
+            }
+
+            .tile.tile-position-1-3 {
+                transform: translate(0px, 155px);
+            }
+
+            .tile.tile-position-1-4 {
+                transform: translate(0px, 232.5px);
+            }
+
+            .tile.tile-position-2-1 {
+                transform: translate(77.5px, 0px);
+            }
+
+            .tile.tile-position-2-2 {
+                transform: translate(77.5px, 77.5px);
+            }
+
+            .tile.tile-position-2-3 {
+                transform: translate(77.5px, 155px);
+            }
+
+            .tile.tile-position-2-4 {
+                transform: translate(77.5px, 232.5px);
+            }
+
+            .tile.tile-position-3-1 {
+                transform: translate(155px, 0px);
+            }
+
+            .tile.tile-position-3-2 {
+                transform: translate(155px, 77.5px);
+            }
+
+            .tile.tile-position-3-3 {
+                transform: translate(155px, 155px);
+            }
+
+            .tile.tile-position-3-4 {
+                transform: translate(155px, 232.5px);
+            }
+
+            .tile.tile-position-4-1 {
+                transform: translate(232.5px, 0px);
+            }
+
+            .tile.tile-position-4-2 {
+                transform: translate(232.5px, 77.5px);
+            }
+
+            .tile.tile-position-4-3 {
+                transform: translate(232.5px, 155px);
+            }
+
+            .tile.tile-position-4-4 {
+                transform: translate(232.5px, 232.5px);
+            }
+
+            .container {
+                max-width: 350px;
+            }
+
+            .heading {
+                margin: 0 0 20px;
+            }
+
+            .title {
+                font-size: 50px;
+            }
+        }
+    </style>
+
+    <!-- iPhone, retina -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport"
+        content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0, maximum-scale=1, user-scalable=no, minimal-ui">
+</head>
+
+<body>
+    <header class="bg-dark text-white text-center p-4">
+        <button type="button" class="sig" style="float:left" onclick="goback()">🔙返回</button>
+        <h2>双人对战&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h2>
+    </header>
+    <div class="timer-area">
+        <h2>剩余时间</h2>
+        <h2>&nbsp;&nbsp;<span id="countdown" style="color:crimson;">120</span> 秒</h2>
+    </div>
+    <div class="player-area">
+        <div class="container">
+            <div class="heading">
+                <h1 class="title">2048</h1>
+                <div class="score-container">0</div>
+            </div>
+
+            <span id="sign_in">未登录</span>
+
+            <div class="game-container">
+                <div class="game-message">
+                    <p></p>
+                    <div class="lower">
+                        <a class="retry-button" onclick="refresh()">再来一次</a>
+                    </div>
+                </div>
+
+                <div class="grid-container">
+                    <div class="grid-row">
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell"></div>
+                    </div>
+                    <div class="grid-row">
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell"></div>
+                    </div>
+                    <div class="grid-row">
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell"></div>
+                    </div>
+                    <div class="grid-row">
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell"></div>
+                    </div>
+                </div>
+                <div class="tile-container">
+
+                </div>
+            </div>
+            <p class="game-explanation">
+                <strong class="important">玩法指导:</strong> 使用 <strong>方向键/WASD/HJKL键</strong> 移动方块。 两个同样数字的方块相碰会
+                <strong>合并成为一个！</strong>
+            </p>
+        </div>
+        <span id="debug"></span><br /><br />
+        <span id="demo"></span>
+    </div>
+
+
+
+
+    <div class="opponent-area">
+        <div class="container">
+            <div class="heading">
+                <h1 class="title">2048</h1>
+                <div class="score-container2">0</div>
+            </div>
+
+            <span id="opponent">正在匹配</span> <!-- begin cubes modal -->
+            <div class="double" id="loading">
+                <div class="double-bounce1"></div>
+                <div class="double-bounce2"></div>
+            </div>
+
+            <div class="game-container2">
+                <div class="game-message2">
+                    <p></p>
+                    <div class="lower">
+                    </div>
+                </div>
+
+                <div class="grid-container">
+                    <div class="grid-row">
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell"></div>
+                    </div>
+                    <div class="grid-row">
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell"></div>
+                    </div>
+                    <div class="grid-row">
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell"></div>
+                    </div>
+                    <div class="grid-row">
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell"></div>
+                    </div>
+                </div>
+
+                <div class="tile-container2">
+
+                </div>
+            </div>
+        </div>
+        <span id="debug2"></span><br /><br />
+    </div>
+    <script>
+        (function () {
+            var lastTime = 0;
+            var vendors = ['webkit', 'moz'];
+            for (var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
+                window.requestAnimationFrame = window[vendors[x] + 'RequestAnimationFrame'];
+                window.cancelAnimationFrame = window[vendors[x] + 'CancelAnimationFrame'] ||
+                    window[vendors[x] + 'CancelRequestAnimationFrame'];
+            }
+
+            if (!window.requestAnimationFrame) {
+                window.requestAnimationFrame = function (callback) {
+                    var currTime = new Date().getTime();
+                    var timeToCall = Math.max(0, 16 - (currTime - lastTime));
+                    var id = window.setTimeout(function () {
+                        callback(currTime + timeToCall);
+                    },
+                        timeToCall);
+                    lastTime = currTime + timeToCall;
+                    return id;
+                };
+            }
+
+            if (!window.cancelAnimationFrame) {
+                window.cancelAnimationFrame = function (id) {
+                    clearTimeout(id);
+                };
+            }
+        }());
+
+        // Wait till the browser is ready to render the game (avoids glitches)
+        window.requestAnimationFrame(function () {
+
+        });
+
+        Function.prototype.bind = Function.prototype.bind || function (target) {
+            var self = this;
+            return function (args) {
+                if (!(args instanceof Array)) {
+                    args = [args];
+                }
+                self.apply(target, args);
+            };
+        };
+
+        (function () {
+            if (typeof window.Element === "undefined" ||
+                "classList" in document.documentElement) {
+                return;
+            }
+
+            var prototype = Array.prototype,
+                push = prototype.push,
+                splice = prototype.splice,
+                join = prototype.join;
+
+            function DOMTokenList(el) {
+                this.el = el;
+                // The className needs to be trimmed and split on whitespace
+                // to retrieve a list of classes.
+                var classes = el.className.replace(/^\s+|\s+$/g, '').split(/\s+/);
+                for (var i = 0; i < classes.length; i++) {
+                    push.call(this, classes[i]);
+                }
+            }
+
+            DOMTokenList.prototype = {
+                add: function (token) {
+                    if (this.contains(token)) return;
+                    push.call(this, token);
+                    this.el.className = this.toString();
+                },
+                contains: function (token) {
+                    return this.el.className.indexOf(token) != -1;
+                },
+                item: function (index) {
+                    return this[index] || null;
+                },
+                remove: function (token) {
+                    if (!this.contains(token)) return;
+                    for (var i = 0; i < this.length; i++) {
+                        if (this[i] == token) break;
+                    }
+                    splice.call(this, i, 1);
+                    this.el.className = this.toString();
+                },
+                toString: function () {
+                    return join.call(this, ' ');
+                },
+                toggle: function (token) {
+                    if (!this.contains(token)) {
+                        this.add(token);
+                    } else {
+                        this.remove(token);
+                    }
+
+                    return this.contains(token);
+                }
+            };
+
+            window.DOMTokenList = DOMTokenList;
+
+            function defineElementGetter(obj, prop, getter) {
+                if (Object.defineProperty) {
+                    Object.defineProperty(obj, prop, {
+                        get: getter
+                    });
+                } else {
+                    obj.__defineGetter__(prop, getter);
+                }
+            }
+
+            defineElementGetter(HTMLElement.prototype, 'classList', function () {
+                return new DOMTokenList(this);
+            });
+        })();
+
+        function GameManager(size, InputManager, Actuator, StorageManager) {
+            this.size = size; // Size of the grid
+            this.inputManager = new InputManager;
+            this.storageManager = new StorageManager;
+            this.actuator = new Actuator;
+
+            this.startTiles = 2;
+
+            this.inputManager.on("move", this.move.bind(this));
+            this.inputManager.on("restart", this.restart.bind(this));
+            this.inputManager.on("keepPlaying", this.keepPlaying.bind(this));
+
+            this.setup();
+        }
+
+        // Restart the game
+        GameManager.prototype.restart = function () {
+            this.storageManager.clearGameState();
+            this.actuator.continueGame(); // Clear the game won/lost message
+            this.setup();
+        };
+
+        // Keep playing after winning (allows going over 2048)
+        GameManager.prototype.keepPlaying = function () {
+            this.keepPlaying = true;
+            this.actuator.continueGame(); // Clear the game won/lost message
+        };
+
+        // Return true if the game is lost, or has won and the user hasn't kept playing
+        GameManager.prototype.isGameTerminated = function () {
+            return this.over || (this.won && !this.keepPlaying);
+        };
+
+        // Set up the game
+        GameManager.prototype.setup = function () {
+            var previousState = this.storageManager.getGameState();
+
+            // Reload the game from a previous game if present
+            if (previousState) {
+                this.grid = new Grid(previousState.grid.size,
+                    previousState.grid.cells); // Reload grid
+                this.score = previousState.score;
+                this.over = previousState.over;
+                this.won = previousState.won;
+                this.keepPlaying = previousState.keepPlaying;
+            } else {
+                this.grid = new Grid(this.size);
+                this.score = 0;
+                this.over = false;
+                this.won = false;
+                this.keepPlaying = false;
+
+                // Add the initial tiles
+                this.addStartTiles();
+            }
+
+            // Update the actuator
+            this.actuate();
+        };
+
+        // Set up the initial tiles to start the game with
+        GameManager.prototype.addStartTiles = function () {
+            for (var i = 0; i < this.startTiles; i++) {
+                this.addRandomTile();
+            }
+        };
+
+        // Adds a tile in a random position
+        GameManager.prototype.addRandomTile = function () {
+            if (this.grid.cellsAvailable()) {
+                var value = Math.random() < 0.9 ? 2 : 4;
+                var tile = new Tile(this.grid.randomAvailableCell(), value);
+                this.grid.insertTile(tile);
+            }
+        };
+
+        // Sends the updated grid to the actuator
+        GameManager.prototype.actuate = function () {
+            if (this.storageManager.getBestScore() < this.score) {
+                this.storageManager.setBestScore(this.score);
+            }
+
+            // Clear the state when the game is over (game over only, not win)
+            if (this.over) {
+                this.storageManager.clearGameState();
+            } else {
+                this.storageManager.setGameState(this.serialize());
+
+            }
+
+            this.actuator.actuate(this.grid, {
+                score: this.score,
+                over: this.over,
+                won: this.won,
+                bestScore: this.storageManager.getBestScore(),
+                terminated: this.isGameTerminated()
+            });
+
+        };
+
+        // Represent the current game as an object
+        GameManager.prototype.serialize = function () {
+            return {
+                grid: this.grid.serialize(),
+                score: this.score,
+                over: this.over,
+                won: this.won,
+                keepPlaying: this.keepPlaying
+            };
+        };
+
+        // Save all tile positions and remove merger info
+        GameManager.prototype.prepareTiles = function () {
+            this.grid.eachCell(function (x, y, tile) {
+                if (tile) {
+                    tile.mergedFrom = null;
+                    tile.savePosition();
+                }
+            });
+        };
+
+        // Move a tile and its representation
+        GameManager.prototype.moveTile = function (tile, cell) {
+            this.grid.cells[tile.x][tile.y] = null;
+            this.grid.cells[cell.x][cell.y] = tile;
+            tile.updatePosition(cell);
+        };
+
+        // Move tiles on the grid in the specified direction
+        GameManager.prototype.move = function (direction) {
+            // 0: up, 1: right, 2: down, 3: left
+            var self = this;
+
+            if (this.isGameTerminated()) return; // Don't do anything if the game's over
+
+            var cell, tile;
+
+            var vector = this.getVector(direction);
+            var traversals = this.buildTraversals(vector);
+            var moved = false;
+
+            // Save the current tile positions and remove merger information
+            this.prepareTiles();
+
+            // Traverse the grid in the right direction and move tiles
+            traversals.x.forEach(function (x) {
+                traversals.y.forEach(function (y) {
+                    cell = { x: x, y: y };
+                    tile = self.grid.cellContent(cell);
+
+                    if (tile) {
+                        var positions = self.findFarthestPosition(cell, vector);
+                        var next = self.grid.cellContent(positions.next);
+
+                        // Only one merger per row traversal?
+                        if (next && next.value === tile.value && !next.mergedFrom) {
+                            var merged = new Tile(positions.next, tile.value * 2);
+                            merged.mergedFrom = [tile, next];
+
+                            self.grid.insertTile(merged);
+                            self.grid.removeTile(tile);
+
+                            // Converge the two tiles' positions
+                            tile.updatePosition(positions.next);
+
+                            // Update the score
+                            self.score += merged.value;
+
+                            // The mighty 2048 tile
+                            if (merged.value === 2048) self.won = true;
+                        } else {
+                            self.moveTile(tile, positions.farthest);
+                        }
+
+                        if (!self.positionsEqual(cell, tile)) {
+                            moved = true; // The tile moved from its original cell!
+                        }
+                    }
+                });
+            });
+
+            if (moved) {
+                this.addRandomTile();
+
+                if (!this.movesAvailable()) {
+                    this.over = true; // Game over!
+                }
+
+                this.actuate();
+            }
+        };
+
+        // Get the vector representing the chosen direction
+        GameManager.prototype.getVector = function (direction) {
+            // Vectors representing tile movement
+            var map = {
+                0: { x: 0, y: -1 }, // Up
+                1: { x: 1, y: 0 },  // Right
+                2: { x: 0, y: 1 },  // Down
+                3: { x: -1, y: 0 }   // Left
+            };
+
+            return map[direction];
+        };
+
+        // Build a list of positions to traverse in the right order
+        GameManager.prototype.buildTraversals = function (vector) {
+            var traversals = { x: [], y: [] };
+
+            for (var pos = 0; pos < this.size; pos++) {
+                traversals.x.push(pos);
+                traversals.y.push(pos);
+            }
+
+            // Always traverse from the farthest cell in the chosen direction
+            if (vector.x === 1) traversals.x = traversals.x.reverse();
+            if (vector.y === 1) traversals.y = traversals.y.reverse();
+
+            return traversals;
+        };
+
+        GameManager.prototype.findFarthestPosition = function (cell, vector) {
+            var previous;
+
+            // Progress towards the vector direction until an obstacle is found
+            do {
+                previous = cell;
+                cell = { x: previous.x + vector.x, y: previous.y + vector.y };
+            } while (this.grid.withinBounds(cell) &&
+                this.grid.cellAvailable(cell));
+
+            return {
+                farthest: previous,
+                next: cell // Used to check if a merge is required
+            };
+        };
+
+        GameManager.prototype.movesAvailable = function () {
+            return this.grid.cellsAvailable() || this.tileMatchesAvailable();
+        };
+
+        // Check for available matches between tiles (more expensive check)
+        GameManager.prototype.tileMatchesAvailable = function () {
+            var self = this;
+
+            var tile;
+
+            for (var x = 0; x < this.size; x++) {
+                for (var y = 0; y < this.size; y++) {
+                    tile = this.grid.cellContent({ x: x, y: y });
+
+                    if (tile) {
+                        for (var direction = 0; direction < 4; direction++) {
+                            var vector = self.getVector(direction);
+                            var cell = { x: x + vector.x, y: y + vector.y };
+
+                            var other = self.grid.cellContent(cell);
+
+                            if (other && other.value === tile.value) {
+                                return true; // These two tiles can be merged
+                            }
+                        }
+                    }
+                }
+            }
+
+            return false;
+        };
+
+        GameManager.prototype.positionsEqual = function (first, second) {
+            return first.x === second.x && first.y === second.y;
+        };
+
+        function Grid(size, previousState) {
+            this.size = size;
+            this.cells = previousState ? this.fromState(previousState) : this.empty();
+        }
+
+        // Build a grid of the specified size
+        Grid.prototype.empty = function () {
+            var cells = [];
+
+            for (var x = 0; x < this.size; x++) {
+                var row = cells[x] = [];
+
+                for (var y = 0; y < this.size; y++) {
+                    row.push(null);
+                }
+            }
+
+            return cells;
+        };
+
+        Grid.prototype.fromState = function (state) {
+            var cells = [];
+
+            for (var x = 0; x < this.size; x++) {
+                var row = cells[x] = [];
+
+                for (var y = 0; y < this.size; y++) {
+                    var tile = state[x][y];
+                    row.push(tile ? new Tile(tile.position, tile.value) : null);
+                }
+            }
+
+            return cells;
+        };
+
+        // Find the first available random position
+        Grid.prototype.randomAvailableCell = function () {
+            var cells = this.availableCells();
+
+            if (cells.length) {
+                return cells[Math.floor(Math.random() * cells.length)];
+            }
+        };
+
+        Grid.prototype.availableCells = function () {
+            var cells = [];
+
+            this.eachCell(function (x, y, tile) {
+                if (!tile) {
+                    cells.push({ x: x, y: y });
+                }
+            });
+
+            return cells;
+        };
+
+        // Call callback for every cell
+        Grid.prototype.eachCell = function (callback) {
+            for (var x = 0; x < this.size; x++) {
+                for (var y = 0; y < this.size; y++) {
+                    callback(x, y, this.cells[x][y]);
+                }
+            }
+        };
+
+        // Check if there are any cells available
+        Grid.prototype.cellsAvailable = function () {
+            return !!this.availableCells().length;
+        };
+
+        // Check if the specified cell is taken
+        Grid.prototype.cellAvailable = function (cell) {
+            return !this.cellOccupied(cell);
+        };
+
+        Grid.prototype.cellOccupied = function (cell) {
+            return !!this.cellContent(cell);
+        };
+
+        Grid.prototype.cellContent = function (cell) {
+            if (this.withinBounds(cell)) {
+                return this.cells[cell.x][cell.y];
+            } else {
+                return null;
+            }
+        };
+
+        // Inserts a tile at its position
+        Grid.prototype.insertTile = function (tile) {
+            this.cells[tile.x][tile.y] = tile;
+        };
+
+        Grid.prototype.removeTile = function (tile) {
+            this.cells[tile.x][tile.y] = null;
+        };
+
+        Grid.prototype.withinBounds = function (position) {
+            return position.x >= 0 && position.x < this.size &&
+                position.y >= 0 && position.y < this.size;
+        };
+
+        Grid.prototype.serialize = function () {
+            var cellState = [];
+
+            for (var x = 0; x < this.size; x++) {
+                var row = cellState[x] = [];
+
+                for (var y = 0; y < this.size; y++) {
+                    row.push(this.cells[x][y] ? this.cells[x][y].serialize() : null);
+                }
+            }
+
+            return {
+                size: this.size,
+                cells: cellState
+            };
+        };
+
+        function HTMLActuator() {
+            this.tileContainer = document.querySelector(".tile-container");
+            this.scoreContainer = document.querySelector(".score-container");
+            this.messageContainer = document.querySelector(".game-message");
+            this.score = 0;
+        }
+
+        HTMLActuator.prototype.actuate = function (grid, metadata) {
+            var self = this;
+
+            window.requestAnimationFrame(function () {
+                self.clearContainer(self.tileContainer);
+
+                grid.cells.forEach(function (column) {
+                    column.forEach(function (cell) {
+                        if (cell) {
+                            self.addTile(cell);
+                        }
+                    });
+                });
+
+                self.updateScore(metadata.score);
+
+                if (metadata.terminated) {
+                    if (metadata.over) {
+                        self.message(false); // You lose
+                    } else if (metadata.won) {
+                        self.message(true); // You win!
+                    }
+                }
+
+            });
+        };
+
+        // Continues the game (both restart and keep playing)
+        HTMLActuator.prototype.continueGame = function () {
+            this.clearMessage();
+        };
+
+        HTMLActuator.prototype.clearContainer = function (container) {
+            while (container.firstChild) {
+                container.removeChild(container.firstChild);
+            }
+        };
+
+        HTMLActuator.prototype.addTile = function (tile) {
+            var self = this;
+
+            var wrapper = document.createElement("div");
+            var inner = document.createElement("div");
+            var position = tile.previousPosition || { x: tile.x, y: tile.y };
+            var positionClass = this.positionClass(position);
+
+            // We can't use classlist because it somehow glitches when replacing classes
+            var classes = ["tile", "tile-" + tile.value, positionClass];
+
+            if (tile.value > 2048) classes.push("tile-super");
+
+            this.applyClasses(wrapper, classes);
+
+            inner.classList.add("tile-inner");
+            inner.textContent = tile.value;
+
+            if (tile.previousPosition) {
+                // Make sure that the tile gets rendered in the previous position first
+                window.requestAnimationFrame(function () {
+                    classes[2] = self.positionClass({ x: tile.x, y: tile.y });
+                    self.applyClasses(wrapper, classes); // Update the position
+                });
+            } else if (tile.mergedFrom) {
+                classes.push("tile-merged");
+                this.applyClasses(wrapper, classes);
+
+                // Render the tiles that merged
+                tile.mergedFrom.forEach(function (merged) {
+                    self.addTile(merged);
+                });
+            } else {
+                classes.push("tile-new");
+                this.applyClasses(wrapper, classes);
+            }
+
+            // Add the inner part of the tile to the wrapper
+            wrapper.appendChild(inner);
+
+            // Put the tile on the board
+            this.tileContainer.appendChild(wrapper);
+        };
+
+        HTMLActuator.prototype.applyClasses = function (element, classes) {
+            element.setAttribute("class", classes.join(" "));
+        };
+
+        HTMLActuator.prototype.normalizePosition = function (position) {
+            return { x: position.x + 1, y: position.y + 1 };
+        };
+
+        HTMLActuator.prototype.positionClass = function (position) {
+            position = this.normalizePosition(position);
+            return "tile-position-" + position.x + "-" + position.y;
+        };
+
+        HTMLActuator.prototype.updateScore = function (score) {
+            this.clearContainer(this.scoreContainer);
+
+            var difference = score - this.score;
+            this.score = score;
+
+            this.scoreContainer.textContent = this.score;
+
+            if (difference > 0) {
+                var addition = document.createElement("div");
+                addition.classList.add("score-addition");
+                addition.textContent = "+" + difference;
+
+                this.scoreContainer.appendChild(addition);
+            }
+        };
+
+        HTMLActuator.prototype.message = function (won) {
+            var type = won ? "game-won" : "game-over";
+            var message = won ? "Winner" : "Loser";
+            var thisState = localStorage.getItem("gameState");
+            send("gamestate=" + thisState + ",name=" + username + ";");
+            if (state) send(type + "=" + username + ";");
+            state = false;
+            this.messageContainer.classList.add(type);
+            this.messageContainer.getElementsByTagName("p")[0].textContent = message;
+            var ha2 = new HTMLActuator2();
+            ha2.messageContainer.classList.add((!won) ? "game-won" : "game-over");
+            ha2.messageContainer.getElementsByTagName("p")[0].textContent = (!won) ? "Winner" : "Loser";
+        };
+
+        HTMLActuator.prototype.clearMessage = function () {
+            // IE only takes one value to remove at a time.
+            this.messageContainer.classList.remove("game-won");
+            this.messageContainer.classList.remove("game-over");
+        };
+
+        function KeyboardInputManager() {
+            this.events = {};
+
+            if (window.navigator.msPointerEnabled) {
+                //Internet Explorer 10 style
+                this.eventTouchstart = "MSPointerDown";
+                this.eventTouchmove = "MSPointerMove";
+                this.eventTouchend = "MSPointerUp";
+            } else {
+                this.eventTouchstart = "touchstart";
+                this.eventTouchmove = "touchmove";
+                this.eventTouchend = "touchend";
+            }
+
+            this.listen();
+        }
+
+        KeyboardInputManager.prototype.on = function (event, callback) {
+            if (!this.events[event]) {
+                this.events[event] = [];
+            }
+            this.events[event].push(callback);
+        };
+
+        KeyboardInputManager.prototype.emit = function (event, data) {
+            var callbacks = this.events[event];
+            if (callbacks) {
+                callbacks.forEach(function (callback) {
+                    callback(data);
+                });
+            }
+        };
+
+        var loging = false;
+        KeyboardInputManager.prototype.listen = function () {
+            var self = this;
+
+            var map = {
+                38: 0, // Up
+                39: 1, // Right
+                40: 2, // Down
+                37: 3, // Left
+                75: 0, // Vim up
+                76: 1, // Vim right
+                74: 2, // Vim down
+                72: 3, // Vim left
+                87: 0, // W
+                68: 1, // D
+                83: 2, // S
+                65: 3  // A
+            };
+
+            // Respond to direction keys
+            document.addEventListener("keydown", function (event) {
+                var modifiers = event.altKey || event.ctrlKey || event.metaKey || event.shiftKey;
+                var mapped = map[event.which];
+
+                if (!modifiers && !loging) {
+                    if (mapped !== undefined) {
+                        event.preventDefault();
+                        self.emit("move", mapped);
+                    }
+                }
+
+                // R key restarts the game
+                if (!modifiers && event.which === 82 && !loging) {
+                    self.restart.call(self, event);
+                }
+            });
+
+            // Respond to button presses
+            //this.bindButtonPress(".retry-button", this.restart);
+            //this.bindButtonPress(".restart-button", this.restart);
+            //this.bindButtonPress(".keep-playing-button", this.keepPlaying);
+
+            // 响应滑动事件（手机端）
+            var touchStartClientX, touchStartClientY;
+            var gameContainer = document.getElementsByClassName("game-container")[0];
+
+            gameContainer.addEventListener(this.eventTouchstart, function (event) {
+                if ((!window.navigator.msPointerEnabled && event.touches.length > 1) ||
+                    event.targetTouches.length > 1) {
+                    return; // Ignore if touching with more than 1 finger
+                }
+
+                if (window.navigator.msPointerEnabled) {
+                    touchStartClientX = event.pageX;
+                    touchStartClientY = event.pageY;
+                } else {
+                    touchStartClientX = event.touches[0].clientX;
+                    touchStartClientY = event.touches[0].clientY;
+                }
+
+                event.preventDefault();
+            });
+
+            gameContainer.addEventListener(this.eventTouchmove, function (event) {
+                event.preventDefault();
+            });
+
+            gameContainer.addEventListener(this.eventTouchend, function (event) {
+                if ((!window.navigator.msPointerEnabled && event.touches.length > 0) ||
+                    event.targetTouches.length > 0) {
+                    return; // Ignore if still touching with one or more fingers
+                }
+
+                var touchEndClientX, touchEndClientY;
+
+                if (window.navigator.msPointerEnabled) {
+                    touchEndClientX = event.pageX;
+                    touchEndClientY = event.pageY;
+                } else {
+                    touchEndClientX = event.changedTouches[0].clientX;
+                    touchEndClientY = event.changedTouches[0].clientY;
+                }
+
+                var dx = touchEndClientX - touchStartClientX;
+                var absDx = Math.abs(dx);
+
+                var dy = touchEndClientY - touchStartClientY;
+                var absDy = Math.abs(dy);
+
+                if (Math.max(absDx, absDy) > 10) {
+                    // (right : left) : (down : up)
+                    self.emit("move", absDx > absDy ? (dx > 0 ? 1 : 3) : (dy > 0 ? 2 : 0));
+                }
+            });
+        };
+
+        KeyboardInputManager.prototype.restart = function (event) {
+            event.preventDefault();
+            this.emit("restart");
+        };
+
+        KeyboardInputManager.prototype.keepPlaying = function (event) {
+            event.preventDefault();
+            this.emit("keepPlaying");
+        };
+
+        KeyboardInputManager.prototype.bindButtonPress = function (selector, fn) {
+            var button = document.querySelector(selector);
+            button.addEventListener("click", fn.bind(this));
+            button.addEventListener(this.eventTouchend, fn.bind(this));
+        };
+
+        window.fakeStorage = {
+            _data: {},
+
+            setItem: function (id, val) {
+                return this._data[id] = String(val);
+            },
+
+            getItem: function (id) {
+                return this._data.hasOwnProperty(id) ? this._data[id] : undefined;
+            },
+
+            removeItem: function (id) {
+                return delete this._data[id];
+            },
+
+            clear: function () {
+                return this._data = {};
+            }
+        };
+
+        function LocalStorageManager() {
+            this.bestScoreKey = "bestScore";
+            this.gameStateKey = "gameState";
+
+            var supported = this.localStorageSupported();
+            this.storage = supported ? window.localStorage : window.fakeStorage;
+        }
+
+        LocalStorageManager.prototype.localStorageSupported = function () {
+            var testKey = "test";
+
+            try {
+                var storage = window.localStorage;
+                storage.setItem(testKey, "1");
+                storage.removeItem(testKey);
+                return true;
+            } catch (error) {
+                return false;
+            }
+        };
+
+        // Best score getters/setters
+        LocalStorageManager.prototype.getBestScore = function () {
+            return this.storage.getItem(this.bestScoreKey) || 0;
+        };
+
+        LocalStorageManager.prototype.setBestScore = function (score) {
+            this.storage.setItem(this.bestScoreKey, score);
+            if (username != "none") {//____________________________________________________________________xvyanfei
+                send("score=" + score + ",name=" + username + ";");
+            }
+            signscore = score;
+        };
+
+        // Game state getters/setters and clearing
+        LocalStorageManager.prototype.getGameState = function () {
+            var stateJSON = this.storage.getItem(this.gameStateKey);
+            return null;
+        };
+
+        LocalStorageManager.prototype.setGameState = function (gameState) {
+            this.storage.setItem(this.gameStateKey, JSON.stringify(gameState));
+        };
+
+        LocalStorageManager.prototype.clearGameState = function () {
+            this.storage.removeItem(this.gameStateKey);
+        };
+
+        function Tile(position, value) {
+            this.x = position.x;
+            this.y = position.y;
+            this.value = value || 2;
+
+            this.previousPosition = null;
+            this.mergedFrom = null; // Tracks tiles that merged together
+        }
+
+        Tile.prototype.savePosition = function () {
+            this.previousPosition = { x: this.x, y: this.y };
+        };
+
+        Tile.prototype.updatePosition = function (position) {
+            this.x = position.x;
+            this.y = position.y;
+        };
+
+        Tile.prototype.serialize = function () {
+            return {
+                position: {
+                    x: this.x,
+                    y: this.y
+                },
+                value: this.value
+            };
+        };
+
+        var signscore = 0;
+        var state = true;
+        var gameEnded = false;  // 游戏是否已经结束（显示了最终结果）
+        var login = false;
+        var opponentLogin = false;
+        var lastState = "";
+        var getOTimes = 0;
+        var opponentName = "";
+        var counter = 120;
+        try {//__________________________________________________________________xvyanfei
+            var username = decodeURIComponent(atob(getParameter("uid")));//从传参尝试解析用户名
+        }
+        catch (err) {
+            var username = "none"
+            alert("请先登录");
+            goback();
+        }
+        if (username == "" || username != localStorage.getItem('username')) {
+            username = "none";
+            alert("请先登录");
+            goback();
+        }
+        if (getDay() != localStorage.getItem('loginday')) {
+            alert("登录已过期");
+            goback();
+            username = "none";
+        }
+
+        if (username != "none") {
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    var status = this.responseText;
+                    if (status == "success") {
+                        login = true;
+                        document.getElementById("sign_in").innerHTML = username;
+                    } else if (status == "fail") {
+                        alert("房间已满，请稍后再试");
+                    } else if (status == "unsigned") {
+                        alert("用户信息有误,请重新进入");
+                    } else {
+                        alert("房间已满，请稍后再试" + status);
+                    }
+                }
+            };
+            xhttp.open("POST", "multilogin=" + username + ";", true);
+            xhttp.send();
+        }
+
+        function getDay() {
+            const now = new Date();
+            const day = '.' + ('0' + now.getDate()).slice(-2);
+            return day;
+        }
+
+        function send(retdata) {
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    return this.responseText;
+                }
+            };
+            xhttp.open("POST", retdata, true);
+            xhttp.send();
+        }
+
+        function getParameter(name) {
+            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); // 构建一个含有目标参数的正则表达式对象
+            var r = window.location.search.substr(1).match(reg); // 匹配目标参数
+            if (r != null) {
+                if (unescape(r[2]) == "null" || unescape(r[2]) == "none") {
+                    return "";
+                }
+                return unescape(r[2]);
+            } else {
+                return "";
+            }
+        }
+
+        function goback() {
+            var backlink = document.referrer;
+            if (backlink.slice(backlink.search("html") - 12, backlink.search("html") - 1) == "multiplayer") {
+                backlink = "home.html";
+            }
+            if (username == "none" || backlink.search("uid") != -1) {
+                window.location.href = backlink;
+            } else {
+                window.location.href = backlink + "?uid=" + btoa(encodeURIComponent(username));
+            }
+        }
+
+        window.onbeforeunload = function () {
+            send("goout=" + username + ";");
+        }
+
+        setInterval(function () {
+            if (login && state) {
+                if (opponentLogin) {
+                    syncState();
+                    // 从服务器获取剩余时间
+                    getTimeFromServer();
+                } else {
+                    getOpponent();
+                    document.getElementById("opponent").innerHTML = "正在匹配    " + String(parseInt(getOTimes / 2));
+                    if (getOTimes >= 120) {
+                        send("goout=" + username + ";");
+                        state = false;
+                        alert("暂时无人加入,请稍后再试");
+                        goback();
+                    }
+                }
+            }
+
+        }, 500);
+
+        function syncState() {
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    var opponent = decodeURIComponent(this.responseText);
+                    //document.getElementById("debug").innerHTML = opponent;
+                    if (opponent == localStorage.getItem("gameState2") || opponent == "") {
+                        return;
+                    }
+                    if (opponent == "opponentout") {
+                        console.log("检测到对手退出，我方胜利！");
+                        var ha = new HTMLActuator();
+                        ha.messageContainer.classList.add("game-won");
+                        ha.messageContainer.getElementsByTagName("p")[0].textContent = "Winner";
+                        var ha2 = new HTMLActuator2();
+                        ha2.messageContainer.classList.add("game-over");
+                        ha2.messageContainer.getElementsByTagName("p")[0].textContent = "Loser";
+                        document.getElementById("opponent").innerHTML = "对手 " + opponentName + " 已认输(退出对战),你胜利了！";
+                        opponentLogin = false;
+                        opponentName = "";
+                        state = false;
+                        gameEnded = true;  // 标记游戏已结束
+                        //alert("对手"+opponentName+"已认输，你胜利了！");
+                        return;
+                    } else if (opponent == "opponentwon") {
+                        var ha = new HTMLActuator();
+                        ha.messageContainer.classList.add("game-over");
+                        ha.messageContainer.getElementsByTagName("p")[0].textContent = "Loser";
+                        var ha2 = new HTMLActuator2();
+                        ha2.messageContainer.classList.add("game-won");
+                        ha2.messageContainer.getElementsByTagName("p")[0].textContent = "Winner";
+                        document.getElementById("opponent").innerHTML = "很遗憾，" + opponentName + " 抢先一步完成了2048";
+                        state = false;
+                        gameEnded = true;  // 标记游戏已结束
+                        //alert("很遗憾，"+opponentName+"抢先一步完成了2048");
+                        return;
+                    } else if (opponent == "opponentlost") {
+                        var ha = new HTMLActuator();
+                        ha.messageContainer.classList.add("game-won");
+                        ha.messageContainer.getElementsByTagName("p")[0].textContent = "Winner!";
+                        var ha2 = new HTMLActuator2();
+                        ha2.messageContainer.classList.add("game-over");
+                        ha2.messageContainer.getElementsByTagName("p")[0].textContent = "Loser";
+                        document.getElementById("opponent").innerHTML = "对手 " + opponentName + " 挑战失败，你胜利了！";
+                        state = false;
+                        gameEnded = true;  // 标记游戏已结束
+                        //alert("对手"+opponentName+"挑战失败，你胜利了！");
+                        return;
+                    }
+                    localStorage.setItem("gameState2", opponent);
+                    var gM = new GameManager2(4, HTMLActuator2, LocalStorageManager2);
+                    var oState = JSON.parse(opponent);
+
+                }
+            };
+            var thisState = localStorage.getItem("gameState");
+            if (lastState == thisState) {
+                xhttp.open("POST", "gamestate=unchange,name=" + username + ";", true);
+            } else {
+                xhttp.open("POST", "gamestate=" + thisState + ",name=" + username + ";", true);
+                lastState = thisState;
+            }
+            xhttp.send();
+        }
+        localStorage.setItem("gameState2", "");
+
+        function getOpponent() {
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    var opponent = decodeURIComponent(this.responseText);
+                    if (opponent == "[wa][it]") {
+                        getOTimes++;
+                    } else if (opponent == "none") {
+
+                    } else if (opponent == "") {
+
+                    } else {
+                        new GameManager(4, KeyboardInputManager, HTMLActuator, LocalStorageManager);
+                        new GameManager2(4, /*KeyboardInputManager2,*/ HTMLActuator2, LocalStorageManager2);
+                        document.getElementById("opponent").innerHTML = opponent;
+                        document.getElementById('loading').style.display = 'none';
+                        opponentLogin = true;
+                        opponentName = opponent;
+                    }
+                }
+            };
+
+            xhttp.open("POST", "getopponent=" + username + ";", true);
+            xhttp.send();
+        }
+
+        function getTimeFromServer() {
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    var response = this.responseText;
+                    
+                    // 检查特殊状态
+                    if (response == "TIMEOUT" || response == "ENDED") {
+                        // 对手已经时间到或对战已结束
+                        if (gameEnded) {
+                            console.log("游戏已结束，忽略时间到信号");
+                            return; // 游戏已经结束了，不再处理
+                        }
+                        state = false;  // 立即停止循环（使用false而不是0）
+                        counter = 0;
+                        document.getElementById("countdown").innerHTML = 0;
+                        console.log("收到结束信号：" + response + "，停止循环");
+                        
+                        // 先同步一次对手状态，确保有最新数据
+                        syncStateAndCompare();
+                        return;
+                    }
+                    
+                    var remainingTime = parseInt(response);
+                    if (remainingTime >= 0) {
+                        counter = remainingTime;
+                        document.getElementById("countdown").innerHTML = counter;
+                        
+                        // 时间到了
+                        if (counter <= 0) {
+                            if (gameEnded) {
+                                console.log("游戏已结束，忽略倒计时结束");
+                                return; // 游戏已经结束了，不再处理
+                            }
+                            console.log("倒计时结束，准备比较分数");
+                            // 先同步一次对手状态并比较分数
+                            syncStateAndCompare();
+                            // 注意：不在这里设置state=false，让syncStateAndCompare()的回调来设置
+                        }
+                    } else if (remainingTime == -1) {
+                        // 还未匹配成功或其他错误
+                        console.log("等待匹配或发生错误");
+                    }
+                }
+            };
+            xhttp.open("POST", "gettime=" + username + ";", true);
+            xhttp.send();
+        }
+        
+        // 同步对手状态并比较分数
+        function syncStateAndCompare() {
+            // 立即检查游戏状态，避免重复处理
+            if (gameEnded) {
+                console.log("游戏已结束，跳过同步和比较");
+                return;
+            }
+            
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    // 再次检查状态，防止请求飞行期间游戏已结束
+                    if (gameEnded) {
+                        console.log("游戏已结束（请求期间），跳过同步和比较");
+                        return;
+                    }
+                    
+                    var opponent = decodeURIComponent(this.responseText);
+
+                    // 先处理特殊状态：对手主动退出/胜利/失败
+                    if (opponent === "opponentout") {
+                        // 对手退出，直接我方胜利，立即停止
+                        console.log("【时间到】检测到对手退出，我方胜利！");
+                        state = false;
+                        gameEnded = true;  // 标记游戏已结束
+                        try {
+                            var ha = new HTMLActuator();
+                            ha.messageContainer.classList.add("game-won");
+                            ha.messageContainer.getElementsByTagName("p")[0].textContent = "Winner";
+                            var ha2 = new HTMLActuator2();
+                            ha2.messageContainer.classList.add("game-over");
+                            ha2.messageContainer.getElementsByTagName("p")[0].textContent = "Loser";
+                        } catch(e) {}
+                        document.getElementById("opponent").innerHTML = "对手已认输(退出对战)，你胜利了！";
+                        return; // 不再按比分比较
+                    } else if (opponent === "opponentwon") {
+                        // 对手达成 2048，我方失败
+                        state = false;
+                        gameEnded = true;  // 标记游戏已结束
+                        try {
+                            var ha = new HTMLActuator();
+                            ha.messageContainer.classList.add("game-over");
+                            ha.messageContainer.getElementsByTagName("p")[0].textContent = "Loser";
+                            var ha2 = new HTMLActuator2();
+                            ha2.messageContainer.classList.add("game-won");
+                            ha2.messageContainer.getElementsByTagName("p")[0].textContent = "Winner";
+                        } catch(e) {}
+                        document.getElementById("opponent").innerHTML = "很遗憾，对手抢先一步完成了2048";
+                        return;
+                    } else if (opponent === "opponentlost") {
+                        // 对手失败，我方胜利
+                        state = false;
+                        gameEnded = true;  // 标记游戏已结束
+                        try {
+                            var ha = new HTMLActuator();
+                            ha.messageContainer.classList.add("game-won");
+                            ha.messageContainer.getElementsByTagName("p")[0].textContent = "Winner!";
+                            var ha2 = new HTMLActuator2();
+                            ha2.messageContainer.classList.add("game-over");
+                            ha2.messageContainer.getElementsByTagName("p")[0].textContent = "Loser";
+                        } catch(e) {}
+                        document.getElementById("opponent").innerHTML = "对手挑战失败，你胜利了！";
+                        return;
+                    }
+
+                    // 正常状态：更新对手棋盘状态
+                    if (opponent !== "" && opponent !== "unchange") {
+                        try {
+                            localStorage.setItem("gameState2", opponent);
+                        } catch(e) {
+                            console.log("更新对手状态失败：" + e);
+                        }
+                    }
+
+                    // 延迟200ms后比较分数，确保状态已更新
+                    setTimeout(function() {
+                        compareScoresAndShowResult();
+                    }, 200);
+                }
+            };
+            var thisState = localStorage.getItem("gameState");
+            xhttp.open("POST", "gamestate=" + thisState + ",name=" + username + ";", true);
+            xhttp.send();
+        }
+        
+        // 比较分数并显示结果
+        function compareScoresAndShowResult() {
+            // 如果游戏已经结束，不再执行分数比较
+            if (gameEnded) {
+                console.log("游戏已结束，跳过分数比较");
+                return;
+            }
+            
+            var mystate = JSON.parse(localStorage.getItem("gameState"));
+            var ostate = JSON.parse(localStorage.getItem("gameState2"));
+            
+            if (!mystate) {
+                console.error("无法获取自己的游戏状态");
+                document.getElementById("opponent").innerHTML = "游戏状态错误";
+                gameEnded = true;
+                return;
+            }
+            
+            if (!ostate) {
+                console.error("无法获取对手的游戏状态");
+                // 如果没有对手状态，认为自己赢
+                var ha = new HTMLActuator();
+                ha.messageContainer.classList.add("game-won");
+                ha.messageContainer.getElementsByTagName("p")[0].textContent = "Winner";
+                document.getElementById("opponent").innerHTML = "时间到！对手未同步，" + username + " 获胜！";
+                send("timeout=" + username + ";");
+                gameEnded = true;
+                return;
+            }
+            
+            console.log("我的分数：" + mystate.score + "，对手分数：" + ostate.score);
+            
+            // 标记游戏已结束，防止重复调用
+            gameEnded = true;
+            state = false;
+            
+            if (mystate.score > ostate.score) {
+                var ha = new HTMLActuator();
+                ha.messageContainer.classList.add("game-won");
+                ha.messageContainer.getElementsByTagName("p")[0].textContent = "Winner";
+                var ha2 = new HTMLActuator2();
+                ha2.messageContainer.classList.add("game-over");
+                ha2.messageContainer.getElementsByTagName("p")[0].textContent = "Loser";
+                document.getElementById("opponent").innerHTML = "时间到！" + username + " 胜利了！(分数: " + mystate.score + " vs " + ostate.score + ")";
+                send("gamestate=game-won,name=" + username + ";");
+                send("timeout=" + username + ";");
+            }
+            else if (mystate.score < ostate.score) {
+                var ha = new HTMLActuator();
+                ha.messageContainer.classList.add("game-over");
+                ha.messageContainer.getElementsByTagName("p")[0].textContent = "Loser";
+                var ha2 = new HTMLActuator2();
+                ha2.messageContainer.classList.add("game-won");
+                ha2.messageContainer.getElementsByTagName("p")[0].textContent = "Winner";
+                document.getElementById("opponent").innerHTML = "时间到！对手分数更高 (分数: " + mystate.score + " vs " + ostate.score + ")";
+                send("timeout=" + username + ";");
+            }
+            else {
+                var ha = new HTMLActuator();
+                ha.messageContainer.classList.add("game-won");
+                ha.messageContainer.getElementsByTagName("p")[0].textContent = "Win-Win";
+                var ha2 = new HTMLActuator2();
+                ha2.messageContainer.classList.add("game-won");
+                ha2.messageContainer.getElementsByTagName("p")[0].textContent = "Win-Win";
+                document.getElementById("opponent").innerHTML = "时间到！平局，合作共赢 (分数: " + mystate.score + " vs " + ostate.score + ")";
+                send("timeout=" + username + ";");
+            }
+        }
+
+        function refresh() {
+            window.location.href = "multiplayer.html?uid=" + btoa(encodeURIComponent(username));
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        function GameManager2(size, Actuator, StorageManager) {
+            this.size = size; // 网格的大小
+            this.storageManager = new StorageManager;
+            this.actuator = new Actuator;
+
+            this.startTiles = 2; // 开始时tile的数量
+
+            this.setup();
+        }
+
+        // Restart the game
+        GameManager2.prototype.restart = function () {
+            this.storageManager.clearGameState();
+            this.actuator.continueGame(); // Clear the game won/lost message
+            this.setup();
+        };
+
+        // 当2048赢了之后，游戏继续
+        GameManager2.prototype.keepPlaying = function () {
+            this.keepPlaying = true;
+            this.actuator.continueGame(); // Clear the game won/lost message
+        };
+
+        // 判断游戏是否结束 结束——>true 继续——>false
+        GameManager2.prototype.isGameTerminated = function () {
+            return this.over || (this.won && !this.keepPlaying);
+        };
+
+        // Set up the game
+        GameManager2.prototype.setup = function () {
+            var previousState = this.storageManager.getGameState();
+
+            // Reload the game from a previous game if present
+            if (previousState) {
+                this.grid = new Grid(previousState.grid.size,
+                    previousState.grid.cells); // Reload grid
+                this.score = previousState.score;
+                this.over = previousState.over;
+                this.won = previousState.won;
+                this.keepPlaying = previousState.keepPlaying;
+            } else {
+                this.grid = new Grid(this.size);
+                this.score = 0;
+                this.over = false;
+                this.won = false;
+                this.keepPlaying = false;
+
+                // 添加开始的格子，格子数量由StartTiles决定
+                //this.addStartTiles();
+            }
+
+            // 更新画面
+            this.actuate();
+        };
+
+        // Sends the updated grid to the actuator把更新的grid送到actuator
+        GameManager2.prototype.actuate = function () {
+            if (this.storageManager.getBestScore() < this.score) {
+                this.storageManager.setBestScore(this.score);
+                if (username != "none") {//__________________________________________________________________xvyanfei发送最高分数到服务器
+                    //send("score=" + score + ",name=" + username + ";");
+                }
+                signscore = this.score;
+            }
+
+            // 如果游戏结束，则不再更新actuator，删除数据(game over only, not win)
+            if (this.over) {
+                this.storageManager.clearGameState();
+            } else {
+                this.storageManager.setGameState(this.serialize());
+
+            }
+
+            this.actuator.actuate(this.grid, {
+                score: this.score,
+                over: this.over,
+                won: this.won,
+                bestScore: this.storageManager.getBestScore(),
+                terminated: this.isGameTerminated()
+            });
+
+        };
+
+        // 游戏数据标准化
+        GameManager2.prototype.serialize = function () {
+            return {
+                grid: this.grid.serialize(),
+                score: this.score,
+                over: this.over,
+                won: this.won,
+                keepPlaying: this.keepPlaying
+            };
+        };
+
+        function HTMLActuator2() {
+            this.tileContainer = document.querySelector(".tile-container2");
+            this.scoreContainer = document.querySelector(".score-container2");
+            this.messageContainer = document.querySelector(".game-message2");
+
+            this.score = 0;
+        }
+
+        HTMLActuator2.prototype.actuate = function (grid, metadata) {
+            var self = this;
+
+            window.requestAnimationFrame(function () {// 确保界面的更新与浏览器的绘制同步，提供更平滑的动画效果
+                self.clearContainer(self.tileContainer);
+
+                grid.cells.forEach(function (column) {
+                    column.forEach(function (cell) {
+                        if (cell) {
+                            self.addTile(cell);
+                        }
+                    });
+                });
+
+                self.updateScore(metadata.score);
+
+                if (metadata.terminated) {
+                    if (metadata.over) {
+                        self.message(false); // You lose
+                    } else if (metadata.won) {
+                        self.message(true); // You win!
+                    }
+                }
+
+            });
+        };
+
+        HTMLActuator2.prototype.clearContainer = function (container) {
+            while (container.firstChild) {
+                container.removeChild(container.firstChild);
+            }
+        };
+
+        HTMLActuator2.prototype.addTile = function (tile) {
+            var self = this;
+
+            var wrapper = document.createElement("div");
+            var inner = document.createElement("div");
+            var position = tile.previousPosition || { x: tile.x, y: tile.y };
+            var positionClass = this.positionClass(position);
+
+            // We can't use classlist because it somehow glitches when replacing classes
+            var classes = ["tile", "tile-" + tile.value, positionClass];
+
+            if (tile.value > 2048) classes.push("tile-super");
+
+            this.applyClasses(wrapper, classes);
+
+            inner.classList.add("tile-inner");
+            inner.textContent = tile.value;
+
+            if (tile.previousPosition) {
+                // Make sure that the tile gets rendered in the previous position first
+                window.requestAnimationFrame(function () {
+                    classes[2] = self.positionClass({ x: tile.x, y: tile.y });
+                    self.applyClasses(wrapper, classes); // Update the position
+                });
+            } else if (tile.mergedFrom) {
+                classes.push("tile-merged");
+                this.applyClasses(wrapper, classes);
+
+                // Render the tiles that merged
+                tile.mergedFrom.forEach(function (merged) {
+                    self.addTile(merged);
+                });
+            } else {
+                classes.push("tile-new");
+                this.applyClasses(wrapper, classes);
+            }
+
+            // Add the inner part of the tile to the wrapper
+            wrapper.appendChild(inner);
+
+            // Put the tile on the board
+            this.tileContainer.appendChild(wrapper);
+        };
+
+        HTMLActuator2.prototype.applyClasses = function (element, classes) {
+            element.setAttribute("class", classes.join(" "));
+        };
+
+        HTMLActuator2.prototype.normalizePosition = function (position) {
+            return { x: position.x + 1, y: position.y + 1 };
+        };
+
+        HTMLActuator2.prototype.positionClass = function (position) {
+            position = this.normalizePosition(position);
+            return "tile-position-" + position.x + "-" + position.y;
+        };
+
+        HTMLActuator2.prototype.updateScore = function (score) {
+            this.clearContainer(this.scoreContainer);
+
+            var difference = score - this.score;
+            this.score = score;
+
+            this.scoreContainer.textContent = this.score;
+
+            if (difference > 0) {
+                var addition = document.createElement("div");
+                addition.classList.add("score-addition");
+                addition.textContent = "+" + difference;
+
+                this.scoreContainer.appendChild(addition);
+            }
+        };
+
+        HTMLActuator2.prototype.message = function (won) {
+            var type = won ? "game-won" : "game-over";
+            var message = won ? "You win!" : "Game over!";
+
+            this.messageContainer.classList.add(type);
+            this.messageContainer.getElementsByTagName("p")[0].textContent = message;
+        };
+
+        function LocalStorageManager2() {
+            this.bestScoreKey = "bestScore2";
+            this.gameStateKey = "gameState2";
+
+            var supported = LocalStorageManager.prototype.localStorageSupported();
+            this.storage = supported ? window.localStorage : window.fakeStorage;
+        }
+
+        // Best score getters/setters
+        LocalStorageManager2.prototype.getBestScore = function () {
+            return this.storage.getItem(this.bestScoreKey) || 0;
+        };
+
+        LocalStorageManager2.prototype.setBestScore = function (score) {
+            this.storage.setItem(this.bestScoreKey, score);
+        };
+
+        // Game state getters/setters and clearing
+        LocalStorageManager2.prototype.getGameState = function () {
+            var stateJSON = this.storage.getItem(this.gameStateKey);
+            //document.getElementById("debug").innerHTML = stateJSON;
+            return stateJSON ? JSON.parse(stateJSON) : null;
+        };
+
+        LocalStorageManager2.prototype.setGameState = function (gameState) {
+            this.storage.setItem(this.gameStateKey, JSON.stringify(gameState));
+        };
+
+    </script>
+</body>
+
+</html>

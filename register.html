@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>2048注册</title>
+  <!-- <link rel="stylesheet" href="text.css" /> -->
+</head>
+<style>
+  body {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(125deg, #2c3e50, #27ae60, #2980b9, #e74c3c, #8e44ad);
+    background-size: 500%;
+    animation: backgroundframe 15s infinite linear;
+  }
+
+  @keyframes backgroundframe {
+    0% {
+      background-position: 0% 50%;
+    }
+
+    50% {
+      background-position: 100% 50%;
+    }
+
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+
+  input:focus {
+    box-shadow: 0 0 5px #9ecaed;
+    outline: none;
+    border-color: #9ecaed;
+
+  }
+
+  .all {
+    width: 800px;
+    box-shadow: -10px 10px 25px rgba(50, 50, 50, 0.9);
+    margin: auto;
+    margin-top: 5%;
+    display: flex;
+    border-radius: 35px;
+    background-color: #ffffff;
+    height: 550px;
+  }
+
+  .log {
+    width: 50%;
+    margin: auto;
+  }
+
+  .reg {
+    width: 50%;
+    height: 100%;
+    margin: auto;
+    background-color: #20b2aa;
+    border-radius: 35px;
+    color: #ffffff;
+  }
+
+  .reg_1 {
+    text-align: center;
+    margin: auto;
+    margin-top: 50%;
+  }
+
+  .reg_1 h2 {
+    font-weight: 700;
+  }
+
+  .reg_1 p {
+    margin: 15px 0px 25px 0px;
+  }
+
+  .sig {
+    width: 70px;
+    height: 30px;
+    border-radius: 12px;
+    background-color: #20b2aa;
+    border-color: #fff;
+    color: #ffffff;
+  }
+
+  #tiao {
+    padding: 0em 0;
+  }
+
+  .reg_1 a {
+    color: #ffffff;
+  }
+
+  h3 {
+    font-size: 3em;
+    color: black;
+    padding-bottom: 1em;
+    margin: 0;
+    text-align: center;
+    font-family: "Marvel-Regular";
+  }
+
+  .input {
+    margin: 10px 50px;
+    width: 300px;
+    height: 70px;
+  }
+
+  span {
+    color: #999;
+    font-size: 0.85em;
+    padding-bottom: 0.2em;
+    display: block;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+
+  .ll {
+    border: 1px solid #555;
+    outline-color: #fd9f3e;
+    width: 90%;
+    font-size: 1em;
+    padding: 0.5em;
+    line-height: inherit;
+  }
+
+  .codell {
+    border: 1px solid #555;
+    outline-color: #fd9f3e;
+    width: 48%;
+    font-size: 1em;
+    padding: 0.5em;
+    line-height: inherit;
+  }
+
+  .register-top-grid {
+    color: black;
+    padding-bottom: 1em;
+    margin: 0;
+    /* text-align: center; */
+    font-family: "Marvel-Regular";
+    margin: 10px 0;
+  }
+
+  .text-center {
+    text-align: center;
+  }
+
+  .zhuce {
+    border: none;
+    font-size: 15px;
+    color: rgb(255, 253, 253);
+    width: 80px;
+    height: 35px;
+    background-color: rgb(241, 52, 10);
+  }
+
+  /*----------------------------------------------------------------验证码*/
+</style>
+
+<body>
+  <div class="all">
+    <div class="log">
+      <div>
+        <div class="register" id="tiao">
+          <form>
+            <div class="register-top-grid">
+              <h3>注册新用户</h3>
+              <div class="input">
+                <span>用户名 <label style="color: red">* </label></span>
+                <input class="ll" id="name" type="text" placeholder="用姓名注册，让你榜上有名" v-model="name" />
+              </div>
+              <div class="input">
+                <span>密码 <label style="color: red">*</label></span>
+                <input class="ll" type="password" id="password" placeholder="请输入密码" v-model="password" />
+              </div>
+              <div class="input">
+                <span>确认密码 <label style="color: red">*</label></span>
+                <input class="ll" type="password" id="confirm" placeholder="请输入密码" v-model="password" />
+              </div>
+              <div class="input" id="check" style="height: 40px;">
+                <span>验证码 <label style="color: red">*</label></span>
+                <div style="display: flex;">
+                  <input class="codell" type="text" name="text" id="code" placeholder="请输入验证码">
+                  <canvas title="点我刷新验证码" width="120" height="40" style="border:1px solid #000;"></canvas>
+                </div>
+              </div>
+            </div>
+            <div class="text-center">
+              <input type="text" value="      注册" class="zhuce" onclick="register()" />
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="reg">
+      <div class="reg_1">
+        <h2>已有账号？</h2>
+        <p>返回游戏界面登录，开始2048的愉快旅途吧</p>
+        <button type="button" class="sig" onclick="goback()">返回</button>
+      </div>
+    </div>
+  </div>
+  <span id="debug"></span>
+</body>
+<script>
+  function register() {
+    var nameVal = document.getElementById('name').value;
+    var passwordVal = document.getElementById('password').value;
+    var confirmVal = document.getElementById('confirm').value;
+    var arr = ["12345", "123456", "20480", "02048", "1234567", "12345678", "123456789", "abcde"];
+    if (nameVal == "" || passwordVal == "") {
+      alert("有请下一组提醒您:\n请输入正确的用户名和密码");
+      codeStr = ranCode();
+      return;
+    }
+    if (encodeURIComponent(nameVal).length > 127) {
+      alert("有请下一组提醒您，用户名长度过长");
+      codeStr = ranCode();
+      return;
+    }
+    if (encodeURIComponent(passwordVal).length > 64) {
+      alert("有请下一组提醒您，密码长度过长");
+      codeStr = ranCode();
+      return;
+    } else if (passwordVal == "12345" || passwordVal == "123456" || passwordVal == "1234567" || passwordVal == "20480" || passwordVal == "54321" || passwordVal == "654321" || passwordVal == "asdfg" || passwordVal == "abcde") {
+      alert("密码过于简单");
+      codeStr = ranCode();
+      return;
+    } else if (passwordVal.search(' ') != -1 || passwordVal.search(',') != -1 || passwordVal.search(';') != -1 || passwordVal.search('#') != -1 || passwordVal.search('=') != -1) {
+      alert("有请下一组提醒您，密码中不能含有空格 , ; # =");
+      codeStr = ranCode();
+      return;
+    } else if (nameVal.search(' ') != -1 || nameVal.search(',') != -1 || nameVal.search(';') != -1 || nameVal.search('#') != -1 || nameVal.search('=') != -1) {
+      alert("有请下一组提醒您，用户名中不能含有空格 , ; # =");
+      codeStr = ranCode();
+      return;
+    } else if (passwordVal.length < 5) {
+      alert("密码过于简单");
+      codeStr = ranCode();
+      return;
+    }
+    if (passwordVal != confirmVal) {
+      alert("有请下一组提醒您:\n两次输入的密码不一致");
+      codeStr = ranCode();
+      return;
+    }
+    if (nameVal == "none") {
+      alert("有请下一组提醒您，该用户名已经存在");
+      codeStr = ranCode();
+      return;
+    }
+
+    if (code.value == "" || code.value.toLowerCase() != codeStr.toLowerCase()) {
+      alert("验证码错误");// 无论正确还是错误，都要重新刷新验证码
+      codeStr = ranCode();
+      return;
+    }
+
+
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function () {
+      if (this.readyState == 4 && this.status == 200) {
+        var signback = this.responseText;
+        if (signback == "success") {
+          alert("注册成功,单击确定返回游戏界面");
+          localStorage.setItem('username', nameVal);
+          localStorage.setItem('loginday', getDay());
+          var lins = btoa(encodeURIComponent(nameVal));
+          var backlink = document.referrer;
+          if (backlink.search("uid") != -1) {
+            window.location.href = backlink.slice(0,backlink.search("uid=")+4)+lins;
+          } else {
+            window.location.href = backlink + "?uid=" + lins;
+          }
+        } else if (signback == "repeition") {
+          alert("有请下一组提醒您，该用户名已经存在");
+          codeStr = ranCode();
+        } else {
+          document.getElementById("debug").innerHTML = signback;
+        }
+
+      }
+    };
+    xhttp.open("POST", "register=" + nameVal + ",password=" + passwordVal + ";", true);
+    xhttp.send();
+  }
+
+  function getDay() {
+    const now = new Date();
+    const day = '.' + ('0' + now.getDate()).slice(-2);
+    return day;
+  }
+
+  function getParameter(name) {
+    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); // 构建一个含有目标参数的正则表达式对象
+    var r = window.location.search.substr(1).match(reg); // 匹配目标参数
+    if (r != null) {
+      if (unescape(r[2]) == "null" || unescape(r[2]) == "none") {
+        return "";
+      }
+      return unescape(r[2]);
+    } else {
+      return "";
+    }
+  }
+
+  try {
+    var userName = decodeURIComponent(atob(getParameter("uid")));
+  }
+  catch (err) {
+    var userName = "none";
+  }
+  if (userName == "") {
+    userName = "none";
+  }
+
+  function goback() {
+    var backlink = document.referrer;
+    if (backlink.slice(backlink.search("html") - 8, backlink.search("html") - 1) == "register") {
+                backlink = "home.html";
+            }
+    if ((userName) == "none" || (backlink.search("uid") != -1)) {
+      window.location.href = backlink;
+    } else {
+      window.location.href = backlink + "?uid=" + btoa(encodeURIComponent(userName));
+    }
+  }
+
+
+
+  //----------------------------------------下面是验证码
+  // 获取画布元素
+  var mycanvas = document.getElementsByTagName("canvas")[0];
+  // 获取绘图上下文，调用getContext()方法
+  var ctx = mycanvas.getContext("2d");
+  // 定义干扰点的数量
+  var pointNum = 80;
+  // 定义干扰线的数量
+  var lineNum = 5;
+  // 定义随机字符文本
+  var str = "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWSYZ";
+  // 定义用来存储每次生成验证码的字符串
+  var codeStr = "";
+
+  // 为画布添加点击事件
+  mycanvas.onclick = function () {
+    // 每次点击刷新验证码
+    codeStr = ranCode();
+  };
+  // 页面加载时要调用一次，绘制验证码
+  codeStr = ranCode();
+  // 获取输入框元素
+  var code = document.getElementById("code");
+
+  // 构造随机验证码函数
+  function ranCode() {
+    // 每次使用画布之前都要先将其清除
+    ctx.clearRect(0, 0, 120, 40);
+    // 每次刷新验证码时，都要重新创建一个字符串变量用来存储验证码
+    var text = "";
+    // 绘制随机字符的循环
+    for (var i = 0; i < 4; i++) {
+      // 创建新路径
+      ctx.beginPath();
+      // 设置文本基线，顶端垂直对齐
+      ctx.textBaseline = "top";
+      // 设置文本样式
+      ctx.font = "24px 宋体";
+      // 填充文本颜色，颜色要更深一点，不然跟干扰线与干扰点颜色相近，分不清
+      ctx.fillStyle = getRanColor(0, 100);
+      // 定义随机字符
+      var ranS = str.charAt(getRanNumber(0, str.length - 1));
+      // 将每次循环得到的随机字符拼接上去
+      text += ranS;
+      // 保存画布当前状态
+      ctx.save();
+      // 每次绘制一个字符之前先把画布位移到指定位置
+      ctx.translate(i * 25, 0);
+      // 旋转，定义角度可以顺时针旋转也可以逆时针旋转
+      var ranAngle = Math.PI / 180 * getRanNumber(-15, 15);
+      // 画布旋转随机角度
+      ctx.rotate(ranAngle);
+      // 绘制旋转之后的随机字符
+      ctx.fillText(ranS, getRanNumber(10, 15), getRanNumber(0, 15));
+      // 直接读取之前保存的状态，不需要再位移旋转回来
+      ctx.restore();
+    }
+    // 绘制随机点的循环
+    for (var i = 0; i < pointNum; i++) {
+      ctx.beginPath();
+      // 填充文本颜色，颜色推荐在180左右，效果比较明显，中间颜色比较艳丽
+      ctx.fillStyle = getRanColor(180, 260);
+      // 绘制圆形  x轴坐标在随机数0~120（画布宽度），y轴坐标在0~40（画布高度），半径为1
+      ctx.arc(getRanNumber(0, 120), getRanNumber(0, 40), 1, 0, Math.PI * 2);
+      // 填充形状
+      ctx.fill();
+    }
+
+    // 绘制干扰线循环
+    for (var i = 0; i < lineNum; i++) {
+      ctx.beginPath();
+      // 干扰线轮廓颜色
+      ctx.strokeStyle = getRanColor(180, 240);
+      // 干扰线起始点坐标
+      ctx.moveTo(getRanNumber(0, 20), getRanNumber(0, 40));
+      // 干扰线结束点坐标
+      ctx.lineTo(getRanNumber(100, 120), getRanNumber(0, 40));
+      // 绘制干扰线轮廓
+      ctx.stroke();
+    }
+    // 返回每次随机产生的验证码
+    return text;
+  }
+  // 构造随机数的方法函数（min到max随机，包含max）
+  function getRanNumber(min, max) {
+    return parseInt(Math.random() * (max - min + 1) + min);
+  }
+  // 构造随机颜色的方法函数
+  function getRanColor(min, max) {
+    // 如果最小值小于0，或者最小值大于255，即非正常数范围
+    if (min < 0 || min > 255) {
+      // 设置最小值为0
+      min = 0;
+    }
+    // 如果最大值小于0，或者最大值大于255，即非正常数范围
+    if (max < 0 || max > 255) {
+      // 设置最大值为255
+      max = 255;
+    }
+    // 定义rgb()函数的各个值
+    var r = getRanNumber(min, max);
+    var g = getRanNumber(min, max);
+    var b = getRanNumber(min, max);
+    return "rgb(" + r + "," + g + "," + b + ")";
+  }
+</script>
+
+</html>

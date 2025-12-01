@@ -1,0 +1,1128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="Shaoyang Ren">
+  <meta name="generator" content="Hugo 0.122.0">
+  <title>主页</title>
+
+  <link rel='stylesheet' href="css/scratch_318.css">
+  <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css'>
+  <link rel='stylesheet'
+    href='https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css'>
+  <link rel="stylesheet" href="css/stylee.css">
+  <link rel="canonical" href="https://getbootstrap.com/docs/5.3/examples/navbar-fixed/">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@docsearch/css@3">
+  <link rel='stylesheet' href='css/bootstrap.min.css'>
+</head>
+<style>
+  :root {
+    --main-white-color: white;
+    --main-black-color: black;
+  }
+
+  * {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+  }
+
+  html, body {
+    overflow-x: hidden;
+    max-width: 100%;
+  }
+
+  .static {
+    position: static;
+  }
+
+  .cover {
+    background-size: cover;
+    background-position: top;
+    background-repeat: no-repeat;
+  }
+
+  .owl-carousel .owl-slide {
+    position: relative;
+    height: 70vh;
+    background-color: lightgray;
+  }
+
+  .owl-carousel .owl-slide-animated {
+    transform: translateX(20px);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.05s;
+  }
+
+  .owl-carousel .owl-slide-animated.is-transitioned {
+    transform: none;
+    opacity: 1;
+    visibility: visible;
+    transition: all 0.5s;
+  }
+
+  .owl-carousel .owl-slide-title.is-transitioned {
+    transition-delay: 0.2s;
+  }
+
+  .owl-carousel .owl-slide-subtitle.is-transitioned {
+    transition-delay: 0.35s;
+  }
+
+  .owl-carousel .owl-slide-cta.is-transitioned {
+    transition-delay: 0.5s;
+  }
+
+  .owl-carousel .owl-dots,
+  .owl-carousel .owl-nav {
+    position: absolute;
+  }
+
+  .owl-carousel .owl-dots .owl-dot,
+  .owl-carousel .owl-nav [class*="owl-"]:focus {
+    outline: none;
+  }
+
+  .owl-carousel .owl-dots .owl-dot span {
+    background: transparent;
+    border: 1px solid var(--main-black-color);
+    transition: all 0.2s ease;
+  }
+
+  .owl-carousel .owl-dots .owl-dot:hover span,
+  .owl-carousel .owl-dots .owl-dot.active span {
+    background: var(--main-black-color);
+  }
+
+  .owl-carousel .owl-nav {
+    left: 50%;
+    top: 10%;
+    transform: translateX(-50%);
+    margin: 0;
+  }
+
+  .owl-carousel .owl-nav svg {
+    opacity: 0.3;
+    transition: opacity 0.3s;
+  }
+
+  .owl-carousel .owl-nav button:hover svg {
+    opacity: 1;
+  }
+
+  .owl-carousel .owl-nav [class*="owl-"]:hover {
+    background: transparent;
+  }
+
+  section {
+    display: none;
+  }
+
+  @media screen and (max-width: 575px) {
+    .owl-carousel .owl-nav {
+      top: 5%;
+    }
+
+    .owl-carousel .owl-nav svg {
+      width: 24px;
+      height: 24px;
+    }
+  }
+
+
+  .owl-slide-text {
+    color: white;
+    /* 设置文本颜色为白色 */
+  }
+
+  .owl-slide {
+    background-size: cover;
+    background-position: center;
+    height: 70vh !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    text-align: center;
+  }
+
+  .owl-carousel {
+    margin-top: 56px;
+  }
+
+  @media screen and (max-width: 576px) {
+    .owl-carousel {
+      margin-top: 52px;
+    }
+    .owl-slide {
+      height: 60vh !important;
+    }
+  }
+
+  .slide-1 {
+    background-image: url("image/home2048.jpg");
+  }
+
+  .slide-2 {
+    background-image: url("https://ts1.cn.mm.bing.net/th/id/R-C.a772721333dc6bff0607a96b9817e392?rik=%2fgdLYeX7yxX4lg&riu=http%3a%2f%2fp3.so.qhmsg.com%2ft0133dc6bff0607a96b.jpg&ehk=hljXZVqp3W%2biATbRmREnv0b4I4EsC4SJAgO7KA%2fa9lc%3d&risl=&pid=ImgRaw&r=0");
+  }
+
+  .slide-3 {
+    background-image: url('https://pic1.zhimg.com/v2-c40140880c6a655ace54b053a3db5feb_r.jpg?source=172ae18b');
+  }
+
+  /*===================================================================================================================*/
+  .bd-placeholder-img {
+    font-size: 1.125rem;
+    text-anchor: middle;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+  }
+
+  @media (min-width: 768px) {
+    .bd-placeholder-img-lg {
+      font-size: 3.5rem;
+    }
+  }
+
+  .b-example-divider {
+    width: 100%;
+    height: 3rem;
+    background-color: rgba(0, 0, 0, .1);
+    border: solid rgba(0, 0, 0, .15);
+    border-width: 1px 0;
+    box-shadow: inset 0 .5em 1.5em rgba(0, 0, 0, .1), inset 0 .125em .5em rgba(0, 0, 0, .15);
+  }
+
+  .b-example-vr {
+    flex-shrink: 0;
+    width: 1.5rem;
+    height: 100vh;
+  }
+
+  .bi {
+    vertical-align: -.125em;
+    fill: currentColor;
+  }
+
+  .nav-scroller {
+    position: relative;
+    z-index: 2;
+    height: 2.75rem;
+    overflow-y: hidden;
+  }
+
+  .nav-scroller .nav {
+    display: flex;
+    flex-wrap: nowrap;
+    padding-bottom: 1rem;
+    margin-top: -1px;
+    overflow-x: auto;
+    text-align: center;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .btn-bd-primary {
+    --bd-violet-bg: #712cf9;
+    --bd-violet-rgb: 112.520718, 44.062154, 249.437846;
+
+    --bs-btn-font-weight: 600;
+    --bs-btn-color: var(--bs-white);
+    --bs-btn-bg: var(--bd-violet-bg);
+    --bs-btn-border-color: var(--bd-violet-bg);
+    --bs-btn-hover-color: var(--bs-white);
+    --bs-btn-hover-bg: #6528e0;
+    --bs-btn-hover-border-color: #6528e0;
+    --bs-btn-focus-shadow-rgb: var(--bd-violet-rgb);
+    --bs-btn-active-color: var(--bs-btn-hover-color);
+    --bs-btn-active-bg: #5a23c8;
+    --bs-btn-active-border-color: #5a23c8;
+  }
+
+  .bd-mode-toggle {
+    z-index: 1500;
+  }
+
+  .bd-mode-toggle .dropdown-menu .active .bi {
+    display: block !important;
+  }
+
+  /*======================================================================================登录↓=========*/
+  .btn-open-popup {
+    padding: 12px 24px;
+    font-size: 18px;
+    background-color: green;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .btn-open-popup:hover {
+    background-color: #4caf50;
+  }
+
+  .overlay-container {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 9999;
+  }
+
+  .popup-box {
+    background: #fff;
+    padding: 24px;
+    border-radius: 12px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+    width: 320px;
+    text-align: center;
+    opacity: 0;
+    transform: scale(0.8);
+    animation: fadeInUp 0.5s ease-out forwards;
+  }
+
+  .form-container {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .form-label {
+    margin-bottom: 10px;
+    font-size: 16px;
+    color: #444;
+    text-align: left;
+  }
+
+  .form-input {
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 16px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .btn-submit,
+  .btn-close-popup {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  .btn-submit {
+    background-color: green;
+    color: #fff;
+  }
+
+  .btn-close-popup {
+    margin-top: 12px;
+    background-color: #e74c3c;
+    color: #fff;
+  }
+
+  .btn-submit:hover,
+  .btn-close-popup:hover {
+    background-color: #4caf50;
+  }
+
+  /* ----------------------------淡入淡出动画的关键帧 */
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* -------------------------------弹窗动画 */
+  .overlay-container.show {
+    display: flex;
+    opacity: 1;
+  }
+</style>
+
+<body>
+  <!-- partial:index.partial.html -->
+  <div class="owl-carousel owl-theme">
+    <div class="owl-slide slide-1 d-flex align-items-center cover">
+      <div class="container">
+        <div class="row justify-content-center justify-content-md-start">
+          <div class="col-10 col-md-6 static">
+            <div class="owl-slide-text" style="margin-left: -200px;">
+              <h1 class="owl-slide-animated owl-slide-title"><strong>2048</strong></h1>
+              <div class="owl-slide-animated owl-slide-subtitle mb-3">
+                <h3>不只是2048</h3>
+              </div>
+              <button class="btn btn-primary owl-slide-animated owl-slide-cta" target="_blank"
+                role="button" onclick="togglePopup()" id="sibtb">立即登录</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="owl-slide slide-2 d-flex align-items-center cover" style="background-position: top;">
+      <div class="container">
+        <div class="row justify-content-center justify-content-md-start">
+          <div class="col-10 col-md-6 static">
+            <div class="owl-slide-text">
+              <h1 class="owl-slide-animated owl-slide-title">丰富的游戏体验</h1>
+              <div class="owl-slide-animated owl-slide-subtitle mb-3">
+                <h3>双人游戏，联机，悔棋，多种变体2048......带来了丰富的游戏体验。</h3>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="owl-slide slide-3 d-flex align-items-center cover">
+      <div class="container">
+        <div class="row justify-content-center justify-content-md-start">
+          <div class="col-10 col-md-6 static">
+            <div class="owl-slide-text">
+              <h1 class="owl-slide-animated owl-slide-title">负责任的开发者态度</h1>
+              <div class="owl-slide-animated owl-slide-subtitle mb-3">
+                <h3>使用HTML、css、js、c、c++、php多种语言，带来精致的画面和丰富的游戏体验</h3>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!--画机器人-->
+  <div class="col-12 p-0 father" id="robotContainer">
+    <div class="scene">
+      <div class="box">
+        <div class="box-side face-front d-flex justify-content-center align-items-center">
+          <div class="main">
+
+            <div class="g1"></div>
+            <div class="g2"></div>
+            <div class="g3"></div>
+            <div class="g4"></div>
+            <div class="g5"></div>
+            <div class="g6"></div>
+            <div class="g7"></div>
+            <div class="g8"></div>
+            <div class="g9"></div>
+            <div class="g10"></div>
+
+
+            <div class="g11"></div>
+            <div class="g12"></div>
+            <div class="g13"></div>
+            <div class="g14"></div>
+            <div class="g15"></div>
+            <div class="g16"></div>
+            <div class="g17"></div>
+            <div class="g18"></div>
+            <div class="g19"></div>
+            <div class="g20"></div>
+
+            <div class="g21"></div>
+            <div class="g22"></div>
+            <div class="g23"></div>
+            <div class="g24"></div>
+            <div class="g25"></div>
+            <div class="g26"></div>
+            <div class="g27"></div>
+            <div class="g28"></div>
+            <div class="g29"></div>
+            <div class="g30"></div>
+
+            <div class="g31"></div>
+            <div class="g32"></div>
+            <div class="g33"></div>
+            <div class="g34"></div>
+            <div class="g35"></div>
+            <div class="g36"></div>
+            <div class="g37"></div>
+            <div class="g38"></div>
+            <div class="g39"></div>
+            <div class="g40"></div>
+
+            <div class="g41"></div>
+            <div class="g42"></div>
+            <div class="g43"></div>
+            <div class="g44"></div>
+            <div class="g45"></div>
+            <div class="g46"></div>
+            <div class="g47"></div>
+            <div class="g48"></div>
+            <div class="g49"></div>
+            <div class="g50"></div>
+
+
+            <div class="g51"></div>
+            <div class="g52"></div>
+            <div class="g53"></div>
+            <div class="g54"></div>
+            <div class="g55"></div>
+            <div class="g56"></div>
+            <div class="g57"></div>
+            <div class="g58"></div>
+            <div class="g59"></div>
+            <div class="g60"></div>
+
+
+            <div class="g61"></div>
+            <div class="g62"></div>
+            <div class="g63"></div>
+            <div class="g64"></div>
+            <div class="g65"></div>
+            <div class="g66"></div>
+            <div class="g67"></div>
+            <div class="g68"></div>
+            <div class="g69"></div>
+            <div class="g70"></div>
+
+            <div class="g71"></div>
+            <div class="g72"></div>
+            <div class="g73"></div>
+            <div class="g74"></div>
+            <div class="g75"></div>
+            <div class="g76"></div>
+            <div class="g77"></div>
+            <div class="g78"></div>
+            <div class="g79"></div>
+            <div class="g80"></div>
+
+            <div class="g81"></div>
+            <div class="g82"></div>
+            <div class="g83"></div>
+            <div class="g84"></div>
+            <div class="g85"></div>
+            <div class="g86"></div>
+            <div class="g87"></div>
+            <div class="g88"></div>
+            <div class="g89"></div>
+            <div class="g90"></div>
+
+            <div class="g91"></div>
+            <div class="g92"></div>
+            <div class="g93"></div>
+            <div class="g94"></div>
+            <div class="g95"></div>
+            <div class="g96"></div>
+            <div class="g97"></div>
+            <div class="g98"></div>
+            <div class="g99"></div>
+            <div class="g100"></div>
+
+            <div class="g101"></div>
+            <div class="g102"></div>
+            <div class="g103"></div>
+            <div class="g104"></div>
+            <div class="g105"></div>
+            <div class="g106"></div>
+            <div class="g107"></div>
+            <div class="g108"></div>
+            <div class="g109"></div>
+            <div class="g110"></div>
+
+
+            <div class="g111"></div>
+            <div class="g112"></div>
+            <div class="g113"></div>
+            <div class="g114"></div>
+            <div class="g115"></div>
+            <div class="g116"></div>
+            <div class="g117"></div>
+            <div class="g118"></div>
+            <div class="g119"></div>
+            <div class="g120"></div>
+
+            <div class="g121"></div>
+            <div class="g122"></div>
+            <div class="g123"></div>
+            <div class="g124"></div>
+            <div class="g125"></div>
+            <div class="g126"></div>
+            <div class="g127"></div>
+            <div class="g128"></div>
+            <div class="g129"></div>
+            <div class="g130"></div>
+
+            <div class="g131"></div>
+            <div class="g132"></div>
+            <div class="g133"></div>
+            <div class="g134"></div>
+            <div class="g135"></div>
+            <div class="g136"></div>
+            <div class="g137"></div>
+            <div class="g138"></div>
+            <div class="g139"></div>
+            <div class="g140"></div>
+
+            <div class="g141"></div>
+            <div class="g142"></div>
+            <div class="g143"></div>
+            <div class="g144"></div>
+            <div class="g145"></div>
+            <div class="g146"></div>
+            <div class="g147"></div>
+            <div class="g148"></div>
+            <div class="g149"></div>
+            <div class="g150"></div>
+          </div>
+        </div>
+
+        <div class="box-side face-right"></div>
+        <div class="box-side  face-left"></div>
+        <div class="box-side  face-top"></div>
+        <div class="box-side  face-bottom"></div>
+      </div>
+    </div>
+  </div>
+
+  <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">2048now-play</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
+        aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarCollapse">
+        <ul class="navbar-nav me-auto mb-2 mb-md-0">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="#">回到顶部</a>
+          </li>
+          <li class="nav-item">
+            <div class="nav-link" id="sibt" onclick="togglePopup()">登录/注册账号</div>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" onclick="ifunsign_Popup()">排行榜</a>
+          </li>
+          <li class="nav-item dropdown" style="position:fixed;right: 90px;">
+            <a class="nav-link dropdown-toggle" href="#" id="bd-theme" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <span id="bd-theme-text">主题</span>
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="bd-theme">
+              <li><button class="dropdown-item" type="button" data-bs-theme-value="light"><svg width="16" height="16"><use href="#icon-sun"></use></svg>&nbsp;浅色</button></li>
+              <li><button class="dropdown-item" type="button" data-bs-theme-value="dark"><svg width="16" height="16"><use href="#icon-moon"></use></svg>&nbsp;深色</button></li>
+              <li><button class="dropdown-item" type="button" data-bs-theme-value="auto"><svg width="16" height="16"><use href="#icon-auto"></use></svg>&nbsp;跟随系统</button></li>
+            </ul>
+          </li>
+          <li class="nav-item" style="position:fixed;right:20px;">
+            <span class="nav-link" id="sign_in"></span>
+          </li>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <div class="px-4 py-5 my-5 text-center">
+      <img class="d-block mx-auto mb-4" src="image/Logo.png" alt="" width="250" height="">
+      <h1 class="display-5 fw-bold text-body-emphasis">倾力制作</h1>
+      <div class="col-lg-6 mx-auto">
+
+        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+
+        </div>
+      </div>
+    </div>
+
+    <div class="b-example-divider"></div>
+
+    <div class="px-4 pt-5 my-5 text-center border-bottom">
+      <h1 class="display-4 fw-bold text-body-emphasis">经典版2048</h1>
+      <div class="col-lg-6 mx-auto">
+        <p class="lead mb-4">经典版2048，原汁原味，熟悉的感觉！</p>
+        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center mb-5">
+          <button type="button" class="btn btn-primary btn-lg px-4 me-md-2" onclick="toclassic()">即刻游玩！</button>
+        </div>
+      </div>
+      <div class="overflow-hidden" style="max-height: 30vh;">
+        <div class="container px-5">
+          <img src="image/classic.png" class="img-fluid border rounded-3 shadow-lg mb-4" alt="Example image" width="700"
+            height="500" loading="lazy">
+        </div>
+      </div>
+    </div>
+
+
+
+    <div class="b-example-divider"></div>
+
+    <div class="container col-xxl-8 px-4 py-5">
+      <div class="row flex-lg-row-reverse align-items-center g-5 py-5">
+        <div class="col-10 col-sm-8 col-lg-6">
+          <img src="image/3d.jpg" class="d-block mx-lg-auto img-fluid" alt="Bootstrap Themes" width="280" height="500"
+            loading="lazy">
+        </div>
+        <div class="col-lg-6">
+          <h1 class="display-5 fw-bold text-body-emphasis lh-1 mb-3">2048-cube</h1>
+          <p class="lead">立方体2048，可旋转，可前进，可后退：360°拓展的大满足！！！</p>
+          <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+            <button type="button" class="btn btn-primary btn-lg px-4 me-md-2" onclick="tocube()">即刻游玩！</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="b-example-divider"></div>
+
+    <div class="container col-xxl-8 px-4 py-5">
+      <div class="row flex-lg-row-reverse align-items-center g-5 py-5">
+        <div class="col-10 col-sm-8 col-lg-6">
+          <img src="image/zombie.jpg" class="d-block mx-lg-auto img-fluid" alt="Bootstrap Themes" width="700"
+            height="350" loading="lazy">
+        </div>
+        <div class="col-lg-6">
+          <h1 class="display-4 fw-bold lh-1 text-body-emphasis mb-3">2048-PVZ.ver</h1>
+          <p class="lead">2048扩展到5x5的方格！计算，合并，发射子弹！击杀形形色色的僵尸大军！植物大战僵尸和2048的完美结合一定能给您带来绝佳的游戏体验！
+          <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+            <button type="button" class="btn btn-primary btn-lg px-4 me-md-2" onclick="tozombie()">即刻游玩！</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="b-example-divider"></div>
+    <div class="container col-xxl-8 px-4 py-5">
+      <div class="row flex-lg-row-reverse align-items-center g-5 py-5">
+        <div class="col-10 col-sm-8 col-lg-6">
+          <img src="image/multiplayer.jpg" class="d-block mx-lg-auto img-fluid" alt="Bootstrap Themes" width="600" height="400"
+            loading="lazy">
+        </div>
+        <div class="col-lg-6">
+          <h1 class="display-5 fw-bold text-body-emphasis lh-1 mb-3">2048联机对战版</h1>
+          <p class="lead">想与好友共享快乐？2048双人版一定能为您和您的朋友提供手速和友情的至高快乐！</p>
+          <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+            <button type="button" class="btn btn-primary btn-lg px-4 me-md-2" onclick="toMultiplayer()">即刻游玩！</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="col-lg-4 offset-lg-1 p-0 overflow-hidden shadow-lg">
+
+    </div>
+
+
+    <div class="b-example-divider"></div>
+
+    <div class="bg-dark text-secondary px-4 py-5 text-center">
+      <div class="py-5">
+        <h1 class="display-5 fw-bold text-white">非常感谢您对我们游戏的支持！</h1>
+        <div class="col-lg-6 mx-auto">
+          <p class="fs-5 mb-4">有请下一队制作 队长：徐延飞 队员：吴沛泽 张桦桦 车盛彦辰 任少扬
+            <br>从五号到十三号，从早上八点到凌晨十分，朝阳，群星与蝉鸣见证着游戏的开发，前端后端，处处体现着组员辛勤的汗水，如果您对我们的的工作成果感到满意，还望您能为我们投上满意的一票，并再次感谢您对我们的支持 ：）
+          </p>
+          <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+            @有请下一队
+          </div>
+        </div>
+      </div>
+    </div>
+    <footer class="container">
+      <p>&copy; 中国石油大学（华东） 2023级 计算机科学系 xmade by 有请下一队 &middot;2024.7</p>
+    </footer>
+  </main>
+  <div id="popupOverlay" class="overlay-container">
+    <div class="popup-box">
+      <h2 style="color: green;">用户登录</h2>
+      <form class="form-container">
+        <label class="form-label" for="name">
+          用户名:
+        </label>
+        <input class="form-input" type="text" placeholder="请输入用户名" id="name" name="name" required>
+
+        <label class="form-label" for="password">密码:</label>
+        <input class="form-input" type="password" placeholder="请输入密码" id="password" name="password" required>
+
+        <button class="btn-submit" type="button" onclick="signin()">
+          确定
+        </button>
+      </form>
+
+      <button class="btn-close-popup" onclick="togglePopup()">
+        关闭
+      </button>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+      <button type="primary" class="btn-close-popup" onclick="toRegister()">注册</button>
+    </div>
+  </div>
+
+  <audio id="audio" src="audio/click.mp3"></audio>
+  <!-- partial -->
+  <!-- theme icons for navbar theme switcher -->
+  <svg style="display:none;">
+    <symbol id="icon-sun" viewBox="0 0 16 16">
+      <circle cx="8" cy="8" r="3" fill="currentColor" />
+    </symbol>
+    <symbol id="icon-moon" viewBox="0 0 16 16">
+      <path d="M10 2a6 6 0 1 0 4 10 6 6 0 0 1-4-10z" fill="currentColor" />
+    </symbol>
+    <symbol id="icon-auto" viewBox="0 0 16 16">
+      <path d="M8 1v2M8 13v2M1 8h2M13 8h2M3 3l1.5 1.5M11.5 11.5L13 13M3 13l1.5-1.5M11.5 4.5L13 3" stroke="currentColor" stroke-width="1" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+  </svg>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js'></script>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js'></script>
+  <script>
+    var username="";
+    (()=>{
+      try {//__________________________________________________________________xvyanfei
+        username = decodeURIComponent(atob(getParameter("uid")));//从传参尝试解析用户名
+        if (username == "" || username != window.localStorage.getItem('username') || getDay() != window.localStorage.getItem('loginday')) {
+          username = "";
+        }
+        if (username != "") {
+          //这时候应该问服务器是否正确
+          document.getElementById("sign_in").innerHTML = username;
+          document.getElementById("sibt").innerHTML = "已登录";
+          document.getElementById("sibtb").innerHTML = "已登录";
+          document.getElementById("sibt").setAttribute("style", "display:none;");
+        }
+      }
+      catch (err) {
+        username = "";
+      }
+    })();
+
+    function getDay() {
+      const now = new Date();
+      const day = '.' + ('0' + now.getDate()).slice(-2);
+      return day;
+    }
+
+    function togglePopup() {
+      const overlay = document.getElementById('popupOverlay');
+      overlay.classList.toggle('show');
+    }
+
+    function ifunsign_Popup() {//---------点击排行榜判断是否登录
+      if (username == "none") {//跳转登录页面
+        togglePopup();
+      } else {
+        window.location.href = "ranklist.html?uid=" + btoa(encodeURIComponent(username));
+      }
+    }
+
+    function signin() {
+      var nameVal = document.getElementById('name').value;
+      var passwordVal = document.getElementById('password').value;
+      var stscore = parseInt(window.localStorage.getItem('bestScore') || 0);
+      if (nameVal == "" || passwordVal == "") {
+        alert("请输入正确的用户名和密码");
+        return;
+      }
+      if (passwordVal.search(' ') != -1 || passwordVal.search(',') != -1 || passwordVal.search(';') != -1 || passwordVal.search('#') != -1 || passwordVal.search('=') != -1) {
+        alert("密码错误");
+        return;
+      } else if (nameVal.search(' ') != -1 || nameVal.search(',') != -1 || nameVal.search(';') != -1 || nameVal.search('#') != -1 || nameVal.search('=') != -1) {
+        alert("该用户未注册");
+        return;
+      }
+      var xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+          var signback = this.responseText;
+          if (signback.slice(0, 7) == "success") {
+            document.getElementById("sign_in").innerHTML = nameVal;
+            document.getElementById("sibt").innerHTML = "已登录";
+            username = nameVal;
+            togglePopup()
+            window.localStorage.setItem('username', username);
+            window.localStorage.setItem('loginday', getDay());
+          } else if (signback == "fail") {
+            document.getElementById("sign_in").innerHTML = "未登录";
+            alert("密码错误");
+          } else if (signback == "unsign") {
+            document.getElementById("sign_in").innerHTML = "未登录";
+            alert("该用户未注册");
+          } else {
+            document.getElementById("sign_in").innerHTML = signback;
+          }
+        }
+      };
+      xhttp.open("POST", "name=" + nameVal + ",password=" + passwordVal + ";", true);
+      xhttp.send();
+    }
+
+    function toRegister() {
+      window.location.href = "register.html?uid=" + btoa(encodeURIComponent(username));
+    }
+
+    function toMultiplayer() {
+      if (username == "none") {
+        togglePopup();
+      } else {
+        window.location.href = "multiplayer.html?uid=" + btoa(encodeURIComponent(username));
+      }
+    }
+
+    function toclassic() {
+      if (username == "none") {
+        window.location.href = "classic.html"
+      } else {
+        window.location.href = "classic.html?uid=" + btoa(encodeURIComponent(username));
+      }
+    }
+
+    function tocube() {
+      if (username == "none") {
+        window.location.href = "cube.html"
+      } else {
+        window.location.href = "cube.html?uid=" + btoa(encodeURIComponent(username));
+      }
+    }
+
+    function tozombie() {
+      var audio = document.getElementById('audio');
+      const evillaugh = new Audio('./audio/evillaugh.mp3');
+      evillaugh.play();
+      audio.pause();
+      if (username == "none") {
+        window.open("zombie.html");
+        //window.location.href = "zombie.html"
+      } else {
+        window.open("zombie.html?uid=" + btoa(encodeURIComponent(username)));
+        //window.location.href = "zombie.html?uid=" + btoa(encodeURIComponent(username));
+      }
+      setTimeout(() => {
+        window.close();
+        //若没关上：
+        window.opener = null; 
+        window.open('', '_self').close();
+        open("home.html", '_self').close();
+      }, 5000);
+    }
+
+    function getParameter(name) {
+      var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); // 构建一个含有目标参数的正则表达式对象
+      var r = window.location.search.substr(1).match(reg); // 匹配目标参数
+      if (r != null) {
+        if (unescape(r[2]) == "null" || unescape(r[2]) == "none") {
+          return "";
+        }
+        return unescape(r[2]);
+      } else {
+        return "";
+      }
+    }
+
+    $(".owl-carousel").on("initialized.owl.carousel", () => {
+      setTimeout(() => {
+        $(".owl-item.active .owl-slide-animated").addClass("is-transitioned");
+        $("section").show();
+      }, 200);
+    });
+
+    const $owlCarousel = $(".owl-carousel").owlCarousel({
+      items: 1,
+      loop: true,
+      nav: true,
+      navText: [
+        '<svg width="50" height="50" viewBox="0 0 24 24"><path d="M16.67 0l2.83 2.829-9.339 9.175 9.339 9.167-2.83 2.829-12.17-11.996z"/></svg>',
+        '<svg width="50" height="50" viewBox="0 0 24 24"><path d="M5 3l3.057-3 11.943 12-11.943 12-3.057-3 9-9z"/></svg>' /* icons from https://iconmonstr.com */]
+    });
+
+
+
+    $owlCarousel.on("changed.owl.carousel", e => {
+      $(".owl-slide-animated").removeClass("is-transitioned");
+
+      const $currentOwlItem = $(".owl-item").eq(e.item.index);
+      $currentOwlItem.find(".owl-slide-animated").addClass("is-transitioned");
+
+      const $target = $currentOwlItem.find(".owl-slide-text");
+      doDotsCalculations($target);
+    });
+
+    $owlCarousel.on("resize.owl.carousel", () => {
+      setTimeout(() => {
+        setOwlDotsPosition();
+      }, 50);
+    });
+
+    setOwlDotsPosition();
+
+    function setOwlDotsPosition() {
+      const $target = $(".owl-item.active .owl-slide-text");
+      doDotsCalculations($target);
+    }
+
+    function doDotsCalculations(el) {
+      const height = el.height();
+      const { top, left } = el.position();
+      const res = height + top + 20;
+
+      $(".owl-carousel .owl-dots").css({
+        top: `${res}px`,
+        left: `${left}px`
+      });
+
+    }
+
+    document.addEventListener('click', function () {
+      var audio = document.getElementById('audio');
+      audio.play();
+    });
+
+    // the robot Movement 
+
+    var mouseX, mouseY;
+    $(document).mousemove(function (e) {
+      if (e.pageY <= -10) {
+        $(".g49").hide("slow");
+      };
+      mouseX = -1 * ((e.pageX) - ($(window).width() / 2 + 25)) * 60 / $(window).width();
+      mouseY = ((e.pageY) - ($(window).height() / 2 + 1300)) * 20 / $(window).height();
+      $(".box").css("transform", "rotateY(" + mouseX + "deg) rotateX(" + mouseY + "deg)");
+      // console.log(mouseX + " << x edited  " + mouseY + " << y edited  " + e.pageX + " << x  " + e.pageY + " << y  ")
+    }).mouseover();
+
+
+    $(document).ready(function () {
+
+      $(".g57 , .g36, .g51 ,.g49, .g20 , .g19 , .g18 , .g32 , .g47 , .g55 , .g40 , .g26, .g59 , .g27 , .g28 , .g44 , .g59 , .g93 , .g108 , .g124 , .g125 , .g126 , .g127 , .g128 , .g129 , .g130 , .g131 , .g132 , .g118 , .g103").toggleClass("c1");//smile
+    })
+
+    $(".main").click(function () {
+
+      $(".g57 , .g36, .g51 ,.g49 , .g20 , .g19 , .g18 , .g32 , .g47 , .g55 , .g40 , .g26, .g59 , .g27 , .g28 , .g44 , .g59 , .g93 , .g108 , .g124 , .g125 , .g126 , .g127 , .g128 , .g129 , .g130 , .g131 , .g132 , .g118 , .g103").removeClass("c1");//smile
+
+
+      $(".g128,.g112,.g113,.g96,.g97,.g98,.g80,.g81,.g82,.g83,.g64,.g65,.g66,.g67,.g68,.g49,.g50,.g51,.g52,.g53,.g34,.g35,.g36,.g37,.g38,.g20,.g21 , .g22 , .g24 ,.g114,.g99,.g84,.g69,.g54,.g39,.g100,.g85,.g70,.g55,.g40,.g25,.g86,.g71,.g56,.g41,.g26,.g72,.g57,.g42").addClass("c1");
+    })
+
+    $(".main").mouseout(function () {
+      $(".g128,.g112,.g113,.g96,.g97,.g98,.g80,.g81,.g82,.g83,.g64,.g65,.g66,.g67,.g68,.g49,.g50,.g51,.g52,.g53,.g34,.g35,.g36,.g37,.g38,.g20,.g21 , .g22 , .g24 ,.g114,.g99,.g84,.g69,.g54,.g39,.g100,.g85,.g70,.g55,.g40,.g25,.g86,.g71,.g56,.g41,.g26,.g72,.g57,.g42").removeClass("c1");
+
+      $(".g57 , .g36, .g51 ,.g49 , .g20 , .g19 , .g18 , .g32 , .g47 , .g55 , .g40 , .g26, .g59 , .g27 , .g28 , .g44 , .g59 , .g93 , .g108 , .g124 , .g125 , .g126 , .g127 , .g128 , .g129 , .g130 , .g131 , .g132 , .g118 , .g103").addClass("c1");
+    });
+
+    (() => {
+        'use strict'
+
+        const getStoredTheme = () => localStorage.getItem('theme')
+        const setStoredTheme = theme => localStorage.setItem('theme', theme)
+
+        const getPreferredTheme = () => {
+          const storedTheme = getStoredTheme()
+          if (storedTheme) {
+            return storedTheme
+          }
+
+          return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+        }
+
+        const setTheme = theme => {
+          if (theme === 'auto') {
+            document.documentElement.setAttribute('data-bs-theme', (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'))
+          } else {
+            document.documentElement.setAttribute('data-bs-theme', theme)
+          }
+        }
+
+        setTheme(getPreferredTheme())
+
+        const showActiveTheme = (theme, focus = false) => {
+          const themeSwitcher = document.querySelector('#bd-theme')
+
+          if (!themeSwitcher) {
+            return
+          }
+
+          const themeSwitcherText = document.querySelector('#bd-theme-text')
+          // prefer explicit active icon element; fall back to the navbar toggler icon or any .theme-icon
+          const activeThemeIcon = document.querySelector('.theme-icon-active use') || document.querySelector('#bd-theme .theme-icon use') || document.querySelector('.theme-icon use')
+          const btnToActive = document.querySelector(`[data-bs-theme-value="${theme}"]`)
+
+          // if there's no matching button for the theme (e.g. unexpected value), bail out safely
+          if (!btnToActive) {
+            return
+          }
+
+          const svgUse = btnToActive.querySelector('svg use')
+          const svgOfActiveBtn = svgUse ? svgUse.getAttribute('href') : null
+
+          document.querySelectorAll('[data-bs-theme-value]').forEach(element => {
+            element.classList.remove('active')
+            try {
+              element.setAttribute('aria-pressed', 'false')
+            } catch (e) {
+              // ignore
+            }
+          })
+
+          btnToActive.classList.add('active')
+          try {
+            btnToActive.setAttribute('aria-pressed', 'true')
+          } catch (e) {
+            // ignore
+          }
+
+          if (activeThemeIcon && svgOfActiveBtn) {
+            try {
+              activeThemeIcon.setAttribute('href', svgOfActiveBtn)
+            } catch (e) {
+              // ignore
+            }
+          }
+
+          const themeSwitcherLabel = `${themeSwitcherText ? themeSwitcherText.textContent : ''} (${btnToActive.dataset.bsThemeValue})`
+          try {
+            themeSwitcher.setAttribute('aria-label', themeSwitcherLabel)
+          } catch (e) {
+            // ignore
+          }
+
+          if (focus) {
+            themeSwitcher.focus()
+          }
+        }
+
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+          const storedTheme = getStoredTheme()
+          if (storedTheme !== 'light' && storedTheme !== 'dark') {
+            setTheme(getPreferredTheme())
+          }
+        })
+
+        window.addEventListener('DOMContentLoaded', () => {
+          showActiveTheme(getPreferredTheme())
+
+          document.querySelectorAll('[data-bs-theme-value]')
+            .forEach(toggle => {
+              toggle.addEventListener('click', () => {
+                const theme = toggle.getAttribute('data-bs-theme-value')
+                setStoredTheme(theme)
+                setTheme(theme)
+                showActiveTheme(theme, true)
+              })
+            })
+        })
+      })()
+
+  </script>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js'></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

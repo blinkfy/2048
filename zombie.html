@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=0.8">
+  <title>2048 vs Zombies</title>
+  <link href="css/main.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+  <!-- 顶部控制栏：返回按钮在左，暂停和调速控制在右 -->
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding: 0 20px; margin-top: -70px;">
+    <button type="button" class="sig" onclick="goback()">⬅返回</button>
+    <div style="display: flex; gap: 15px; align-items: center;">
+      <!-- 暂停按钮 -->
+      <button type="button" id="pauseButton" class="pause-button" onclick="togglePause()">
+        <div id="pauseIcon" class="button-icon"></div>
+      </button>
+      <!-- 游戏调速控制 -->
+      <div class="game-speed-control">
+        <label style="font-size: 14px; margin-right: 8px; color: #5d544c;">游戏速度:</label>
+    <button class="speed-button" onclick="setGameSpeed(0.5, event)">0.5x</button>
+    <button class="speed-button active" onclick="setGameSpeed(1, event)">1x</button>
+    <button class="speed-button" onclick="setGameSpeed(1.5, event)">1.5x</button>
+    <button class="speed-button" onclick="setGameSpeed(2, event)">2x</button>
+    <button class="speed-button" onclick="setGameSpeed(3, event)">3x</button>
+      </div>
+    </div>
+  </div>
+  <div class="container">
+    <!-- 标题和分数 -->
+    <div class="heading">
+      <div class="title-container">
+        <div class="occupySpace"></div>
+      </div>
+      <!-- 新增减半卡槽 -->
+      <div class="scores-container">
+        <a class="restart-button">没发挥好？再来一局！</a>
+        <div class="score-container">0</div>
+        <div class="best-container">0</div>
+        <div class="card-slot">
+          <div class="half-card" draggable="true">减半卡</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="game-container">
+      <!-- 结束游戏 -->
+      <div class="game-message">
+        <p></p>
+        <div class="lower">
+          <!-- 只有赢的时候才显示 -->
+          <a class="keep-playing-button">Keep going</a>
+          <!-- 赢和输的时候输的时候都显示 -->
+          <a class="retry-button">Try again</a>
+        </div>
+      </div>
+      <!-- 格子 -->
+      <div class="grid-container">
+        <!-- 从右到左，从上到下 -->
+        <div class="grid-row">
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+        </div>
+        <div class="grid-row">
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+        </div>
+        <div class="grid-row">
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+        </div>
+        <div class="grid-row">
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+        </div>
+        <div class="grid-row">
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+        </div>
+      </div>
+      <div class="tile-container">
+      </div>
+
+    </div>
+    <div class=" progress-container">
+      <img id="progress-empty" src="./image/Interface/FlagMeterEmpty.png" alt="Empty Progress Bar">
+      <img id="progress-full" src="./image/Interface/FlagMeterFull.png" alt="Empty Progress Bar">
+    </div>
+  </div>
+  <!-- 兼容性 -->
+  <script src="js/bind_polyfill.js"></script>
+  <!-- 键盘输入 -->
+  <script src="js/keyboard_input_manager.js"></script>
+  <!-- 渲染 -->
+  <script src="js/html_actuator.js"></script>
+  <!-- 格子 -->
+  <script src="js/grid.js"></script>
+  <!-- 棋子 -->
+  <script src="js/tile.js"></script>
+  <!-- 子弹 -->
+  <script src="js/bullet.js"></script>
+  <!-- 僵尸 -->
+  <script src="js/Zombie.js"></script>
+  <!-- 本地存储 -->
+  <script src="js/local_storage_manager.js"></script>
+  <!-- 减半卡槽 -->
+  <script src="js/halfcard.js"></script>
+  <!-- 游戏 -->
+  <script src="js/application.js"></script>
+  <!-- 游戏管理 -->
+  <script src="js/game_manager.js"></script>
+  <!-- 登录信息 -->
+  <script>  
+    try {
+      var username = decodeURIComponent(atob(getParameter("uid")));//从传参尝试解析用户名
+    }
+    catch (err) {
+      var username = "none"
+    }
+    if (username == "" || username != localStorage.getItem('username')) {
+      username = "none";
+    }
+    if (getDay() != localStorage.getItem('loginday')) {
+      username = "none";
+    }
+
+    function getDay() {
+      const now = new Date();
+      const day = '.' + ('0' + now.getDate()).slice(-2);
+      return day;
+    }
+
+    function send(retdata) {
+      var xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+          return this.responseText;
+        }
+      };
+      xhttp.open("POST", retdata, true);
+      xhttp.send();
+    }
+
+    function getParameter(name) {
+      var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); // 构建一个含有目标参数的正则表达式对象
+      var r = window.location.search.substr(1).match(reg); // 匹配目标参数
+      if (r != null) {
+        if (unescape(r[2]) == "null" || unescape(r[2]) == "none") {
+          return "";
+        }
+        return unescape(r[2]);
+      } else {
+        return "";
+      }
+    }
+
+    function goback() {
+      const audio = new Audio('./audio/tap.mp3');
+      audio.play();
+      var backlink = document.referrer;
+      if (backlink.slice(backlink.search("html") - 7, backlink.search("html") - 1) == "zombie") {
+        backlink = "home.html";
+      }
+      if (username == "none" || backlink.search("uid") != -1) {
+        window.location.href = backlink;
+      } else {
+        window.location.href = backlink + "?uid=" + btoa(encodeURIComponent(username));
+      }
+    }
+
+    // 全局游戏速度系数（1为正常速度）
+    window.gameSpeedMultiplier = 1;
+    // 全局暂停状态
+    window.gamePaused = false;
+    
+    // 切换暂停/恢复
+    function togglePause() {
+      const audio = new Audio('./audio/tap.mp3');
+      audio.play();
+      
+      window.gamePaused = !window.gamePaused;
+      
+      const pauseButton = document.getElementById('pauseButton');
+      const pauseIcon = document.getElementById('pauseIcon');
+      
+      if (window.gamePaused) {
+        // 暂停状态：显示开始图标 (1,1)
+        setSpriteCell(pauseIcon, 1, 1, 3, 6);
+        pauseButton.classList.add('paused');
+        console.log('游戏已暂停');
+      } else {
+        // 正常状态：显示暂停图标 (3,6)
+        setSpriteCell(pauseIcon, 3, 6, 3, 6);
+        pauseButton.classList.remove('paused');
+        console.log('游戏继续');
+      }
+    }
+    
+    // 设置游戏速度函数
+    function setGameSpeed(speed, evt) {
+      const audio = new Audio('./audio/tap.mp3');
+      audio.play();
+      window.gameSpeedMultiplier = speed;
+      console.log('游戏速度设置为: ' + speed + 'x');
+      
+      // 高亮当前选中的速度按钮（使用 class 切换）
+      var buttons = document.querySelectorAll('.speed-button');
+      buttons.forEach(function(btn) {
+        btn.classList.remove('active');
+      });
+      // evt 兼容性：点击时会传入事件对象
+      var target = (evt && evt.target) ? evt.target : this;
+      if (target && target.classList) target.classList.add('active');
+    }
+    
+    // helper: set sprite sheet cell (row, col) 1-based indices
+    function setSpriteCell(elem, row, col, rows, cols) {
+      if (!elem || !elem.style) return;
+      // compute position in percentages (0%..100%)
+      const x = ((col - 1) / (cols - 1)) * 100;
+      const y = ((row - 1) / (rows - 1)) * 100;
+      elem.style.backgroundPosition = x + '% ' + y + '%';
+    }
+
+    // 初始化图标为暂停图标 (3,6)
+    document.addEventListener('DOMContentLoaded', function() {
+      var pauseIconInit = document.getElementById('pauseIcon');
+      setSpriteCell(pauseIconInit, 3, 6, 3, 6);
+    });
+  </script>
+</body>
+</html>
